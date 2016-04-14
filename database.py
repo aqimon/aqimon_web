@@ -47,7 +47,7 @@ class Database:
         q = self.conn.execute(
             """SELECT machineID, latitude, longitude, temperature, humidity, dustLevel, coLevel, time
                 FROM machine OUTER LEFT JOIN entry ON machine.lastEntry=entry.id
-                WHERE time>datetime('now', '-15 minutes')""")
+                WHERE time>datetime('now', '-1555 minutes')""")
         result = []
         for res in q:
             result.append(dict(zip(fields, res)))
