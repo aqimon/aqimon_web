@@ -26,7 +26,7 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/machine/<int:machineID")
+@app.route("/machine/<int:machineID>")
 def machineInfoPage(machineID):
     return render_template("machine.html", machineID=machineID)
 

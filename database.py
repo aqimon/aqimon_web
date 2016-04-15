@@ -47,7 +47,7 @@ class Database:
         q = self.conn.execute(
             """SELECT machineID, latitude, longitude, temperature, humidity, dustLevel, coLevel, time
                 FROM machine OUTER LEFT JOIN entry ON machine.lastEntry=entry.id
-                WHERE time>datetime('now', '-1555 minutes')""")
+                WHERE time>datetime('now', '-15 minutes')""")
         result = []
         for res in q:
             result.append(dict(zip(fields, res)))
@@ -60,9 +60,9 @@ class Database:
                                 FROM entry
                                 WHERE machineID=? AND time>datetime('now', ?)""", (machineID, timeOffset))
         q2 = list(q2)
-        res1 = {"id": q1[0], "lat": q1[1], "lon": q1[2]}
+        res1 = {"id": q1[0], "latitude": q1[1], "longitude": q1[2]}
         res2 = []
         for tmp in q2:
             res2.append(dict(zip(fields, tmp)))
-        res1['data'] = res2
+        res1['events'] = res2
         return res1

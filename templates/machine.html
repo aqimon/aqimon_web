@@ -12,11 +12,33 @@
           crossorigin="anonymous">
 </head>
 <body>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Maker Week</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="#">Machine info</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+    <div class="container">
+
+      <div id="map"></div>
+
+    </div> <!-- /container -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="http://code.highcharts.com/highcharts.js"></script>
     <script src="static/sprintf.js"></script>
     <script src="static/machine.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE4Z5HnkoNb8n8U5ftRvXZK1rdiCkYcaU&libraries=places&callback=initAutocomplete"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE4Z5HnkoNb8n8U5ftRvXZK1rdiCkYcaU&libraries=places&callback=initMap"
          async defer></script>
 </body>
 </html>
