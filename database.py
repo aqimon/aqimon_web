@@ -56,7 +56,7 @@ class Database:
     def getMachineData(self, machineID, timeOffset):
         fields = ("time", "temperature", "humidity", "dustLevel", "coLevel")
         q1 = list(self.conn.execute("SELECT * FROM machine WHERE id=?", (machineID, )))[0]
-        q2 = self.conn.execute("""SELECT time, temperature, humidity, dustLevel, coLevel
+        q2 = self.conn.execute("""SELECT cast(round((julianday(time) - 2440587.5)*86400000.0) as int), temperature, humidity, dustLevel, coLevel
                                 FROM entry
                                 WHERE machineID=? AND time>datetime('now', ?)""", (machineID, timeOffset))
         q2 = list(q2)

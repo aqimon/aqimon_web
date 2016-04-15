@@ -5,40 +5,80 @@
     <title>Machine #{{machineID}}</title>
     <script>
         var machineID={{machineID}};
+
+
     </script>
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
           crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="/static/machine.css">
 </head>
 <body>
 
-    <!-- Static navbar -->
-    <nav class="navbar navbar-default navbar-static-top">
-      <div class="container">
+<!-- Static navbar -->
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Maker Week</a>
+            <a class="navbar-brand" href="#">Maker Week</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li class="active"><a href="#">Machine info</a></li>
-          </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="#">Machine info</a></li>
+            </ul>
         </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+    </div>
+</nav>
+<div class="container fluid">
+    <div class="row" id="header">
+        <div class="col-xs-6 col-md-6">
+            <div id="map"></div>
+        </div>
+        <div class="col-xs-6 col-md-6">
+            <h1>Machine #{{machineID}}</h1>
+            <ul>
+                <li>Latitude:</li>
+                <li>Longitude:</li>
+            </ul>
+        </div>
+    </div>
+    <div>
 
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#temperature" aria-controls="temperature" role="tab" data-toggle="tab" id="xxx">Temperature</a>
+            </li>
+            <li role="presentation">
+                <a href="#humidity" aria-controls="humidity" role="tab" data-toggle="tab">Humidity</a>
+            </li>
+            <li role="presentation">
+                <a href="#dust" aria-controls="dust" role="tab" data-toggle="tab">Dust concentration</a>
+            </li>
+            <li role="presentation">
+                <a href="#co" aria-controls="co" role="tab" data-toggle="tab">CO concentration</a>
+            </li>
+        </ul>
 
-    <div class="container">
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active" id="temperature">temp</div>
+            <div role="tabpanel" class="tab-pane fade" id="humidity">humid</div>
+            <div role="tabpanel" class="tab-pane fade" id="dust">dust</div>
+            <div role="tabpanel" class="tab-pane fade" id="co">co</div>
+        </div>
 
-      <div id="map"></div>
-
-    </div> <!-- /container -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="static/sprintf.js"></script>
-    <script src="static/machine.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE4Z5HnkoNb8n8U5ftRvXZK1rdiCkYcaU&libraries=places&callback=initMap"
-         async defer></script>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE4Z5HnkoNb8n8U5ftRvXZK1rdiCkYcaU&libraries=places"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+<script src="/static/sprintf.js"></script>
+<script src="/static/machine.js"></script>
 </body>
 </html>

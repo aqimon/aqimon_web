@@ -1,0 +1,12 @@
+#header {
+    height: 300px;
+    margin-bottom: 30px;
+}
+
+#map {
+    height: 300px;
+}
+
+#temperature #humidity #dust #co {
+    height: 400px;
+}
