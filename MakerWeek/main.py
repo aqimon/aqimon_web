@@ -13,3 +13,7 @@ def index():
 @app.route("/map")
 def map():
     return render_template("map.html")
+
+@app.route("/client/<clientID>")
+def client(clientID):
+    return render_template("client.html", clientID=clientID)

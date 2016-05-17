@@ -6,7 +6,9 @@ class Database():
         self.db.row_factory = sqlite3.Row
 
     def __enter__(self):
-        return self.db.cursor()
+        cursor=self.db.cursor()
+        cursor.execute("PRAGMA foreign_keys = ON")
+        return cursor
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.db.commit()

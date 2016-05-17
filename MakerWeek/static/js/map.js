@@ -13,6 +13,7 @@ currentOpenInfobox=null;
 
 function setClient(data){
     var clientID=data.clientID;
+    data.time=Date(data.time).toString()
     if (clientID in markersList) {
         console.log("modify existing ", data.clientID);
         markersList[clientID].infobox.setContent(generateContent(data));

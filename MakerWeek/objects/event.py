@@ -1,20 +1,31 @@
 import datetime
 
+from MakerWeek.database import getDB
+
 class Event():
+
     @staticmethod
-    def createTable(db):
+    def __getCurrentTimestamp__():
+        now = datetime.datetime.utcnow()
+        timestamp = int(now.timestamp() * 1000)
+        return timestamp
+
+    @staticmethod
+    def createTable():
+        db=getDB()
         with db as cursor:
             __tabledefinition__ = """
                     CREATE TABLE event(
                         eventID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                         clientID VARCHAR NOT NULL REFERENCES client(clientID),
-                        time DATETIME NOT NULL,
+                        time INTEGER NOT NULL,
                         temperature REAL NOT NULL,
                         humidity REAL NOT NULL,
                         dustLevel REAL NOT NULL,
                         coLevel REAL NOT NULL
                     )
                 """
+            cursor.execute("PRAGMA foreign_keys = OFF;")
             cursor.execute("DROP TABLE IF EXISTS event")
             cursor.execute(__tabledefinition__)
 
@@ -25,10 +36,11 @@ class Event():
         self.dustLevel = dustLevel
         self.coLevel = coLevel
         if time is None:
-            self.time = datetime.datetime.utcnow()
+            self.time = self.__getCurrentTimestamp__()
+            print(self.time)
         else:
-            if isinstance(time, str):
-                self.time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.f")
+            if isinstance(time, int):
+                self.time = datetime.datetime.utcfromtimestamp(time)
             elif isinstance(time, datetime.datetime):
                 self.tine = time
         if eventID is not None:
@@ -42,23 +54,22 @@ class Event():
             "humidity": self.humidity,
             "dustLevel": self.dustLevel,
             "coLevel": self.coLevel,
-            "time": self.time_to_sqlite()
+            "time": self.time
         }
 
-    def db_write(self, db):
+    def dbWrite(self):
+        db = getDB()
         with db as cursor:
             cursor.execute(
                 "INSERT INTO event (clientID, time, temperature, humidity, dustLevel, coLevel) VALUES (?, ?, ?, ?, ?, ?)",
                 (self.clientID,
-                 self.time_to_sqlite(),
+                 self.time,
                  self.temperature,
                  self.humidity,
                  self.dustLevel,
                  self.coLevel))
             self.eventID = cursor.lastrowid
 
-    def time_to_sqlite(self):
-        return self.time.isoformat(sep=" ")
 
     @staticmethod
     def get_event_via_id(db, eventID):

@@ -2,19 +2,23 @@ import json
 
 from MakerWeek.common import paramsParse
 from MakerWeek.database import getDB
-from MakerWeek.objects.client import Client
+from MakerWeek.objects.client import Client, ClientNotFound
 from MakerWeek.objects.event import Event
 from MakerWeek.realtime.realtime import broadcastEvent
 from flask import request, Blueprint
+import json
 
 api = Blueprint('api', __name__, url_prefix="/api")
 
 
-@api.route("/get/machine/<int:machineID>")
-def getClientInfo(machineID):
-    db = getDB()
-    q = db.getClientData(machineID, "-1 day")
-    return json.dumps(q, indent=4)
+@api.route("/get/client/<clientID>")
+def getClientInfo(clientID):
+    try:
+        client=Client.getID(clientID)
+    except ClientNotFound:
+        return json.dumps({"msg": "no such client"}), 404
+    client.getRecent()
+    return json.dumps(client.toDict())
 
 
 @api.route("/add/client")
@@ -59,9 +63,8 @@ def addEntry():
     }
     params = paramsParse(__paramsList__, request.args)
 
-    db = getDB()
     event = Event(**params)
-    event.db_write(db)
+    event.dbWrite()
     client = Client.getID(params["clientID"])
     client.lastEvent = event.eventID
     client.dbUpdate()
@@ -71,8 +74,6 @@ def addEntry():
 
 @api.route("/burn")
 def burn():
-    db = getDB()
-    Event.createTable(db)
     Client.createTable()
-    db.close()
+    Event.createTable()
     return "ok"

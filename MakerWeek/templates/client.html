@@ -1,84 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Machine #{{machineID}}</title>
-    <script>
-        var machineID={{machineID}};
-
-
-    </script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>MakerWeek client {{clientID}}</title>
     <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-          crossorigin="anonymous">
+          href="/static/css/bootstrap.css">
     <link rel="stylesheet"
-          href="/static/machine.css">
+          href="/static/css/client.css">
 </head>
 <body>
-
-<!-- Static navbar -->
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Maker Week</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">MakerWeek</a>
+            </div>
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                <li class="active"><a href="#">Machine info</a></li>
+                <li>
+                    <a href="/">
+                        <span class="glyphicon glyphicon-home"></span>
+                        Home
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/map">
+                        <span class="glyphicon glyphicon-globe"></span>
+                        Global map
+                    </a>
+                </li>
             </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
-<div class="container fluid">
-    <div class="row" id="header">
-        <div class="col-xs-6 col-md-6">
-            <div id="map"></div>
-        </div>
-        <div class="col-xs-6 col-md-6">
-            <h1>Machine #{{machineID}}</h1>
-            <ul>
-                <li>Latitude:</li>
-                <li>Longitude:</li>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/login">
+                        <span class="glyphicon glyphicon-user"></span> Login
+                    </a>
+                </li>
+                <li>
+                    <a href="/register">
+                        <span class="glyphicon glyphicon-log-in"></span> Sign up
+                    </a>
+                </li>
             </ul>
         </div>
-    </div>
-    <div>
-
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
-                <a href="#temperature" aria-controls="temperature" role="tab" data-toggle="tab" id="xxx">Temperature</a>
-            </li>
-            <li role="presentation">
-                <a href="#humidity" aria-controls="humidity" role="tab" data-toggle="tab">Humidity</a>
-            </li>
-            <li role="presentation">
-                <a href="#dust" aria-controls="dust" role="tab" data-toggle="tab">Dust concentration</a>
-            </li>
-            <li role="presentation">
-                <a href="#co" aria-controls="co" role="tab" data-toggle="tab">CO concentration</a>
-            </li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade active" id="temperature">temp</div>
-            <div role="tabpanel" class="tab-pane fade" id="humidity">humid</div>
-            <div role="tabpanel" class="tab-pane fade" id="dust">dust</div>
-            <div role="tabpanel" class="tab-pane fade" id="co">co</div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row" id="row">
+            <div class="col-md-6 col-xs-6">
+                <div id="map"></div>
+            </div>
+            <div class="col-md-6 col-xs-6">
+                <h1>Client {{clientID}}</h1>
+                <hr />
+                <ul>
+                    <li>Latitude: <span id="latitude"></span></li>
+                    <li>Longitude: <span id="longitude"></span></li>
+                    <li>Address: <span id="address"></span></li>
+                </ul>
+            </div>
         </div>
-
+        <div id="charts">
+            <ul class="nav nav-tabs" role="tablist">
+               <li class="active">
+                   <a href="#temperature" data-toggle="tab" aria-controls="temperature" role="tab" id="temperature-tab">Temperature</a>
+               </li>
+                <li>
+                   <a href="#humidity" data-toggle="tab" aria-controls="humidity" role="tab" id="humidity-tab">Humidity</a>
+               </li>
+                <li>
+                   <a href="#dustLevel" data-toggle="tab" aria-controls="dustLevel" role="tab" id="dustLevel-tab">Dust concentration</a>
+               </li>
+                <li>
+                   <a href="#coLevel" data-toggle="tab" aria-controls="coLevel" role="tab" id="coLevel-tab">CO concentration</a>
+               </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active fade in" id="temperature"></div>
+                <div class="tab-pane fade" id="humidity"></div>
+                <div class="tab-pane fade" id="dustLevel"></div>
+                <div class="tab-pane fade" id="coLevel"></div>
+            </div>
+        </div>
     </div>
-</div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE4Z5HnkoNb8n8U5ftRvXZK1rdiCkYcaU&libraries=places"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-        crossorigin="anonymous"></script>
-<script src="/static/sprintf.js"></script>
-<script src="/static/machine.js"></script>
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/sprintf.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
+    <script src="/static/js/socketio.js"></script>
+    <script>
+        clientID="{{clientID}}";
+    </script>
+    <script src="/static/js/highcharts.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/client.js"></script>
 </body>
 </html>

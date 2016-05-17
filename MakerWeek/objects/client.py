@@ -1,5 +1,5 @@
 from MakerWeek.database import getDB
-
+import datetime
 
 class Client():
     def __init__(self, clientID, longitude, latitude, address, lastEvent=None):
@@ -8,12 +8,29 @@ class Client():
         self.latitude = latitude
         self.address = address
         self.lastEvent = lastEvent
+        self.recentEvents=None
+
+    def getRecent(self):
+        timedelta = datetime.timedelta(days=1)
+        time = datetime.datetime.utcnow() - timedelta
+        timestamp = int(time.timestamp() * 1000)
+        with getDB() as cursor:
+            cursor.execute("""
+                SELECT time, temperature, humidity, dustLevel, coLevel
+                FROM event
+                WHERE clientID=? AND time>?
+            """, (self.clientID, timestamp))
+            self.recentEvents=[]
+            for row in cursor.fetchall():
+                self.recentEvents.append(dict(row))
+
 
     def toDict(self):
         return {
             "longitude": self.longitude,
             "latitude": self.latitude,
-            "address": self.address
+            "address": self.address,
+            "recentEvents": self.recentEvents
         }
 
     def dbWrite(self):
@@ -42,7 +59,7 @@ class Client():
             cursor.execute("SELECT * FROM client WHERE clientID=?", (clientID,))
             result = cursor.fetchone()
             if result is None:
-                raise ClientNotFound(id=clientID)
+                raise ClientNotFound()
             else:
                 return Client(**dict(result))
 
@@ -54,11 +71,12 @@ class Client():
                 latitude REAL NOT NULL,
                 longitude REAL NOT NULL,
                 address VARCHAR NOT NULL,
-                lastEvent INTEGER REFERENCES event(eventID)
+                lastEvent INTEGER
             )
         """
         db = getDB()
         with db as cursor:
+            cursor.execute("PRAGMA foreign_keys = OFF;")
             cursor.execute("DROP TABLE IF EXISTS client")
             cursor.execute(__tabledefinition__)
 
