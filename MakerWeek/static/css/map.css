@@ -1,0 +1,18 @@
+#map-container {
+    padding: 0;
+    height: 100vh;
+}
+
+#map {
+    height: 100%;
+}
+
+.infobox-header {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.infobox-hr {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}

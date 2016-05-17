@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>MakerWeek map</title>
+    <link rel="stylesheet"
+          href="https://bootswatch.com/united/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="/static/css/map.css">
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">MakerWeek</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/">
+                        <span class="glyphicon glyphicon-home"></span>
+                        Home
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/map">
+                        <span class="glyphicon glyphicon-globe"></span>
+                        Global map
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/login">
+                        <span class="glyphicon glyphicon-user"></span> Login
+                    </a>
+                </li>
+                <li>
+                    <a href="/register">
+                        <span class="glyphicon glyphicon-log-in"></span> Sign up
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid" id="map-container">
+        <div id="map"></div>
+    </div>
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/sprintf.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
+    <script src="/static/js/socketio.js"></script>
+    <script src="/static/js/map.js"></script>
+</body>
+</html>
