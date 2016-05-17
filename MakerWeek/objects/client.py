@@ -12,13 +12,14 @@ class Client():
 
     def getRecent(self):
         timedelta = datetime.timedelta(days=1)
-        time = datetime.datetime.utcnow() - timedelta
+        time = datetime.datetime.now(datetime.timezone.utc) - timedelta
         timestamp = int(time.timestamp() * 1000)
         with getDB() as cursor:
             cursor.execute("""
                 SELECT time, temperature, humidity, dustLevel, coLevel
                 FROM event
                 WHERE clientID=? AND time>?
+                ORDER BY time ASC
             """, (self.clientID, timestamp))
             self.recentEvents=[]
             for row in cursor.fetchall():

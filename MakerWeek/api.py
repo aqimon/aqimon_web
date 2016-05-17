@@ -27,7 +27,7 @@ def addClient():
     # Parameters:
     #  - id: Uniquely identified ID
     #  - latitude, longitude: client's location in latitude and longitude
-    #  TODO: - address: client's location in real world address
+    #  - address: client's location in real world address
     # Returns
     #   TODO: Returns API key?
 

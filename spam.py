@@ -1,15 +1,18 @@
 import random
+import time
+
 import requests
 
 random.seed()
 
 while True:
-	data={
-		"id": 1001,
-		"temp": random.randint(20, 30),
-		"humid": random.randint(80, 100),
-		"dust": random.randint(0, 10)/10,
-		"co": random.randint(0, 10)/10
-	}
-	req=requests.get("https://makerw33d-tuankiet65.rhcloud.com/api/add/entry", params=data)
-	print(req.text)
+    data = {
+        "clientID": "tuankiet65",
+        "temperature": random.randint(20, 30),
+        "humidity": random.randint(60, 100),
+        "dustLevel": random.randint(0, 10) / 10,
+        "coLevel": random.randint(0, 10) / 10
+    }
+    req = requests.get("http://localhost:5000/api/add/event", params=data)
+    print(req.text)
+    time.sleep(2)

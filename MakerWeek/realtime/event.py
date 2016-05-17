@@ -3,7 +3,7 @@ import datetime
 
 def getRecent():
     timedelta = datetime.timedelta(minutes=15)
-    time = datetime.datetime.utcnow() - timedelta
+    time = datetime.datetime.now(datetime.timezone.utc) - timedelta
     timestamp=int(time.timestamp()*1000)
     db=getDB()
     with db as cursor:

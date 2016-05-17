@@ -6,7 +6,7 @@ class Event():
 
     @staticmethod
     def __getCurrentTimestamp__():
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(datetime.timezone.utc)
         timestamp = int(now.timestamp() * 1000)
         return timestamp
 
@@ -37,7 +37,6 @@ class Event():
         self.coLevel = coLevel
         if time is None:
             self.time = self.__getCurrentTimestamp__()
-            print(self.time)
         else:
             if isinstance(time, int):
                 self.time = datetime.datetime.utcfromtimestamp(time)

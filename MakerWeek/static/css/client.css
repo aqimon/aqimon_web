@@ -1,7 +1,15 @@
-.row {
+#div-map {
     height: 50vh;
+}
+
+#map {
+    height: 100%;
 }
 
 body {
     padding-top: 70px;
+}
+
+#charts {
+    padding-top: 10px;
 }

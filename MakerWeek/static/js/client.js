@@ -1,13 +1,13 @@
-var map;
+var map, marker, socketio, currentPane;
 
-function initMap(lat, lon){
+function initMap(latitude, longitude){
     map=new google.maps.Map(document.getElementById("map"), {
-        center: {lat: lat, lng: lon},
+        center: {lat: latitude, lng: longitude},
         mapTypeId: google.maps.MapTypeId.HYBRID,
-        zoom: 18
+        zoom: 1
     });
     marker=new google.maps.Marker({
-        position: {lat: lat, lng: lon}
+        position: {lat: latitude, lng: longitude}
     });
     marker.setMap(map)
 }
@@ -18,71 +18,87 @@ function initInfo(latitude, longitude, address){
     $("#address").text(address);
 }
 
-function initCharts(events){
+function generateSettings(data){
     var generalSettings={
         chart: {
             type: "line"
         },
         xAxis: {
             type: "datetime",
-            tickInterval: 60 * 60 * 1000 // one hour
+            tickInterval: 10 * 60 * 1000 // 10 minutes
         },
         series: [{
-            data: []
+            data: [],
         }]
     };
-    $('#temperature').highcharts(generalSettings);
-    $('#humidity').highcharts(generalSettings);
-    $('#dustLevel').highcharts(generalSettings);
-    $('#coLevel').highcharts(generalSettings);
+    generalSettings.series[0].data=data;
+    return generalSettings
+}
 
-    for (i=0; i<events.length; i++) {
-        console.log(events[i]);
-        var time=events[i].time;
-        $("#temperature").highcharts().series[0].addPoint([time, events[i].temperature], redraw=false);
-        $("#humidity").highcharts().series[0].addPoint([time, events[i].humidity], redraw=false);
-        $("#dustLevel").highcharts().series[0].addPoint([time, events[i].dustLevel], redraw=false);
-        $("#coLevel").highcharts().series[0].addPoint([time, events[i].coLevel], redraw=false);
+
+function initCharts(events){
+    temperatureArr=[];
+    humidityArr=[];
+    dustLevelArr=[];
+    coLevelArr=[];
+
+    for (var i=0; i<events.length; i++) {
+        time=events[i].time;
+        temperatureArr.push([time, events[i].temperature]);
+        humidityArr.push([time, events[i].humidity]);
+        dustLevelArr.push([time, events[i].dustLevel]);
+        coLevelArr.push([time, events[i].coLevel]);
     }
-    $("#temperature").highcharts().reflow();
+
+    $("#temperature").highcharts(generateSettings(temperatureArr));
+    $("#humidity").highcharts(generateSettings(humidityArr));
+    $("#dustLevel").highcharts(generateSettings(dustLevelArr));
+    $("#coLevel").highcharts(generateSettings(coLevelArr));
+
     $("#temperature").highcharts().redraw();
-    $("#humidity").highcharts().redraw();
-    $("#dustLevel").highcharts().redraw();
-    $("#coLevel").highcharts().redraw();
+    currentPane=$("#temperature");
 }
 
 function addData(data){
-    var time=Date(data.time);
-    $("#temperature").highcharts().series[0].addPoint([time, data.temperature]);
-    $("#humidity").highcharts().series[0].addPoint([time, data.humidity]);
-    $("#dustLevel").highcharts().series[0].addPoint([time, data.dustLevel]);
-    $("#coLevel").highcharts().series[0].addPoint([time, data.coLevel]);
+    var time=data.time;
+    console.log(data.humidity);
+    $("#temperature").highcharts().series[0].addPoint([time, data.temperature], redraw=false, shift=true);
+    $("#humidity").highcharts().series[0].addPoint([time, data.humidity], redraw=false, shift=true);
+    $("#dustLevel").highcharts().series[0].addPoint([time, data.dustLevel], redraw=false, shift=true);
+    $("#coLevel").highcharts().series[0].addPoint([time, data.coLevel], redraw=false, shift=true);
+    if (typeof(currentPane) != "undefined") {
+        currentPane.highcharts().redraw();
+    }
 }
 
 function reflowAndRedraw(e){
-    targetPane=$("#"+$(e.target).attr("aria-controls"));
-    targetPane.highcharts().reflow();
-    targetPane.highcharts().redraw();
+    currentPane=$("#"+$(e.target).attr("aria-controls"));
+    currentPane.highcharts().reflow();
+    currentPane.highcharts().redraw();
 }
 
 $(function(){
     socketio=io("/");
+
     socketio.on("connect", function(){
         console.log("connected to server");
         room=sprintf("client_%s", clientID);
         socketio.emit("json", {"action": "joinRoom", "room": room});
-    });
+    })
+
     socketio.on("json", function(data){
         addData(data);
     })
+
+    $("a[id$=-tab]").on("shown.bs.tab", function(e){
+        currentPane=$("#"+$(e.target).attr("aria-controls"));
+        currentPane.highcharts().reflow();
+        currentPane.highcharts().redraw();
+    });
+
     $.getJSON(sprintf("/api/get/client/%s", clientID), function(data){
-        console.log("received: ", data)
-        //initMap(data.latitude, data.longitude);
+        initMap(data.latitude, data.longitude);
         initInfo(data.latitude, data.longitude, data.address);
         initCharts(data.recentEvents);
-        $("#temperature-tab").on("shown.bs.tab", reflowAndRedraw);
-        $("#humidity-tab").on("shown.bs.tab", reflowAndRedraw);
-        $("#dustLevel-tab").on("shown.bs.tab", reflowAndRedraw);
-        $("#coLevel-tab").on("shown.bs.tab", reflowAndRedraw);
     })
 })
