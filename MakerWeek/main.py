@@ -1,9 +1,11 @@
 from MakerWeek.api import api
 from MakerWeek.realtime import realtimeServer
+from MakerWeek.authentication import authentication
 from flask import Flask, render_template
 
 app = Flask(__name__)
 app.register_blueprint(api)
+app.register_blueprint(authentication)
 realtimeServer.init_app(app)
 
 @app.route("/")
