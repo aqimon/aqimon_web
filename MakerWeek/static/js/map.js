@@ -7,7 +7,7 @@ function initMap(){
     });
 }
 
-// {machineID:{markers: <markers>, infobox: <infobox>]}
+// {machineID:{marker: <markers>, infobox: <infobox>]}
 markersList={};
 currentOpenInfobox=null;
 
@@ -15,11 +15,15 @@ function setClient(data){
     var clientID=data.clientID;
     data.time=Date(data.time).toString()
     if (clientID in markersList) {
-        console.log("modify existing ", data.clientID);
         markersList[clientID].infobox.setContent(generateContent(data));
+        markersList[clientID].marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function(client){
+            console.log(client);
+            client.marker.setAnimation(null);
+        }, 1000, markersList[clientID]);
     } else {
-        console.log("make new ", data.clientID);
         markersList[clientID]=newMarker(data);
+        markersList[clientID].marker.setAnimation(google.maps.Animation.DROP);
     }
 }
 function newMarker(data){
@@ -73,7 +77,6 @@ $(function(){
     socketio.on("connect", function (){
         console.log("connected to server");
         socketio.emit("json", {"action": "getRecent"}, function (data){
-            console.log("getRecent: ", data);
             for (i=0; i<data.length; i++){
                 setClient(data[i]);
             }
@@ -86,7 +89,6 @@ $(function(){
     });
 
     socketio.on("json", function (data){
-        console.log("received data: ", data);
         setClient(data);
     });
 
