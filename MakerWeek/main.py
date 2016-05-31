@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.register_blueprint(api)
 app.register_blueprint(authentication)
 realtimeServer.init_app(app)
+app.secret_key="xxx"
 
 @app.route("/")
 def index():

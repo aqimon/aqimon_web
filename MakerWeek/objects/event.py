@@ -5,7 +5,7 @@ from MakerWeek.database import getDB
 class Event():
 
     @staticmethod
-    def __getCurrentTimestamp__():
+    def __getCurrentTimestamp():
         now = datetime.datetime.now(datetime.timezone.utc)
         timestamp = int(now.timestamp() * 1000)
         return timestamp
@@ -36,7 +36,7 @@ class Event():
         self.dustLevel = dustLevel
         self.coLevel = coLevel
         if time is None:
-            self.time = self.__getCurrentTimestamp__()
+            self.time = self.__getCurrentTimestamp()
         else:
             if isinstance(time, int):
                 self.time = datetime.datetime.utcfromtimestamp(time)

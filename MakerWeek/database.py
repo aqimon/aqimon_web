@@ -1,4 +1,5 @@
 import sqlite3
+from flask import g
 
 class Database():
     def __init__(self, fileName):
@@ -12,10 +13,11 @@ class Database():
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.db.commit()
-        self.db.close()
 
     def close(self):
         self.db.close()
 
 def getDB():
-    return Database("MakerWeek.sqlite3")
+    if getattr(g, "db", None) is None:
+        g.db = Database("MakerWeek.sqlite3")
+    return g.db

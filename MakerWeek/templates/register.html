@@ -47,7 +47,7 @@
         <div id="registration-form" class="well well-lg">
             <h1>Registration form</h1>
             <hr />
-            <form action="/register" method="get">
+            <form action="/register" method="post">
                 <div class="input-group">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                     <input placeholder="Your username" name="username" type="text" class="form-control">
@@ -58,11 +58,11 @@
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                    <input type="text" name="password" placeholder="Your password" class="form-control">
+                    <input type="password" name="password" placeholder="Your password" class="form-control">
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                    <input type="text" name="password-repeat" placeholder="Your password (again)" class="form-control">
+                    <input type="password" name="password-repeat" placeholder="Your password (again)" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-block btn-primary btn-lg">Submit</button>
             </form>
