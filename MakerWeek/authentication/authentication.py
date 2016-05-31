@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session, g
 from MakerWeek.authentication import user
 authentication = Blueprint("authentication", __name__, url_prefix="")
-
 
 @authentication.route("/login", methods=["GET"])
 def loginPage():

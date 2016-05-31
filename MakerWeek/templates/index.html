@@ -28,6 +28,13 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                {% if user is not none %}
+                <li>
+                    <a href="/myaccount">
+                        <span class="glyphicon glyphicon-user"></span> {{user.username}}
+                    </a>
+                </li>
+                {% else %}
                 <li>
                     <a href="/login">
                         <span class="glyphicon glyphicon-user"></span> Login
@@ -38,6 +45,7 @@
                         <span class="glyphicon glyphicon-log-in"></span> Sign up
                     </a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </nav>

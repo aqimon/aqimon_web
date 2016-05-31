@@ -29,7 +29,7 @@ def get(tokenKey, tokenValue):
         if result is None:
             raise LoginTokenNotFound
         tokenHash = result['tokenHash']
-        if bcrypt.hashpw(password=tokenValue.encode("utf-8"), salt=tokenHash) == tokenHash:
+        if bcrypt.hashpw(password=tokenValue, salt=tokenHash) == tokenHash:
             return result['userID']
         else:
             raise LoginTokenNotCorrect
