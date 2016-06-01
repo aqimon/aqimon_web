@@ -27,8 +27,8 @@ def index():
 
 @app.route("/map")
 def map():
-    return render_template("map.html")
+    return render_template("map.html", user=g.user)
 
 @app.route("/client/<clientID>")
 def client(clientID):
-    return render_template("client.html", clientID=clientID)
+    return render_template("client.html", clientID=clientID, user=g.user)

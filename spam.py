@@ -37,5 +37,4 @@ while True:
     for uuid in clients:
         event=generateEvent(uuid)
         requests.get("http://localhost:5000/api/add/event", params=event)
-        time.sleep(1)
-
+        time.sleep(0.5)

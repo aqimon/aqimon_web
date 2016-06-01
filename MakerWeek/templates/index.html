@@ -1,54 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <title>MakerWeek</title>
-    <link rel="stylesheet"
-          href="/static/css/bootstrap.css">
-</head>
-<body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">MakerWeek</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="/">
-                        <span class="glyphicon glyphicon-home"></span>
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="/map">
-                        <span class="glyphicon glyphicon-globe"></span>
-                        Global map
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if user is not none %}
-                <li>
-                    <a href="/myaccount">
-                        <span class="glyphicon glyphicon-user"></span> {{user.username}}
-                    </a>
-                </li>
-                {% else %}
-                <li>
-                    <a href="/login">
-                        <span class="glyphicon glyphicon-user"></span> Login
-                    </a>
-                </li>
-                <li>
-                    <a href="/register">
-                        <span class="glyphicon glyphicon-log-in"></span> Sign up
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
+{% extends "base.html" %}
+{% set currPage="index" %}
+{% block title %} MakerWeek {% endblock %}
+{% block content %}
     <div class="jumbotron">
         <div class="container">
             <h1>Hey man!</h1>
@@ -56,5 +9,4 @@
             <p>I don't give a fuck about you so do tinker around as much as possible, okay?</p>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

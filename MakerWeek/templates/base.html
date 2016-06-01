@@ -1,0 +1,63 @@
+{% set navLeft=[
+    ("index", "Home", "/", "home"),
+    ("map", "Global map", "/map", "globe"),
+] %}
+{% set navRight=[
+    ("login", "Login", "/login", "log-in"),
+    ("register", "Sign up", "/register", "user"),
+] %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet"
+          href="/static/css/bootstrap.css">
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">MakerWeek</a>
+            </div>
+            <ul class="nav navbar-nav">
+                {% for navItem in navLeft %}
+                <li class="{% if navItem[0]==currPage %}active{% endif %}">
+                    <a href="{{navItem[2]}}">
+                        <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
+                        {{navItem[1]}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user is not none %}
+                <li class='{% if "myaccount"==currPage %}active{% endif %}'>
+                    <a href="/myaccount">
+                        <span class="glyphicon glyphicon-user"></span> {{user.username}}
+                    </a>
+                </li>
+                <li>
+                    <a href="/signout">
+                        <span class="glyphicon glyphicon-log-out"></span> Sign out
+                    </a>
+                </li>
+                {% else %}
+                    {% for navItem in navRight %}
+                    <li class="{% if navItem[0]==currPage %}active{% endif %}">
+                        <a href="{{navItem[2]}}">
+                            <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
+                            {{navItem[1]}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+    {% block js %}{% endblock %}
+</body>
+</html>

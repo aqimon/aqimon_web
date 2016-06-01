@@ -1,48 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <title>MakerWeek client {{clientID}}</title>
-    <link rel="stylesheet"
-          href="/static/css/bootstrap.css">
-    <link rel="stylesheet"
-          href="/static/css/client.css">
-</head>
-<body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">MakerWeek</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li>
-                    <a href="/">
-                        <span class="glyphicon glyphicon-home"></span>
-                        Home
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="/map">
-                        <span class="glyphicon glyphicon-globe"></span>
-                        Global map
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="/login">
-                        <span class="glyphicon glyphicon-user"></span> Login
-                    </a>
-                </li>
-                <li>
-                    <a href="/register">
-                        <span class="glyphicon glyphicon-log-in"></span> Sign up
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+{% extends "base.html" %}
+{% set currPage="client" %}
+{% block title %} MakerWeek client {{ clientID }} {% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/css/client.css">
+{% endblock %}
+{% block content %}
     <div class="container-fluid">
         <div class="row" id="row">
             <div class="col-md-6 col-xs-6" id="div-map">
@@ -81,6 +43,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block js %}
     <script src="/static/js/jquery.js"></script>
     <script src="/static/js/sprintf.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
@@ -91,5 +55,4 @@
     <script src="/static/js/highcharts.js"></script>
     <script src="/static/js/bootstrap.js"></script>
     <script src="/static/js/client.js"></script>
-</body>
-</html>
+{% endblock %}
