@@ -23,12 +23,12 @@ def checkLogin():
 
 @app.route("/")
 def index():
-    return render_template("index.html", user=g.user)
+    return render_template("index.html")
 
 @app.route("/map")
 def map():
-    return render_template("map.html", user=g.user)
+    return render_template("map.html")
 
 @app.route("/client/<clientID>")
 def client(clientID):
-    return render_template("client.html", clientID=clientID, user=g.user)
+    return render_template("client.html", clientID=clientID)

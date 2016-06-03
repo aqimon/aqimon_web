@@ -33,17 +33,17 @@
                 {% endfor %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                {% if user is not none %}
+                {% if g.user is not none %}
                 <li class='{% if "myaccount"==currPage %}active{% endif %}'>
                     <a href="/myaccount">
-                        <span class="glyphicon glyphicon-user"></span> {{user.username}}
+                        <span class="glyphicon glyphicon-user"></span> {{g.user.username}}
                     </a>
                 </li>
                 <li>
                     <a href="/signout">
                         <span class="glyphicon glyphicon-log-out"></span> Sign out
                     </a>
-                </li>
+                    </li>
                 {% else %}
                     {% for navItem in navRight %}
                     <li class="{% if navItem[0]==currPage %}active{% endif %}">
