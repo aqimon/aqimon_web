@@ -8,7 +8,7 @@ def isLoggedIn():
 @authentication.route("/login", methods=["GET"])
 def loginPage():
     if isLoggedIn():
-        return redirect("/", code=200)
+        return redirect("/")
     return render_template("login.html", user=g.user)
 
 
@@ -21,23 +21,23 @@ def login():
     try:
         cookie=user.login(username, password)
     except user.LoginFailed:
-        return redirect("/login?failure=1", code=401)
+        return redirect("/login?failure=1")
     else:
         session['tokenKey'], session['tokenHash']=cookie
-    return redirect("/", code=200)
+    return redirect("/")
 
 
 @authentication.route("/register", methods=["GET"])
 def registerPage():
     if isLoggedIn():
-        return redirect("/", code=200)
+        return redirect("/")
     return render_template("register.html", user=g.user)
 
 
 @authentication.route("/register", methods=["POST"])
 def register():
     if isLoggedIn():
-        return redirect("/", code=200)
+        return redirect("/")
     print(request.form)
     username = request.form['username']
     password = request.form['password']
@@ -48,4 +48,4 @@ def register():
 @authentication.route("/signout")
 def signOut():
     session.clear()
-    return redirect("/", code=200)
+    return redirect("/")
