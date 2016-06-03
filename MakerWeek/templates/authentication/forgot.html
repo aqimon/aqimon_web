@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% set name="forgot" %}
+{% block title %} MakerWeek forgot your password {% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/css/forms.css" />
+{% endblock %}
+{% block content %}
+    <div class="container-fluid" id="container">
+        <div id="form" class="well well-lg">
+            <h1>Forgot your password?</h1>
+            <hr />
+            <form action="/forgot" method="post">
+                <div class="input-group">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                    <input placeholder="Your email" name="email" type="text" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-block btn-lg btn-primary">Reset my password</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
