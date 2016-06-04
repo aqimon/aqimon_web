@@ -1,8 +1,10 @@
-from MakerWeek.database import getDB
-from MakerWeek.authentication import loginToken
-import string
 import random
+import string
+
 import bcrypt
+
+from MakerWeek.authentication import loginToken
+from MakerWeek.database import getDB
 
 
 class User:
@@ -54,22 +56,32 @@ def createNewUser(username, password, email):
         cursor.execute("INSERT INTO user(username, password, email) VALUES (?, ?, ?)", (username, password, email))
 
 
-def resetPassword(email):
+def getIDFromEmail(email):
     with getDB() as cursor:
         cursor.execute("SELECT * FROM user WHERE email=?", (email,))
         result = cursor.fetchone()
     if result is None:
         raise UserNotFound
-    newPassword=_generateRandomPassword(20)
-    newPasswordHash=bcrypt.hashpw(newPassword.encode("utf-8"), bcrypt.gensalt())
+    return result['id']
+
+
+def resetPassword(userID):
+    newPassword = _generateRandomPassword(20)
+    newPasswordHash = bcrypt.hashpw(newPassword.encode("utf-8"), bcrypt.gensalt())
     with getDB() as cursor:
-        cursor.execute("UPDATE user SET password=? WHERE email=?", (newPasswordHash, email))
+        cursor.execute("UPDATE user SET password=? WHERE id=?", (newPasswordHash, userID))
     return newPassword
+
 
 def _generateRandomPassword(length):
     rand = random.SystemRandom()
     letters = string.ascii_letters + string.digits
     return ''.join(rand.choice(letters) for _ in range(length))
+
+
+def getEmailFromID(userID):
+    user = User(userID)
+    return user.email
 
 
 class LoginFailed(Exception):

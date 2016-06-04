@@ -1,5 +1,5 @@
+import email.mime.text
 import smtplib
-import email
 
 EMAIL_USERNAME="M4k3rW33d@gmail.com"
 EMAIL_PASSWORD="rEenkwqwJ6mggekxnW3hqq0wDDzEO4"
@@ -21,12 +21,11 @@ def sendEmail(toAddress, subject, msg):
             emailInit()
         except LoginFailed:
             pass
-    content=email.message.Message()
-    content.add_header("From", EMAIL_USERNAME)
-    content.add_header("To", toAddress)
-    content.add_header("Subject", subject)
-    content.set_payload(msg, charset="utf-8")
-    smtp.send_message(content)
+    content = email.mime.text.MIMEText(msg, "html", "utf-8")
+    content["From"] = EMAIL_USERNAME
+    content["To"] = toAddress
+    content["Subject"] = subject
+    smtp.sendmail(EMAIL_USERNAME, toAddress, content.as_string())
 
 def emailShutdown():
     global smtp

@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, session, g, url_for
-from MakerWeek.authentication import user
+import json
+
+from flask import Blueprint, render_template, request, redirect, session, g
+
+from MakerWeek.authentication import user, forgotToken
 from MakerWeek.mail import mail
 
 authentication = Blueprint("authentication", __name__, url_prefix="")
@@ -25,7 +28,7 @@ def login():
     try:
         cookie = user.login(username, password)
     except user.LoginFailed:
-        return redirect("/login?failure=1")
+        return redirect("/login?failure")
     else:
         session['tokenKey'], session['tokenHash'] = cookie
     return redirect("/")
@@ -47,7 +50,7 @@ def register():
     password = request.form['password']
     email = request.form['email']
     user.createNewUser(username, password, email)
-    return redirect("/login?created=1")
+    return redirect("/login?created")
 
 
 @authentication.route("/signout")
@@ -67,8 +70,24 @@ def forgotPage():
 def resetPassword():
     email = request.form['email']
     try:
-        newPassword = user.resetPassword(email)
+        userID = user.getIDFromEmail(email)
     except user.UserNotFound:
-        return redirect("/forgot?failure=1")
-    mail.sendEmail(email, "Your new password", "Your new password is {}".format(newPassword))
-    return redirect("/login?reset=1")
+        return json.dumps({"result": "UserNotFound"})
+    token, time = forgotToken.generateForgotToken(userID)
+    mailContent = render_template("authentication/forgotEmail.html", token=token, expiration=time.isoformat())
+    mail.sendEmail(email, "MakerWeek reset your password", mailContent)
+    return json.dumps({"result": "success"})
+
+
+@authentication.route("/forgot2/<token>", methods=["GET"])
+def resetPassword2(token):
+    try:
+        userID = forgotToken.useForgotToken(token)
+    except (forgotToken.TokenExpired, forgotToken.TokenExpired):
+        return redirect("/login.html?invalidToken")
+    newPassword = user.resetPassword(userID)
+    mailContent = """
+        Your new temporary password is: {}. Please sign in using this temporary password and then change it immediately.
+    """.format(newPassword)
+    mail.sendEmail(user.getEmailFromID(userID), "New password", mailContent)
+    return redirect("/login?resetSuccess")

@@ -1,14 +1,14 @@
 import json
+import random
+
+from flask import request, Blueprint
 
 from MakerWeek.common import paramsParse
 from MakerWeek.database import getDB
+from MakerWeek.mail import mail
 from MakerWeek.objects.client import Client, ClientNotFound
 from MakerWeek.objects.event import Event
 from MakerWeek.realtime.realtime import broadcastEvent
-from MakerWeek.mail import mail
-from flask import request, Blueprint
-import json
-import random
 
 api = Blueprint('api', __name__, url_prefix="/api")
 

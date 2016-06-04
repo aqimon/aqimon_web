@@ -2,6 +2,7 @@ import base64
 import os
 
 import bcrypt
+
 from MakerWeek.database import getDB
 
 
@@ -44,12 +45,10 @@ def create(userID):
                        (tokenKey, tokenHash, userID))
     return (tokenKey, tokenValue)
 
-
 def _genRandomString(byteNum):
     rand = os.urandom(byteNum)
     randString = base64.b64encode(rand)
     return randString
-
 
 class LoginTokenNotFound(Exception):
     pass
