@@ -3,7 +3,8 @@ $(function(){
         "resetSuccess",
         "invalidToken",
         "created",
-        "failure"
+        "failure",
+        "needToLogin"
     ];
     param=location.search;
     for (i=0; i<alerts.length; i++){

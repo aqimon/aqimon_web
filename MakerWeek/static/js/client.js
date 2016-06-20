@@ -1,5 +1,5 @@
 var map, marker, socketio, currentPane, pointCount=0, obj={};
-
+var subscribeButton=$("#subscribe-button"), subscribeState="subscribe";
 var specificSettings={
     title: {
         temperature: "Temperature (degree Celsius)",
@@ -53,12 +53,12 @@ function initCharts(){
     obj.dustLevel=$("#dustLevel").highcharts(generateSettings("dustLevel"));
     obj.coLevel=$("#coLevel").highcharts(generateSettings("coLevel"));
 
-    obj.temperature.showLoading();
-    obj.humidity.showLoading();
-    obj.dustLevel.showLoading();
-    obj.coLevel.showLoading();
+    obj.temperature.highcharts().showLoading();
+    obj.humidity.highcharts().showLoading();
+    obj.dustLevel.highcharts().showLoading();
+    obj.coLevel.highcharts().showLoading();
 
-    obj.temperature.redraw();
+    obj.temperature.highcharts().redraw();
     currentPane=$("#temperature");
 }
 
@@ -77,15 +77,15 @@ function initChartsData(events){
         pointCount++;
     }
 
-    obj.temperature.series[0].setData(temperatureArr);
-    obj.humidity.series[0].setData(humidityArr);
-    obj.dustLevel.series[0].setData(dustLevelArr);
-    obj.coLevel.series[0].setData(coLevelArr);
+    obj.temperature.highcharts().series[0].setData(temperatureArr);
+    obj.humidity.highcharts().series[0].setData(humidityArr);
+    obj.dustLevel.highcharts().series[0].setData(dustLevelArr);
+    obj.coLevel.highcharts().series[0].setData(coLevelArr);
 
-    obj.temperature.hideLoading();
-    obj.humidity.hideLoading();
-    obj.dustLevel.hideLoading();
-    obj.coLevel.hideLoading();
+    obj.temperature.highcharts().hideLoading();
+    obj.humidity.highcharts().hideLoading();
+    obj.dustLevel.highcharts().hideLoading();
+    obj.coLevel.highcharts().hideLoading();
 }
 
 function addData(data){
@@ -96,10 +96,10 @@ function addData(data){
         shift=false;
         pointCount++;
     }
-    $("#temperature").highcharts().series[0].addPoint([time, data.temperature], redraw=false, shift=s);
-    $("#humidity").highcharts().series[0].addPoint([time, data.humidity], redraw=false, shift=s);
-    $("#dustLevel").highcharts().series[0].addPoint([time, data.dustLevel], redraw=false, shift=s);
-    $("#coLevel").highcharts().series[0].addPoint([time, data.coLevel], redraw=false, shift=s);
+    $("#temperature").highcharts().series[0].addPoint([time, data.temperature], redraw=false, shift=shift);
+    $("#humidity").highcharts().series[0].addPoint([time, data.humidity], redraw=false, shift=shift);
+    $("#dustLevel").highcharts().series[0].addPoint([time, data.dustLevel], redraw=false, shift=shift);
+    $("#coLevel").highcharts().series[0].addPoint([time, data.coLevel], redraw=false, shift=shift);
     if (typeof(currentPane) != "undefined") {
         currentPane.highcharts().redraw();
     }
@@ -131,4 +131,35 @@ $(function(){
         initInfo(data.latitude, data.longitude, data.address);
         initChartsData(data.recentEvents);
     })
+
+    $.getJSON("/api/notification/status", data={"clientID": clientID}, success=function(data){
+        console.log("x");
+        if (data.result=="yes"){
+            subscribeState="unsubscribe";
+            subscribeButton.html("Unsubscribe");
+        } else {
+            subscribeState="subscribe";
+            subscribeButton.html("Subscribe");
+        };
+        subscribeButton.prop("disabled", false)
+    })
+
+    subscribeButton.click(function(){
+        subscribeButton.prop("disabled", true);
+        subscribeButton.html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
+        if (subscribeState=="subscribe"){
+            $.getJSON("/api/notification/subscribe", data={"clientID": clientID}, function(data){
+                subscribeButton.prop("disabled", false);
+                subscribeButton.html("Unsubscribe");
+                subscribeState="unsubscribe";
+            })
+        } else {
+            $.getJSON("/api/notification/unsubscribe", {"clientID": clientID}, function(data){
+                subscribeButton.prop("disabled", false);
+                subscribeButton.html("Subscribe");
+                subscribeState="subscribe";
+            })
+        }
+    })
+
 })

@@ -1,10 +1,10 @@
 {% set navLeft=[
-    ("index", "Home", "/", "home"),
-    ("map", "Global map", "/map", "globe"),
+("index", "Home", "/", "home"),
+("map", "Global map", "/map", "globe"),
 ] %}
 {% set navRight=[
-    ("login", "Login", "/login", "log-in"),
-    ("register", "Sign up", "/register", "user"),
+("login", "Login", "/login", "log-in"),
+("register", "Sign up", "/register", "user"),
 ] %}
 <!DOCTYPE html>
 <html>
@@ -17,47 +17,47 @@
     {% block css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">MakerWeek</a>
-            </div>
-            <ul class="nav navbar-nav">
-                {% for navItem in navLeft %}
-                <li class="{% if navItem[0]==currPage %}active{% endif %}">
-                    <a href="{{navItem[2]}}">
-                        <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
-                        {{navItem[1]}}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if g.user is not none %}
-                <li class='{% if "myaccount"==currPage %}active{% endif %}'>
-                    <a href="/myaccount">
-                        <span class="glyphicon glyphicon-user"></span> {{g.user.username}}
-                    </a>
-                </li>
-                <li>
-                    <a href="/signout">
-                        <span class="glyphicon glyphicon-log-out"></span> Sign out
-                    </a>
-                    </li>
-                {% else %}
-                    {% for navItem in navRight %}
-                    <li class="{% if navItem[0]==currPage %}active{% endif %}">
-                        <a href="{{navItem[2]}}">
-                            <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
-                            {{navItem[1]}}
-                        </a>
-                    </li>
-                    {% endfor %}
-                {% endif %}
-            </ul>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">MakerWeek</a>
         </div>
-    </nav>
-    {% block content %}{% endblock %}
-    {% block js %}{% endblock %}
+        <ul class="nav navbar-nav">
+            {% for navItem in navLeft %}
+            <li class="{% if navItem[0]==currPage %}active{% endif %}">
+                <a href="{{navItem[2]}}">
+                    <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
+                    {{navItem[1]}}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if g.user is not none %}
+            <li class='{% if "myaccount"==currPage %}active{% endif %}'>
+                <a href="/myaccount">
+                    <span class="glyphicon glyphicon-user"></span> {{g.user.username}}
+                </a>
+            </li>
+            <li>
+                <a href="/signout">
+                    <span class="glyphicon glyphicon-log-out"></span> Sign out
+                </a>
+            </li>
+            {% else %}
+            {% for navItem in navRight %}
+            <li class="{% if navItem[0]==currPage %}active{% endif %}">
+                <a href="{{navItem[2]}}">
+                    <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
+                    {{navItem[1]}}
+                </a>
+            </li>
+            {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+{% block content %}{% endblock %}
+{% block js %}{% endblock %}
 </body>
 </html>

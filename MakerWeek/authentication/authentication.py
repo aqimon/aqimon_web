@@ -1,28 +1,25 @@
 import json
 
-from flask import Blueprint, render_template, request, redirect, session, g
-
+from MakerWeek.async import async
 from MakerWeek.authentication import user, forgotToken
-from MakerWeek.mail import mail
+from flask import Blueprint, render_template, request, redirect, session, g
 
 authentication = Blueprint("authentication", __name__, url_prefix="")
 
 
+@authentication.before_request
 def isLoggedIn():
-    return getattr(g, "user", None) is not None
+    if getattr(g, "user", None) is not None and request.path != "/signout":
+        return redirect("/")
 
 
 @authentication.route("/login", methods=["GET"])
 def loginPage():
-    if isLoggedIn():
-        return redirect("/")
     return render_template("authentication/login.html")
 
 
 @authentication.route("/login", methods=["POST"])
 def login():
-    if isLoggedIn():
-        return redirect("/")
     username = request.form['username']
     password = request.form['password']
     try:
@@ -36,15 +33,11 @@ def login():
 
 @authentication.route("/register", methods=["GET"])
 def registerPage():
-    if isLoggedIn():
-        return redirect("/")
     return render_template("authentication/register.html")
 
 
 @authentication.route("/register", methods=["POST"])
 def register():
-    if isLoggedIn():
-        return redirect("/")
     print(request.form)
     username = request.form['username']
     password = request.form['password']
@@ -61,8 +54,6 @@ def signOut():
 
 @authentication.route("/forgot", methods=["GET"])
 def forgotPage():
-    if isLoggedIn():
-        return redirect("/")
     return render_template("authentication/forgot.html")
 
 
@@ -75,7 +66,7 @@ def resetPassword():
         return json.dumps({"result": "UserNotFound"})
     token, time = forgotToken.generateForgotToken(userID)
     mailContent = render_template("authentication/forgotEmail.html", token=token, expiration=time.isoformat())
-    mail.sendEmail(email, "MakerWeek reset your password", mailContent)
+    async.sendMail(email, "MakerWeek reset your password", mailContent)
     return json.dumps({"result": "success"})
 
 
@@ -89,5 +80,5 @@ def resetPassword2(token):
     mailContent = """
         Your new temporary password is: {}. Please sign in using this temporary password and then change it immediately.
     """.format(newPassword)
-    mail.sendEmail(user.getEmailFromID(userID), "New password", mailContent)
+    async.sendMail(user.getEmailFromID(userID), "New password", mailContent)
     return redirect("/login?resetSuccess")

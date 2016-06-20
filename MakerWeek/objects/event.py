@@ -2,8 +2,8 @@ import datetime
 
 from MakerWeek.database import getDB
 
-class Event():
 
+class Event:
     @staticmethod
     def __getCurrentTimestamp():
         now = datetime.datetime.now(datetime.timezone.utc)
@@ -12,7 +12,7 @@ class Event():
 
     @staticmethod
     def createTable():
-        db=getDB()
+        db = getDB()
         with db as cursor:
             __tabledefinition__ = """
                     CREATE TABLE event(
@@ -68,7 +68,6 @@ class Event():
                  self.dustLevel,
                  self.coLevel))
             self.eventID = cursor.lastrowid
-
 
     @staticmethod
     def get_event_via_id(db, eventID):

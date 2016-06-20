@@ -36,7 +36,8 @@ def handleIncoming(data):
         return {"msg": "no such action"}
 
 
-def broadcastEvent(clientID, temperature, humidity, dustLevel, coLevel, time, longitude, latitude, address, **kwargs):
+def broadcastEvent(clientID, temperature, humidity, dustLevel, coLevel, time, longitude, latitude, address, *args,
+                   **kwargs):
     data = {"clientID": clientID,
             "temperature": temperature,
             "humidity": humidity,

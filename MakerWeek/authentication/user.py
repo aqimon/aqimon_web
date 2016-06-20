@@ -2,7 +2,6 @@ import random
 import string
 
 import bcrypt
-
 from MakerWeek.authentication import loginToken
 from MakerWeek.database import getDB
 
@@ -35,7 +34,7 @@ def _getHashesPassword(username):
         row = cursor.fetchone()
         if row is None:
             raise UserNotFound
-        return (row['id'], row['password'])
+        return row['id'], row['password']
 
 
 def login(username, password):

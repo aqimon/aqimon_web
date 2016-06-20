@@ -1,14 +1,19 @@
-from MakerWeek.database import getDB
 import datetime
+import json
 
-class Client():
-    def __init__(self, clientID, longitude, latitude, address, lastEvent=None):
+from MakerWeek.database import getDB
+
+
+class Client:
+    def __init__(self, clientID, longitude, latitude, address, owner, lastEvent=None, subscriberList="[]"):
         self.clientID = clientID
         self.longitude = longitude
         self.latitude = latitude
         self.address = address
         self.lastEvent = lastEvent
-        self.recentEvents=None
+        self.subscriberList = json.loads(subscriberList)
+        self.owner = owner
+        self.recentEvents = None
 
     def getRecent(self):
         timedelta = datetime.timedelta(days=1)
@@ -21,10 +26,9 @@ class Client():
                 WHERE clientID=? AND time>?
                 ORDER BY time ASC
             """, (self.clientID, timestamp))
-            self.recentEvents=[]
+            self.recentEvents = []
             for row in cursor.fetchall():
                 self.recentEvents.append(dict(row))
-
 
     def toDict(self):
         return {
@@ -35,23 +39,26 @@ class Client():
         }
 
     def dbWrite(self):
-        db=getDB()
+        db = getDB()
         with db as cursor:
-            cursor.execute("INSERT INTO client(clientID, longitude, latitude, address) VALUES (?, ?, ?, ?)",
+            cursor.execute("INSERT INTO client(clientID, longitude, latitude, address, owner) VALUES (?, ?, ?, ?, ?)",
                            (self.clientID,
                             self.latitude,
                             self.longitude,
-                            self.address))
+                            self.address,
+                            self.owner))
 
     def dbUpdate(self):
-        db=getDB()
+        db = getDB()
         with db as cursor:
-            cursor.execute("UPDATE client SET longitude=?, latitude=?, address=?, lastEvent=? WHERE clientID=?",
-                           (self.longitude,
-                            self.latitude,
-                            self.address,
-                            self.lastEvent,
-                            self.clientID))
+            cursor.execute(
+                "UPDATE client SET longitude=?, latitude=?, address=?, lastEvent=?, subscriberList=? WHERE clientID=?",
+                (self.longitude,
+                 self.latitude,
+                 self.address,
+                 self.lastEvent,
+                 json.dumps(self.subscriberList),
+                 self.clientID))
 
     @staticmethod
     def getID(clientID):
@@ -72,7 +79,9 @@ class Client():
                 latitude REAL NOT NULL,
                 longitude REAL NOT NULL,
                 address VARCHAR NOT NULL,
-                lastEvent INTEGER
+                lastEvent INTEGER,
+                owner INTEGER REFERENCES user(id),
+                subscriberList VARCHAR DEFAULT '[]'
             )
         """
         db = getDB()
@@ -81,6 +90,16 @@ class Client():
             cursor.execute("DROP TABLE IF EXISTS client")
             cursor.execute(__tabledefinition__)
 
+    def subscribe(self, userID):
+        if userID not in self.subscriberList:
+            self.subscriberList.append(userID)
+
+    def unsubscribe(self, userID):
+        if userID in self.subscriberList:
+            self.subscriberList.remove(userID)
+
+    def isSubscribed(self, userID):
+        return userID in self.subscriberList
 
 class ClientNotFound(Exception):
     pass

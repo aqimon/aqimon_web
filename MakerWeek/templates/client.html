@@ -2,57 +2,72 @@
 {% set currPage="client" %}
 {% block title %} MakerWeek client {{ clientID }} {% endblock %}
 {% block css %}
-    <link rel="stylesheet" href="/static/css/client.css">
+<link rel="stylesheet" href="/static/css/client.css">
 {% endblock %}
 {% block content %}
-    <div class="container-fluid">
-        <div class="row" id="row">
-            <div class="col-md-6 col-xs-6" id="div-map">
-                <div id="map"></div>
-            </div>
-            <div class="col-md-6 col-xs-6">
-                <h1>Client {{clientID}}</h1>
-                <hr />
-                <ul>
-                    <li>Latitude: <span id="latitude"></span></li>
-                    <li>Longitude: <span id="longitude"></span></li>
-                    <li>Address: <span id="address"></span></li>
-                </ul>
-            </div>
+<div class="container-fluid">
+    <div class="row" id="row">
+        <div class="col-md-6 col-xs-6" id="div-map">
+            <div id="map"></div>
         </div>
-        <div id="charts">
-            <ul class="nav nav-tabs" role="tablist">
-               <li class="active">
-                   <a href="#temperature" aria-controls="temperature" data-toggle="tab" role="tab" id="temperature-tab">Temperature</a>
-               </li>
-                <li>
-                   <a href="#humidity" aria-controls="humidity" data-toggle="tab" role="tab" id="humidity-tab">Humidity</a>
-               </li>
-                <li>
-                   <a href="#dustLevel" aria-controls="dustLevel" data-toggle="tab" role="tab" id="dustLevel-tab">Dust concentration</a>
-               </li>
-                <li>
-                   <a href="#coLevel" aria-controls="coLevel" data-toggle="tab" role="tab" id="coLevel-tab">CO concentration</a>
-               </li>
+        <div class="col-md-6 col-xs-6">
+            <h1>Client {{clientID}}</h1>
+            <hr/>
+            <ul>
+                <li>Latitude: <span id="latitude"></span></li>
+                <li>Longitude: <span id="longitude"></span></li>
+                <li>Address: <span id="address"></span></li>
             </ul>
-            <div class="tab-content">
-                <div class="tab-pane active fade in" id="temperature"></div>
-                <div class="tab-pane fade" id="humidity"></div>
-                <div class="tab-pane fade" id="dustLevel"></div>
-                <div class="tab-pane fade" id="coLevel"></div>
+            {% if g.user is not none %}
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <button class="btn btn-block btn-primary" id="subscribe-button" disabled="true">
+                        <span class="glyphicon glyphicon-refresh spinning">Loading</span>
+                    </button>
+                </div>
             </div>
+            {% endif %}
         </div>
     </div>
+    <div id="charts">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active">
+                <a href="#temperature" aria-controls="temperature" data-toggle="tab" role="tab" id="temperature-tab">Temperature</a>
+            </li>
+            <li>
+                <a href="#humidity" aria-controls="humidity" data-toggle="tab" role="tab" id="humidity-tab">Humidity</a>
+            </li>
+            <li>
+                <a href="#dustLevel" aria-controls="dustLevel" data-toggle="tab" role="tab" id="dustLevel-tab">Dust
+                    concentration</a>
+            </li>
+            <li>
+                <a href="#coLevel" aria-controls="coLevel" data-toggle="tab" role="tab" id="coLevel-tab">CO
+                    concentration</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active fade in" id="temperature"></div>
+            <div class="tab-pane fade" id="humidity"></div>
+            <div class="tab-pane fade" id="dustLevel"></div>
+            <div class="tab-pane fade" id="coLevel"></div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block js %}
-    <script src="/static/js/jquery.js"></script>
-    <script src="/static/js/sprintf.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
-    <script src="/static/js/socketio.js"></script>
-    <script>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/sprintf.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
+<script src="/static/js/socketio.js"></script>
+<script>
         clientID="{{clientID}}";
-    </script>
-    <script src="/static/js/highcharts.js"></script>
-    <script src="/static/js/bootstrap.js"></script>
-    <script src="/static/js/client.js"></script>
+
+
+
+
+</script>
+<script src="/static/js/highcharts.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/client.js"></script>
 {% endblock %}

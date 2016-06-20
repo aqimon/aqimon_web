@@ -31,7 +31,7 @@ def generateForgotToken(userID):
     timestamp = time.timestamp() * 1000
     with getDB() as cursor:
         cursor.execute("INSERT INTO forgotToken VALUES (?, ?, ?)", (forgotToken, userID, timestamp))
-    return (forgotToken, time + datetime.timedelta(days=1))
+    return forgotToken, time + datetime.timedelta(days=1)
 
 
 def useForgotToken(forgotToken):

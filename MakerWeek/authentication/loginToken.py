@@ -2,7 +2,6 @@ import base64
 import os
 
 import bcrypt
-
 from MakerWeek.database import getDB
 
 
@@ -19,7 +18,7 @@ def createTable():
         cursor.execute(__tabledefinition__)
 
 
-def __init__(self):
+def __init__():
     pass
 
 
@@ -43,12 +42,14 @@ def create(userID):
     with getDB() as cursor:
         cursor.execute("INSERT INTO loginToken VALUES (?, ?, ?)",
                        (tokenKey, tokenHash, userID))
-    return (tokenKey, tokenValue)
+    return tokenKey, tokenValue
+
 
 def _genRandomString(byteNum):
     rand = os.urandom(byteNum)
     randString = base64.b64encode(rand)
     return randString
+
 
 class LoginTokenNotFound(Exception):
     pass
