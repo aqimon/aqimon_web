@@ -34,15 +34,30 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if g.user is not none %}
-            <li class='{% if "myaccount"==currPage %}active{% endif %}'>
-                <a href="/myaccount">
+            <li class='dropdown'>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                   aria-expanded="false">
                     <span class="glyphicon glyphicon-user"></span> {{g.user.username}}
+                    <span class="caret"></span>
                 </a>
-            </li>
-            <li>
-                <a href="/signout">
-                    <span class="glyphicon glyphicon-log-out"></span> Sign out
-                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="/myaccount">
+                            <span class="glyphicon glyphicon-dashboard"></span> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/myaccount/settings">
+                            <span class="glyphicon glyphicon-cog"></span> Account settings
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="/signout">
+                            <span class="glyphicon glyphicon-log-out"></span> Sign out
+                        </a>
+                    </li>
+                </ul>
             </li>
             {% else %}
             {% for navItem in navRight %}
@@ -58,6 +73,10 @@
     </div>
 </nav>
 {% block content %}{% endblock %}
+{% if g.user is not none %}
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+{% endif %}
 {% block js %}{% endblock %}
 </body>
 </html>
