@@ -3,7 +3,7 @@
 ("map", "Global map", "/map", "globe"),
 ] %}
 {% set navRight=[
-("login", "Login", "/login", "log-in"),
+("login", "Login", "/login?from=" + request.path, "log-in"),
 ("register", "Sign up", "/register", "user"),
 ] %}
 <!DOCTYPE html>

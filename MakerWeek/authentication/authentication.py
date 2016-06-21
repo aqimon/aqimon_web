@@ -28,7 +28,7 @@ def login():
         return redirect("/login?failure")
     else:
         session['tokenKey'], session['tokenHash'] = cookie
-    return redirect("/")
+    return redirect(request.form['from'])
 
 
 @authentication.route("/register", methods=["GET"])

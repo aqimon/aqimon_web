@@ -38,6 +38,7 @@
                 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
                 <input type="password" name="password" placeholder="Your password" class="form-control">
             </div>
+            <input type="hidden" name="from" value="{{request.args['from']}}">
             <button type="submit" class="btn btn-block btn-primary btn-lg">Log in</button>
             <a href="/forgot" type="button" class="btn btn-block btn-lg btn-info">
                 I forgot my password
