@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %} MakerWeek user {{ g.user.username }} settings {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/forms.css"/>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>Account settings</h1>
+    </div>
+    <div class="alert alert-success alert-dismissable" role="alert" id="success-alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <strong>Settings saved</strong>
+    </div>
+    <div class="alert alert-danger alert-dismissable" role="alert" id="error-alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <strong>Oh nose!</strong> Whatever errors happened
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>
+                        General settings
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <form action="#" class="form-horizontal" onclick="return false;">
+                        <div class="form-group">
+                            <label for="username" class="control-label col-sm-2">Username</label>
+                            <div class="col-sm-10">
+                                <input id="username" type="text" class="form-control" value="{{ g.user.username }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="control-label col-sm-2">Email</label>
+                            <div class="col-sm-10">
+                                <input id="email" type="text" class="form-control" value="{{ g.user.email }}">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-block btn-primary btn-lg" id="general-submit"
+                                disabled="true">Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>
+                        Change your password
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <form action="#" class="form-horizontal" onclick="return false;">
+                        <div class="form-group">
+                            <label for="password-old" class="control-label col-sm-4">Old password</label>
+                            <div class="col-sm-8">
+                                <input id="password-old" type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password-new" class="control-label col-sm-4">New password</label>
+                            <div class="col-sm-8">
+                                <input id="password-new" type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password-new" class="control-label col-sm-4">New password (repeat)</label>
+                            <div class="col-sm-8">
+                                <input id="password-new-repeat" type="password" class="form-control">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-block btn-primary btn-lg" id="password-submit"
+                                disabled="true">Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="/static/js/user_settings.js"></script>
+{% endblock %}

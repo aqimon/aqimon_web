@@ -1,3 +1,4 @@
+from MakerWeek.ajax import ajax
 from MakerWeek.api import api
 from MakerWeek.authentication import authentication, loginToken, user
 from MakerWeek.realtime import realtimeServer
@@ -8,6 +9,7 @@ app = Flask(__name__)
 app.register_blueprint(api)
 app.register_blueprint(authentication)
 app.register_blueprint(userBlueprint)
+app.register_blueprint(ajax)
 realtimeServer.init_app(app)
 app.secret_key = "xxx"
 

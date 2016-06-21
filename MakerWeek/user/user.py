@@ -11,9 +11,9 @@ def isLoggedIn():
 
 @user.route("/myaccount")
 def myAccount():
-    return render_template("user/myaccount.html")
+    return render_template("user/dashboard.html")
 
 
 @user.route("/myaccount/settings")
 def userSettings():
-    pass
+    return render_template("/user/settings.html")

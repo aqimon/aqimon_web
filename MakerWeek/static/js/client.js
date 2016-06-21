@@ -106,6 +106,7 @@ function addData(data){
 }
 
 $(function(){
+    var lock=false;
     socketio=io("/");
 
     socketio.on("connect", function(){
@@ -115,6 +116,7 @@ $(function(){
     })
 
     socketio.on("json", function(data){
+        while (lock);
         addData(data);
     })
 
@@ -129,7 +131,9 @@ $(function(){
     $.getJSON(sprintf("/api/get/client/%s", clientID), function(data){
         initMap(data.latitude, data.longitude);
         initInfo(data.latitude, data.longitude, data.address);
+        lock=true;
         initChartsData(data.recentEvents);
+        lock=false;
     })
 
     $.getJSON("/api/notification/status", data={"clientID": clientID}, success=function(data){
