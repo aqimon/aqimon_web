@@ -111,7 +111,7 @@ $(function(){
 
     socketio.on("connect", function(){
         console.log("connected to server");
-        room=sprintf("client_%s", clientID);
+        room="client_"+clientID.toString();
         socketio.emit("json", {"action": "joinRoom", "room": room});
     })
 
@@ -128,7 +128,7 @@ $(function(){
 
     initCharts();
 
-    $.getJSON(sprintf("/api/get/client/%s", clientID), function(data){
+    $.getJSON("/ajax/get/client", {"clientID": clientID}, function(data){
         initMap(data.latitude, data.longitude);
         initInfo(data.latitude, data.longitude, data.address);
         lock=true;
@@ -136,8 +136,7 @@ $(function(){
         lock=false;
     })
 
-    $.getJSON("/api/notification/status", data={"clientID": clientID}, success=function(data){
-        console.log("x");
+    $.getJSON("/ajax/notification/status", data={"clientID": clientID}, success=function(data){
         if (data.result=="yes"){
             subscribeState="unsubscribe";
             subscribeButton.html("Unsubscribe");
@@ -152,13 +151,13 @@ $(function(){
         subscribeButton.prop("disabled", true);
         subscribeButton.html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
         if (subscribeState=="subscribe"){
-            $.getJSON("/api/notification/subscribe", data={"clientID": clientID}, function(data){
+            $.getJSON("/ajax/notification/subscribe", data={"clientID": clientID}, function(data){
                 subscribeButton.prop("disabled", false);
                 subscribeButton.html("Unsubscribe");
                 subscribeState="unsubscribe";
             })
         } else {
-            $.getJSON("/api/notification/unsubscribe", {"clientID": clientID}, function(data){
+            $.getJSON("/ajax/notification/unsubscribe", {"clientID": clientID}, function(data){
                 subscribeButton.prop("disabled", false);
                 subscribeButton.html("Subscribe");
                 subscribeState="subscribe";

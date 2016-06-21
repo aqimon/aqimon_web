@@ -1,6 +1,7 @@
 from MakerWeek.ajax import ajax
 from MakerWeek.api import api
 from MakerWeek.authentication import authentication, loginToken, user
+from MakerWeek.objects.client import Client
 from MakerWeek.realtime import realtimeServer
 from MakerWeek.user.user import user as userBlueprint
 from flask import Flask, render_template, session, g
@@ -39,4 +40,4 @@ def map():
 
 @app.route("/client/<clientID>")
 def client(clientID):
-    return render_template("client.html", clientID=clientID)
+    return render_template("client.html", client=Client.getID(clientID))

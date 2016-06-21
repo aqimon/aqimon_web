@@ -1,9 +1,11 @@
 import json
 
 from MakerWeek.objects.client import Client, ClientNotFound
+from flask import request
 
 
-def getClientInfo(clientID):
+def getClientInfo():
+    clientID = request.args['clientID']
     try:
         client = Client.getID(clientID)
     except ClientNotFound:

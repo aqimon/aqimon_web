@@ -28,5 +28,5 @@ def changePassword():
     hashedNewPassword = bcrypt.hashpw(newPassword.encode("utf-8"), bcrypt.gensalt())
     with getDB() as cursor:
         cursor.execute("UPDATE user SET password=? WHERE id=?", (hashedNewPassword, g.user.id))
-        session.clear()
+    session.clear()
     return json.dumps({"result": "success"})

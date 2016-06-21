@@ -29,8 +29,8 @@ def generateEvent(uuid):
 def login(session):
     print("Logging in...")
     data = {
-        "username": "test_account",
-        "password": "test_account",
+        "username": "test_account_spam",
+        "password": "test_account_spam",
     }
     req = session.post("http://localhost:5000/login", data=data)
 

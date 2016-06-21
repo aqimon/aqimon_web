@@ -11,7 +11,7 @@
             <div id="map"></div>
         </div>
         <div class="col-md-6 col-xs-6">
-            <h1>Client {{clientID}}</h1>
+            <h1>Client {{client.clientID}}</h1>
             <hr/>
             <ul>
                 <li>Latitude: <span id="latitude"></span></li>
@@ -21,8 +21,12 @@
             {% if g.user is not none %}
             <div class="row">
                 <div class="col-md-6 col-xs-6">
-                    <button class="btn btn-block btn-primary" id="subscribe-button" disabled="true">
-                        <span class="glyphicon glyphicon-refresh spinning">Loading</span>
+                    <button class="btn btn-block btn-primary" id="subscribe-button">
+                        {% if g.user.id in client.subscriberList %}
+                        <span>Unsubscribe</span>
+                        {% else %}
+                        <span>Subscribe</span>
+                        {% endif %}
                     </button>
                 </div>
             </div>
@@ -57,11 +61,17 @@
 {% endblock %}
 {% block js %}
 <script src="/static/js/jquery.js"></script>
-<script src="/static/js/sprintf.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
 <script src="/static/js/socketio.js"></script>
 <script>
-        clientID="{{clientID}}";
+        clientID="{{client.clientID}}";
+        {% if g.user is not none %}
+            {% if g.user.id in client.subscriberList %}
+                subscribeState="unsubscribe";
+            {% else %}
+                subscribeState="subscribe";
+            {% endif %}
+        {% endif %}
 </script>
 <script src="/static/js/highcharts.js"></script>
 <script src="/static/js/bootstrap.js"></script>
