@@ -1,31 +1,6 @@
-import random
 import string
 
-import bcrypt
-from MakerWeek.authentication import loginToken
-from MakerWeek.database import getDB
-
-
-class User:
-    def __init__(self, userID):
-        with getDB() as cursor:
-            cursor.execute("SELECT * FROM user WHERE id=?", (userID,))
-            row = cursor.fetchone()
-            if row is None:
-                raise UserNotFound
-            self.id = row['id']
-            self.username = row['username']
-            self.email = row['email']
-
-
-def _createTable():
-    with getDB() as cursor:
-        cursor.execute("""CREATE TABLE user(
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            username VARCHAR NOT NULL UNIQUE,
-                            password VARCHAR NOT NULL,
-                            email VARCHAR NOT NULL UNIQUE
-                        )""")
+from MakerWeek.database.database import User
 
 
 def _getHashesPassword(username):
@@ -35,17 +10,6 @@ def _getHashesPassword(username):
         if row is None:
             raise UserNotFound
         return row['id'], row['password']
-
-
-def login(username, password):
-    try:
-        userID, hash = _getHashesPassword(username)
-    except UserNotFound:
-        raise LoginFailed
-    password = password.encode("utf-8")
-    if bcrypt.hashpw(password, hash) != hash:
-        raise LoginFailed
-    return loginToken.create(userID)
 
 
 def createNewUser(username, password, email):

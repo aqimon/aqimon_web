@@ -1,8 +1,7 @@
-import json
+from flask import Blueprint, render_template, request, redirect, session, g, json
 
-from MakerWeek.async import async
-from MakerWeek.authentication import user, forgotToken
-from flask import Blueprint, render_template, request, redirect, session, g
+from MakerWeek import async
+from MakerWeek.database.database import User, ForgotToken
 
 authentication = Blueprint("authentication", __name__, url_prefix="")
 
@@ -18,19 +17,6 @@ def loginPage():
     return render_template("authentication/login.html")
 
 
-@authentication.route("/login", methods=["POST"])
-def login():
-    username = request.form['username']
-    password = request.form['password']
-    try:
-        cookie = user.login(username, password)
-    except user.LoginFailed:
-        return redirect("/login?failure")
-    else:
-        session['tokenKey'], session['tokenHash'] = cookie
-    return redirect(request.form['from'])
-
-
 @authentication.route("/register", methods=["GET"])
 def registerPage():
     return render_template("authentication/register.html")
@@ -38,17 +24,27 @@ def registerPage():
 
 @authentication.route("/register", methods=["POST"])
 def register():
-    print(request.form)
     username = request.form['username']
     password = request.form['password']
     email = request.form['email']
-    user.createNewUser(username, password, email)
+    user = User.add(username, password, email)
     return redirect("/login?created")
+
+
+@authentication.route("/login", methods=["POST"])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    try:
+        session['tokenKey'], session['tokenValue'] = User.get(User.username == username).login(password)
+    except Exception:
+        return redirect("/login?failure")
+    return redirect(request.form['from'])
 
 
 @authentication.route("/signout")
 def signOut():
-    session.clear()
+    User.logout()
     return redirect("/")
 
 
@@ -60,25 +56,24 @@ def forgotPage():
 @authentication.route("/forgot", methods=["POST"])
 def resetPassword():
     email = request.form['email']
-    try:
-        userID = user.getIDFromEmail(email)
-    except user.UserNotFound:
-        return json.dumps({"result": "UserNotFound"})
+    # TODO: Exception
+    user = User.get(User.email == email)
     token, time = forgotToken.generateForgotToken(userID)
     mailContent = render_template("authentication/forgotEmail.html", token=token, expiration=time.isoformat())
     async.sendMail(email, "MakerWeek reset your password", mailContent)
-    return json.dumps({"result": "success"})
+    return json.jsonify(result="success")
 
 
-@authentication.route("/forgot2/<token>", methods=["GET"])
+@authentication.route("/forgot_with_token/<token>", methods=["GET"])
 def resetPassword2(token):
-    try:
-        userID = forgotToken.useForgotToken(token)
-    except (forgotToken.TokenExpired, forgotToken.TokenExpired):
-        return redirect("/login.html?invalidToken")
-    newPassword = user.resetPassword(userID)
+    # TODO: exception when token is not valid
+    token_obj = ForgotToken.get(ForgotToken.token == token)
+    # TODO: Render mail from HTML
     mailContent = """
         Your new temporary password is: {}. Please sign in using this temporary password and then change it immediately.
     """.format(newPassword)
     async.sendMail(user.getEmailFromID(userID), "New password", mailContent)
     return redirect("/login?resetSuccess")
+
+
+@authentication.route("/forgot_after_token")

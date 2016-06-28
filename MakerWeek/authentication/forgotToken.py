@@ -5,20 +5,6 @@ import os
 from MakerWeek.database import getDB
 
 
-def createTable():
-    __tabledefinition__ = """
-        CREATE TABLE forgotToken(
-            token VARCHAR NOT NULL PRIMARY KEY,
-            userID INTEGER NOT NULL REFERENCES user(id),
-            timestamp INTEGER NOT NULL
-        )
-    """
-
-    with getDB() as cursor:
-        cursor.execute("DROP TABLE IF EXISTS forgotToken")
-        cursor.execute(__tabledefinition__)
-
-
 def _genRandomString(byteNum):
     rand = os.urandom(byteNum)
     randString = base64.urlsafe_b64encode(rand)

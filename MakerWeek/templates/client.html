@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set currPage="client" %}
-{% block title %} MakerWeek client {{ clientID }} {% endblock %}
+{% block title %} MakerWeek client {{ client.id }} {% endblock %}
 {% block css %}
 <link rel="stylesheet" href="/static/css/client.css">
 {% endblock %}
@@ -11,7 +11,7 @@
             <div id="map"></div>
         </div>
         <div class="col-md-6 col-xs-6">
-            <h1>Client {{client.clientID}}</h1>
+            <h1>Client {{client.id}}</h1>
             <hr/>
             <ul>
                 <li>Latitude: <span id="latitude"></span></li>
@@ -64,7 +64,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
 <script src="/static/js/socketio.js"></script>
 <script>
-        clientID="{{client.clientID}}";
+        clientID="{{client.id}}";
         {% if g.user is not none %}
             {% if g.user.id in client.subscriberList %}
                 subscribeState="unsubscribe";
