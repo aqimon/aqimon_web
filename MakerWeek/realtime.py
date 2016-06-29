@@ -1,6 +1,8 @@
 import flask_socketio as socketio
 from flask import request
-from . import room, event
+
+from MakerWeek.common import timeSubtract
+from MakerWeek.database.database import database, Event, Client, LastEvent
 
 realtimeServer = socketio.SocketIO()
 
@@ -19,6 +21,18 @@ def sayGoodbye():
                   room=request.sid)
 
 
+def getRecent():
+    database.connect()
+    last_events = (LastEvent
+                   .select(LastEvent, Event, Client)
+                   .join(Event)
+                   .join(Client)
+                   .where(Event.timestamp >= timeSubtract(minutes=15)))
+    response = [last_event.event_id.toFrontendObject(include_geo=True) for last_event in last_events]
+    database.close()
+    return response
+
+
 @realtimeServer.on("json")
 def handleIncoming(data):
     # {"action": <str>, "room": <str>}
@@ -27,26 +41,16 @@ def handleIncoming(data):
     # if action=recent then get recent client data
     action = data['action']
     if action == "joinRoom":
-        room.joinRoom(data['room'])
+        socketio.join_room(data['room'])
     elif action == "leaveRoom":
-        room.leaveRoom(data['room'])
+        socketio.leave_room(data['room'])
     elif action == "getRecent":
-        return event.getRecent()
+        return getRecent()
     else:
         return {"msg": "no such action"}
 
 
-def broadcastEvent(clientID, temperature, humidity, dustLevel, coLevel, time, longitude, latitude, address, *args,
-                   **kwargs):
-    data = {"clientID": clientID,
-            "temperature": temperature,
-            "humidity": humidity,
-            "dustLevel": dustLevel,
-            "coLevel": coLevel,
-            "time": time,
-            "longitude": longitude,
-            "latitude": latitude,
-            "address": address}
-    realtimeServer.send(data, json=True, room="index")
-    clientRoom = "client_{}".format(clientID)
-    realtimeServer.send(data, json=True, room=clientRoom)
+def broadcastEvent(obj):
+    realtimeServer.send(obj, json=True, room="index")
+    clientRoom = "client_{}".format(obj['clientID'])
+    realtimeServer.send(obj, json=True, room=clientRoom)
