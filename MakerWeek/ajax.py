@@ -1,4 +1,4 @@
-from flask import Blueprint, g, request, json, redirect, Response
+from flask import Blueprint, g, request, json, redirect
 from peewee import DoesNotExist
 
 from MakerWeek.common import timeSubtract, checkPassword, hashPassword, paramsParse
@@ -15,6 +15,7 @@ def subscribe():
     userID = g.user.id
     client = Client.get(Client.id == clientID)
     client.subscriber_list.append(userID)
+    client.save()
     return json.jsonify(result="success")
 
 
@@ -26,6 +27,7 @@ def unsubscribe():
     userID = g.user.id
     client = Client.get(Client.id == clientID)
     client.subscriber_list.remove(userID)
+    client.save()
     return json.jsonify(result="success")
 
 
@@ -33,19 +35,22 @@ def unsubscribe():
 def getClientInfo():
     clientID = request.args['clientID']
     try:
-        client = Client.get(Client.client_id == clientID)
+        client = Client.get(Client.id == clientID)
     except DoesNotExist:
         return json.jsonify({"msg": "no such client"}), 404
-    events = Event.select().where((Event.client_id == client.id) & (Event.timestamp >= timeSubtract(days=1)))
+    events = (Event
+              .select(Event, Client)
+              .join(Client)
+              .where((Event.client_id == client.id) & (Event.timestamp >= timeSubtract(days=1))))
     response = {
-        "id": client.id,
+        "clientID": client.id,
         "latitude": client.latitude,
         "longitude": client.longitude,
         "address": client.address,
-        "owner": client.owner,
-        "events": [event.toFrontendObject() for event in events]
+        "owner": client.owner.id,
+        "events": [event.toFrontendObject(include_id=False) for event in events]
     }
-    return Response(json.dumps(response), mimetype="application/json")
+    return json.jsonify(**response)
 
 
 @ajax.route("/user_settings/save_general")
@@ -56,6 +61,7 @@ def saveGeneralSettings():
     newEmail = request.args['email']
     g.user.username = newUsername
     g.user.email = newEmail
+    g.user.save()
     return json.jsonify(result="success")
 
 
@@ -68,6 +74,7 @@ def changePassword():
         return json.dumps({"result": "incorrect old password"})
     newPassword = request.args['new_password']
     g.user.password = hashPassword(newPassword)
+    g.user.save()
     g.user.logout()
     return json.jsonify(result="success")
 
@@ -83,15 +90,15 @@ def addClient():
     #   TODO: Returns API key?
 
     __paramsList__ = {
-        "clientID": "str",
+        "id": "str",
         "latitude": "float",
         "longitude": "float",
         "address": "str",
     }
+
     if g.user is None:
-        return "{result: 'need to login first'}"
+        return json.jsonify(result='need to login first')
     params = paramsParse(__paramsList__, request.args)
     params['owner'] = g.user.id
-    client = Client(**params)
-    client.dbWrite()
+    client = Client.create(**params)
     return json.dumps({"result": "success"})

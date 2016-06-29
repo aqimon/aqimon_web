@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, session, g, json
+from peewee import DoesNotExist
 
 from MakerWeek import async
-from MakerWeek.database.database import User, ForgotToken
+from MakerWeek.common import hashPassword, timeSubtract, genRandomString
+from MakerWeek.database.database import User, ForgotToken, database
 
 authentication = Blueprint("authentication", __name__, url_prefix="")
 
@@ -27,7 +29,7 @@ def register():
     username = request.form['username']
     password = request.form['password']
     email = request.form['email']
-    user = User.add(username, password, email)
+    User.add(username, password, email)
     return redirect("/login?created")
 
 
@@ -35,10 +37,10 @@ def register():
 def login():
     username = request.form['username']
     password = request.form['password']
-    try:
-        session['tokenKey'], session['tokenValue'] = User.get(User.username == username).login(password)
-    except Exception:
-        return redirect("/login?failure")
+    # try:
+    session['tokenKey'], session['tokenValue'] = User.get(User.username == username).login(password)
+    # except Exception:
+    # return redirect("/login?failure")
     return redirect(request.form['from'])
 
 
@@ -58,22 +60,28 @@ def resetPassword():
     email = request.form['email']
     # TODO: Exception
     user = User.get(User.email == email)
-    token, time = forgotToken.generateForgotToken(userID)
-    mailContent = render_template("authentication/forgotEmail.html", token=token, expiration=time.isoformat())
+    ft_obj = ForgotToken.new(user_id=user.id)
+    mailContent = render_template("authentication/forgotEmail.html",
+                                  token=ft_obj.token,
+                                  expiration=ft_obj.timestamp.isoformat())
     async.sendMail(email, "MakerWeek reset your password", mailContent)
     return json.jsonify(result="success")
 
 
-@authentication.route("/forgot_with_token/<token>", methods=["GET"])
+@authentication.route("/forgot2/<token>", methods=["GET"])
 def resetPassword2(token):
     # TODO: exception when token is not valid
-    token_obj = ForgotToken.get(ForgotToken.token == token)
-    # TODO: Render mail from HTML
-    mailContent = """
-        Your new temporary password is: {}. Please sign in using this temporary password and then change it immediately.
-    """.format(newPassword)
-    async.sendMail(user.getEmailFromID(userID), "New password", mailContent)
+    with database.atomic() as tx:
+        try:
+            token_obj = ForgotToken.get((ForgotToken.token == token) & (ForgotToken.timestamp >= timeSubtract(days=1)))
+        except DoesNotExist:
+            return redirect("/login?invalidToken")
+        user = token_obj.user_id
+        newPassword = genRandomString(20)
+        user.password = hashPassword(newPassword)
+        user.save()
+        token_obj.delete_instance()
+    mailContent = render_template("authentication/forgot2Email.html",
+                                  newPassword=newPassword)
+    async.sendMail(user.email, "New password", mailContent)
     return redirect("/login?resetSuccess")
-
-
-@authentication.route("/forgot_after_token")

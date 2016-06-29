@@ -1,9 +1,10 @@
 from flask import Flask, render_template, session, g
+from peewee import DoesNotExist, ProgrammingError
 
 from MakerWeek.ajax import ajax
 from MakerWeek.api import api
-from MakerWeek.authentication import authentication, loginToken
-from MakerWeek.database.database import database, User, Client
+from MakerWeek.authentication import authentication
+from MakerWeek.database.database import database, User, Client, LoginToken
 from MakerWeek.realtime import realtimeServer
 from MakerWeek.user import user as userBlueprint
 
@@ -18,25 +19,31 @@ app.secret_key = "xxx"
 
 @app.before_request
 def checkLogin():
-    if ('tokenKey' not in session) or ('tokenHash' not in session):
+    if ('tokenKey' not in session) or ('tokenValue' not in session):
         g.user = None
     else:
         try:
-            userID = LoginToken.get(session['tokenKey'], session['tokenHash'])
-        except (loginToken.LoginTokenNotCorrect, loginToken.LoginTokenNotCorrect):
+            userID = LoginToken.use(session['tokenKey'], session['tokenValue'])
+        except (DoesNotExist, ProgrammingError):
             g.user = None
-        else:
+            return
+        try:
             g.user = User.get(User.id == userID)
+        except DoesNotExist:
+            g.user = None
 
 
 @app.before_request
 def initDatabase():
+    g.hasdb = True
     database.connect()
 
 
 @app.teardown_appcontext
-def deinitDatabase():
-    database.close()
+def deinitDatabase(args):
+    if 'hasdb' in g:
+        database.close()
+        del g.hasdb
 
 
 @app.route("/")

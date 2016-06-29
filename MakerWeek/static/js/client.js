@@ -132,19 +132,8 @@ $(function(){
         initMap(data.latitude, data.longitude);
         initInfo(data.latitude, data.longitude, data.address);
         lock=true;
-        initChartsData(data.recentEvents);
+        initChartsData(data.events);
         lock=false;
-    })
-
-    $.getJSON("/ajax/notification/status", data={"clientID": clientID}, success=function(data){
-        if (data.result=="yes"){
-            subscribeState="unsubscribe";
-            subscribeButton.html("Unsubscribe");
-        } else {
-            subscribeState="subscribe";
-            subscribeButton.html("Subscribe");
-        };
-        subscribeButton.prop("disabled", false)
     })
 
     subscribeButton.click(function(){

@@ -19,7 +19,6 @@ function hideAlerts(){
 
 
 function handleResponse(data){
-    data=JSON.parse(data);
     if (data.result=="success"){
         $(".alert-success").show(400);
     } else {

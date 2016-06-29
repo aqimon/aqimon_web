@@ -1,12 +1,10 @@
-import base64
 import datetime
 import json
-import os
 
 from flask import session
 from peewee import *
 
-from MakerWeek.common import hashPassword, checkPassword
+from MakerWeek.common import hashPassword, checkPassword, genRandomString
 
 database = MySQLDatabase(host="localhost",
                          user="e3",
@@ -20,7 +18,7 @@ def utcTime():
 
 
 class JSONArrayField(Field):
-    db_field = "varchar"
+    db_field = "longtext"
 
     def db_value(self, value):
         return json.dumps(value)
@@ -44,12 +42,12 @@ class User(BaseModel):
         if not checkPassword(self.password, password):
             # TODO: exception
             raise Exception
-        return LoginToken.create(self.id)
+        return LoginToken.new(self.id)
 
     @staticmethod
     def add(username, password, email):
         password = hashPassword(password)
-        return User(username, password, email)
+        User.create(username=username, password=password, email=email)
 
     @staticmethod
     def logout():
@@ -59,7 +57,6 @@ class User(BaseModel):
 class Client(BaseModel):
     id = UUIDField(primary_key=True)
     address = TextField()
-    last_event = ForeignKeyField(rel_model=Event, to_field='id')
     latitude = FloatField()
     longitude = FloatField()
     owner = ForeignKeyField(rel_model=User, to_field='id')
@@ -75,20 +72,42 @@ class Event(BaseModel):
     temperature = FloatField()
     timestamp = DateTimeField(default=utcTime)
 
-    def toFrontendObject(self):
-        return {
-            "timestamp": self.timestamp.replace(tzinfo=datetime.timezone.utc).timestamp(),
+    def toFrontendObject(self, include_geo=False, include_id=True):
+        response = {
+            "timestamp": self.timestamp.replace(tzinfo=datetime.timezone.utc).timestamp() * 1000,
             "temperature": self.temperature,
             "humidity": self.humidity,
             "dustLevel": self.dustlevel,
             "coLevel": self.colevel
         }
+        if include_geo:
+            response.update({
+                'latitude': self.client_id.latitude,
+                'longitude': self.client_id.longitude,
+                'address': self.client_id.address
+            })
+        if include_id:
+            response.update({
+                "clientID": str(self.client_id.id)
+            })
+        return response
+
+
+class LastEvent(BaseModel):
+    client_id = ForeignKeyField(rel_model=Client, to_field='id', primary_key=True)
+    event_id = ForeignKeyField(rel_model=Event, to_field='id')
 
 
 class ForgotToken(BaseModel):
-    token = CharField(primary_key=True)
+    token = CharField(primary_key=True, default=lambda: genRandomString(128))
     timestamp = DateTimeField(default=utcTime)
     user_id = ForeignKeyField(rel_model=User, to_field='id')
+
+    @staticmethod
+    def new(user_id):
+        ForgotToken.delete().where(ForgotToken.user_id == user_id).execute()
+        token = ForgotToken.create(user_id=user_id)
+        return token
 
 
 class LoginToken(BaseModel):
@@ -97,24 +116,18 @@ class LoginToken(BaseModel):
     user_id = ForeignKeyField(rel_model=User, to_field='id')
 
     @staticmethod
-    def create(user_id):
-        token_key = LoginToken._genRandomString(32).decode("utf-8")
-        token_value = LoginToken._genRandomString(128)
+    def new(user_id):
+        token_key = genRandomString(32)
+        token_value = genRandomString(128)
         token_hash = hashPassword(token_value)
-        new = LoginToken(token_key, token_hash, user_id)
+        LoginToken.create(token_key=token_key, token_hash=token_hash, user_id=user_id)
         return token_key, token_value
 
     @staticmethod
-    def get(token_key, token_value):
+    def use(token_key, token_value):
         # TODO: Exception
         token_obj = LoginToken.get(LoginToken.token_key == token_key)
         if not checkPassword(token_obj.token_hash, token_value):
             # TODO: Exception
             raise Exception
         return token_obj.user_id
-
-    @staticmethod
-    def _genRandomString(byteNum):
-        rand = os.urandom(byteNum)
-        randString = base64.b64encode(rand)
-        return randString

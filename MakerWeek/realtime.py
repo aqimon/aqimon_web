@@ -2,7 +2,7 @@ import flask_socketio as socketio
 from flask import request
 
 from MakerWeek.common import timeSubtract
-from MakerWeek.database.database import Event
+from MakerWeek.database.database import database, Event, Client, LastEvent
 
 realtimeServer = socketio.SocketIO()
 
@@ -22,8 +22,15 @@ def sayGoodbye():
 
 
 def getRecent():
-    events = Event.select().where(Event.timestamp >= timeSubtract(minutes=15))
-    return [event.toFrontendObject() for event in events]
+    database.connect()
+    last_events = (LastEvent
+                   .select(LastEvent, Event, Client)
+                   .join(Event)
+                   .join(Client)
+                   .where(Event.timestamp >= timeSubtract(minutes=15)))
+    response = [last_event.event_id.toFrontendObject(include_geo=True) for last_event in last_events]
+    database.close()
+    return response
 
 
 @realtimeServer.on("json")
@@ -45,5 +52,5 @@ def handleIncoming(data):
 
 def broadcastEvent(obj):
     realtimeServer.send(obj, json=True, room="index")
-    clientRoom = "client_{}".format(clientID)
+    clientRoom = "client_{}".format(obj['clientID'])
     realtimeServer.send(obj, json=True, room=clientRoom)

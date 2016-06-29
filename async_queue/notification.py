@@ -1,47 +1,62 @@
 import json
-import sqlite3
 
+from peewee import *
 from redis import StrictRedis
 
+database = MySQLDatabase(host="localhost",
+                         user="e3",
+                         password="e3e3e3e3",
+                         database="e3",
+                         fields={"JSONArray": "varchar"})
 
-class Database:
-    def __init__(self, fileName):
-        self.db = sqlite3.connect(fileName)
-        self.db.row_factory = sqlite3.Row
 
-    def __enter__(self):
-        cursor = self.db.cursor()
-        cursor.execute("PRAGMA foreign_keys = ON")
-        return cursor
+class JSONArrayField(Field):
+    db_field = "longtext"
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.db.commit()
+    def db_value(self, value):
+        return json.dumps(value)
 
-    def close(self):
-        self.db.close()
+    def python_value(self, value):
+        return json.loads(value)
+
+
+class BaseModel(Model):
+    class Meta:
+        database = database
+
+
+class User(BaseModel):
+    # auto id field
+    username = CharField(unique=True)
+    password = CharField()
+    email = CharField(unique=True)
+
+
+class Client(BaseModel):
+    id = UUIDField(primary_key=True)
+    address = TextField()
+    latitude = FloatField()
+    longitude = FloatField()
+    owner = ForeignKeyField(rel_model=User, to_field='id')
+    subscriber_list = JSONArrayField(null=False, default=[])
 
 
 class Notification:
     redis = StrictRedis()
-    db = Database("../MakerWeek.sqlite3")
 
     def __init__(self):
         pass
 
     def handler(self, data):
         clientID = data['clientID']
-        with self.db as cursor:
-            cursor.execute("SELECT subscriberList FROM client WHERE clientID=?", (clientID,))
-            result = cursor.fetchone()
-        if result is None:
+        try:
+            client = Client.get(Client.id == clientID)
+        except DoesNotExist:
             return
-        list = json.loads(result['subscriberList'])
-        for userID in list:
-            with self.db as cursor:
-                cursor.execute("SELECT email FROM user WHERE id=?", (userID,))
-                email = cursor.fetchone()['email']
+        for userID in client.subscriber_list:
+            user = User.get(User.id == userID)
             msg = json.dumps({
-                "dst": email,
+                "dst": user.email,
                 "subject": "high {}".format(clientID),
                 "msg": "high {}".format(clientID)
             })
