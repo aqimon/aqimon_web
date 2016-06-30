@@ -3,7 +3,7 @@ from peewee import DoesNotExist
 
 from MakerWeek import async
 from MakerWeek.common import hashPassword, timeSubtract, genRandomString
-from MakerWeek.database.database import User, ForgotToken, database
+from MakerWeek.database.database import User, ForgotToken, database, IncorrectPassword
 
 authentication = Blueprint("authentication", __name__, url_prefix="")
 
@@ -37,10 +37,10 @@ def register():
 def login():
     username = request.form['username']
     password = request.form['password']
-    # try:
-    session['tokenKey'], session['tokenValue'] = User.get(User.username == username).login(password)
-    # except Exception:
-    # return redirect("/login?failure")
+    try:
+        session['tokenKey'], session['tokenValue'] = User.get(User.username == username).login(password)
+    except (DoesNotExist, IncorrectPassword):
+        return redirect("/login?failure")
     return redirect(request.form['from'])
 
 
@@ -58,8 +58,10 @@ def forgotPage():
 @authentication.route("/forgot", methods=["POST"])
 def resetPassword():
     email = request.form['email']
-    # TODO: Exception
-    user = User.get(User.email == email)
+    try:
+        user = User.get(User.email == email)
+    except DoesNotExist:
+        return json.jsonify(result="not found")
     ft_obj = ForgotToken.new(user_id=user.id)
     mailContent = render_template("authentication/forgotEmail.html",
                                   token=ft_obj.token,
@@ -70,7 +72,6 @@ def resetPassword():
 
 @authentication.route("/forgot2/<token>", methods=["GET"])
 def resetPassword2(token):
-    # TODO: exception when token is not valid
     with database.atomic() as tx:
         try:
             token_obj = ForgotToken.get((ForgotToken.token == token) & (ForgotToken.timestamp >= timeSubtract(days=1)))

@@ -6,12 +6,17 @@ from peewee import *
 
 from MakerWeek.common import hashPassword, checkPassword, genRandomString
 
+# database = MySQLDatabase(host=app.config['DB_HOST'],
+#                          user=app.config['DB_USER'],
+#                          password=app.config['DB_PASSWORD'],
+#                          database=app.config['DB_USERNAME'],
+#                          fields={"JSONArray": "varchar"})
+
 database = MySQLDatabase(host="localhost",
                          user="e3",
                          password="e3e3e3e3",
                          database="e3",
                          fields={"JSONArray": "varchar"})
-
 
 def utcTime():
     return datetime.datetime.now(datetime.timezone.utc)
@@ -32,6 +37,9 @@ class BaseModel(Model):
         database = database
 
 
+class IncorrectPassword(Exception):
+    pass
+
 class User(BaseModel):
     # auto id field
     username = CharField(unique=True)
@@ -40,8 +48,7 @@ class User(BaseModel):
 
     def login(self, password):
         if not checkPassword(self.password, password):
-            # TODO: exception
-            raise Exception
+            raise IncorrectPassword
         return LoginToken.new(self.id)
 
     @staticmethod
@@ -110,6 +117,9 @@ class ForgotToken(BaseModel):
         return token
 
 
+class InvalidToken(Exception):
+    pass
+
 class LoginToken(BaseModel):
     token_key = CharField(primary_key=True)
     token_hash = CharField()
@@ -125,9 +135,10 @@ class LoginToken(BaseModel):
 
     @staticmethod
     def use(token_key, token_value):
-        # TODO: Exception
-        token_obj = LoginToken.get(LoginToken.token_key == token_key)
+        try:
+            token_obj = LoginToken.get(LoginToken.token_key == token_key)
+        except DoesNotExist:
+            raise InvalidToken
         if not checkPassword(token_obj.token_hash, token_value):
-            # TODO: Exception
-            raise Exception
+            raise InvalidToken
         return token_obj.user_id
