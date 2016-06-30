@@ -1,5 +1,6 @@
 import datetime
 import json
+import uuid
 
 from flask import session
 from peewee import *
@@ -62,7 +63,7 @@ class User(BaseModel):
 
 
 class Client(BaseModel):
-    id = UUIDField(primary_key=True)
+    id = UUIDField(primary_key=True, default=uuid.uuid4)
     address = TextField()
     latitude = FloatField()
     longitude = FloatField()

@@ -90,7 +90,6 @@ def addClient():
     #   apiKey: API key for that client
 
     __paramsList__ = {
-        "id": "str",
         "latitude": "float",
         "longitude": "float",
         "address": "str",
@@ -101,4 +100,4 @@ def addClient():
     params = paramsParse(__paramsList__, request.args)
     params['owner'] = g.user.id
     client = Client.create(**params)
-    return json.jsonify(result="success", apiKey=client.api_key)
+    return json.jsonify(result="success", apiKey=client.api_key, clientID=str(client.id))
