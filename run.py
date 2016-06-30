@@ -15,4 +15,4 @@ if __name__=="__main__":
     #         Argument:
     #             --dev: run the server as a development server (with debug features enabled)
     #     """)
-    realtimeServer.run(app, host="0.0.0.0")
+    realtimeServer.run(app, host="0.0.0.0", debug=True)

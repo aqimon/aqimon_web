@@ -4,6 +4,7 @@ from peewee import DoesNotExist
 from MakerWeek.ajax import ajax
 from MakerWeek.api import api
 from MakerWeek.authentication import authentication
+from MakerWeek.common import genRandomString
 from MakerWeek.database.database import database, User, Client, LoginToken, InvalidToken
 from MakerWeek.realtime import realtimeServer
 from MakerWeek.user import user
@@ -14,7 +15,7 @@ app.register_blueprint(authentication)
 app.register_blueprint(user)
 app.register_blueprint(ajax)
 realtimeServer.init_app(app)
-
+app.secret_key = genRandomString(512)
 
 @app.before_request
 def checkLogin():

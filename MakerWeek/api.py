@@ -1,6 +1,7 @@
 import json
 
 from flask import request, json, Blueprint
+from peewee import DoesNotExist
 
 from MakerWeek.async import sendNotification
 from MakerWeek.common import paramsParse, overThreshold
@@ -16,7 +17,7 @@ def addEvent():
     # Parameters:
     #  - clientID: client id
     #  - temperature, humidity, dustLevel, coLevel: self-explanatory
-    #  TODO: - apiKey: API key specific to that client
+    #  - apiKey: API key specific to that client
     # Returns:
     #  {"result": <result>}
 
@@ -25,11 +26,20 @@ def addEvent():
         "temperature": "float",
         "humidity": "float",
         "dustlevel": "float",
-        "colevel": "float"
+        "colevel": "float",
+        "apikey": "str"
     }
+
     params = paramsParse(__paramsList__, request.args)
 
     with database.atomic() as tx:
+        try:
+            client = Client.get(Client.id == params['client_id'])
+        except DoesNotExist:
+            return json.jsonify(result="no such client"), 404
+        if client.api_key != params['apikey']:
+            return json.jsonify(result="invalid api key"), 403
+        del params['apikey']
         event = Event.create(**params)
         event.save()
         last_event, created = LastEvent.create_or_get(client_id=event.client_id, event_id=event.id)

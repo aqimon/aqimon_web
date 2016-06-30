@@ -18,11 +18,12 @@ def generateClientInfo(uuid):
 
 def generateEvent(uuid):
     return {
-        "client_id": uuid,
+        "client_id": uuid[0],
         "temperature": random.randint(22, 35),
         "humidity": random.randint(0, 100),
         "dustlevel": random.randint(0, 10) / 10,
-        "colevel": random.randint(0, 10) / 10
+        "colevel": random.randint(0, 10) / 10,
+        "apikey": uuid[1]
     }
 
 
@@ -32,7 +33,7 @@ def login(session):
         "username": "spam_account",
         "password": "spam_account",
     }
-    req = session.post("http://localhost:5000/login", data=data)
+    session.post("http://localhost:5000/login", data=data)
 
 
 random.seed()
@@ -44,9 +45,10 @@ login(session)
 print("Creating some random client...")
 for i in range(CLIENT_NUM):
     clientUUID = uuid.uuid4()
-    clients.append(clientUUID)
     client = generateClientInfo(clientUUID)
-    print(session.get("http://localhost:5000/ajax/add/client", params=client).text)
+    data = session.get("http://localhost:5000/ajax/add/client", params=client).json()
+    print(data)
+    clients.append((clientUUID, data['apiKey']))
 
 print("Now we do some spam")
 while True:

@@ -68,6 +68,7 @@ class Client(BaseModel):
     longitude = FloatField()
     owner = ForeignKeyField(rel_model=User, to_field='id')
     subscriber_list = JSONArrayField(null=False, default=[])
+    api_key = CharField(default=lambda: genRandomString(64))
 
 
 class Event(BaseModel):
