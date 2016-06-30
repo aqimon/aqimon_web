@@ -33,7 +33,7 @@ def login(session):
         "username": "spam_account",
         "password": "spam_account",
     }
-    session.post("http://localhost:5000/login", data=data)
+    session.post("http://e3.tuankiet65.moe/login", data=data)
 
 
 random.seed()
@@ -46,7 +46,7 @@ print("Creating some random client...")
 for i in range(CLIENT_NUM):
     clientUUID = uuid.uuid4()
     client = generateClientInfo(clientUUID)
-    data = session.get("http://localhost:5000/ajax/add/client", params=client).json()
+    data = session.get("http://e3.tuankiet65.moe/ajax/add/client", params=client).json()
     print(data)
     clients.append((clientUUID, data['apiKey']))
 
@@ -54,5 +54,5 @@ print("Now we do some spam")
 while True:
     for uuid in clients:
         event = generateEvent(uuid)
-        session.get("http://localhost:5000/api/add/event", params=event)
-        time.sleep(1)
+        session.get("http://e3.tuankiet65.moe/api/add/event", params=event)
+        time.sleep(0.001)
