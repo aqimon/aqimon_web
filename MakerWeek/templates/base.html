@@ -25,63 +25,75 @@
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a class="navbar-brand" href="/">MakerWeek</a>
         </div>
-        <ul class="nav navbar-nav">
-            {% for navItem in navLeft %}
-            <li class="{% if navItem[0]==currPage %}active{% endif %}">
-                <a href="{{navItem[2]}}">
-                    <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
-                    {{navItem[1]}}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            {% if g.user is not none %}
-            <li class='dropdown'>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                   aria-expanded="false">
-                    <span class="glyphicon glyphicon-user"></span> {{g.user.username}}
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="/myaccount">
-                            <span class="glyphicon glyphicon-dashboard"></span> Dashboard
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/myaccount/settings">
-                            <span class="glyphicon glyphicon-cog"></span> Account settings
-                        </a>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    <li>
-                        <a href="/signout">
-                            <span class="glyphicon glyphicon-log-out"></span> Sign out
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            {% else %}
-            {% for navItem in navRight %}
-            <li class="{% if navItem[0]==currPage %}active{% endif %}">
-                <a href="{{navItem[2]}}">
-                    <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
-                    {{navItem[1]}}
-                </a>
-            </li>
-            {% endfor %}
-            {% endif %}
-        </ul>
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+                {% for navItem in navLeft %}
+                <li class="{% if navItem[0]==currPage %}active{% endif %}">
+                    <a href="{{navItem[2]}}">
+                        <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
+                        {{navItem[1]}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if g.user is not none %}
+                <li class='dropdown'>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <span class="glyphicon glyphicon-user"></span> {{g.user.username}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/myaccount">
+                                <span class="glyphicon glyphicon-dashboard"></span> Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/myaccount/clients">
+                                <span class="glyphicon glyphicon-map-marker"></span> My clients
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/myaccount/settings">
+                                <span class="glyphicon glyphicon-cog"></span> Account settings
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <a href="/signout">
+                                <span class="glyphicon glyphicon-log-out"></span> Sign out
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                {% for navItem in navRight %}
+                <li class="{% if navItem[0]==currPage %}active{% endif %}">
+                    <a href="{{navItem[2]}}">
+                        <span class="glyphicon glyphicon-{{navItem[3]}}"></span>
+                        {{navItem[1]}}
+                    </a>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </nav>
 {% block content %}{% endblock %}
-{% if g.user is not none %}
 <script src="/static/js/jquery.js"></script>
 <script src="/static/js/bootstrap.js"></script>
-{% endif %}
 {% block js %}{% endblock %}
 </body>
 </html>

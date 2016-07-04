@@ -12,7 +12,7 @@ function initMap(latitude, longitude){
     map=new google.maps.Map(document.getElementById("map"), {
         center: {lat: latitude, lng: longitude},
         mapTypeId: google.maps.MapTypeId.HYBRID,
-        zoom: 1
+        zoom: 15
     });
     marker=new google.maps.Marker({
         position: {lat: latitude, lng: longitude}
@@ -40,10 +40,9 @@ function generateSettings(data){
             tickInterval: 10 * 60 * 1000 // 10 minutes
         },
         series: [{
-            data: [],
+            data: [0, 0],
         }]
     };
-    generalSettings.series[0].data=data;
     return generalSettings
 }
 
@@ -69,7 +68,7 @@ function initChartsData(events){
     coLevelArr=[];
 
     for (var i=0; i<events.length; i++) {
-        time=events[i].time;
+        time=new Date(events[i].timestamp);
         temperatureArr.push([time, events[i].temperature]);
         humidityArr.push([time, events[i].humidity]);
         dustLevelArr.push([time, events[i].dustLevel]);
@@ -89,7 +88,7 @@ function initChartsData(events){
 }
 
 function addData(data){
-    var time=data.time;
+    var time=data.timestamp;
     if (pointCount>100){
         shift=true;
     } else {
@@ -128,7 +127,7 @@ $(function(){
 
     initCharts();
 
-    $.getJSON("/ajax/get/client", {"clientID": clientID}, function(data){
+    $.getJSON("/ajax/get/client", {"clientID": clientID, "includeEvents": 1}, function(data){
         initMap(data.latitude, data.longitude);
         initInfo(data.latitude, data.longitude, data.address);
         lock=true;

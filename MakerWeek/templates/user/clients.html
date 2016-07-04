@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block title %} MakerWeek user {{ g.user.username }} clients page {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/user/clients.css"/>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <h1>My clients</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>clientID</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for client in clients %}
+            <tr>
+                <td>{{ client.name }}</td>
+                <td>{{ client.id}}</td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-edit btn-sm" data-toggle="modal"
+                            data-target="#edit-modal" data-clientid="{{ client.id }}" data-keyboard="true">
+                        <span class="glyphicon glyphicon-edit"></span>
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-info btn-export btn-sm" data-toggle="modal"
+                            data-target="#export-modal" data-clientid="{{ client.id }}" data-keyboard="true">
+                        <span class="glyphicon glyphicon-download-alt"></span>
+                        Export
+                    </button>
+                    <button type="button" class="btn btn-danger btn-remove btn-sm" data-toggle="modal"
+                            data-target="#delete-modal" data-clientid="{{ client.id }}" data-keyboard="true">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        Remove
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="edit-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Edit client <span id="edit-modal-client-id"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="return false;" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="edit-client-name" class="col-sm-2 control-label">Client name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-client-name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-address" class="col-sm-2 control-label">Address</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-address">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="edit-latitude" class="col-sm-2 control-label">Latitude</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="edit-latitude">
+                            </div>
+                            <label for="edit-longitude" class="col-sm-2 control-label">Longitude</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="edit-longitude">
+                            </div>
+                        </div>
+                        <div id="edit-location-picker"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="edit-modal-submit-button">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add-modal" data-keyboard="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add a new client</h4>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="return false;" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="add-client-name" class="col-sm-2 control-label">Client name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="add-client-name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="add-address" class="col-sm-2 control-label">Address</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="add-address">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="add-latitude" class="col-sm-2 control-label">Latitude</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="add-latitude">
+                            </div>
+                            <label for="add-longitude" class="col-sm-2 control-label">Longitude</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="add-longitude">
+                            </div>
+                        </div>
+                        <div id="add-location-picker"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="add-modal-submit-button">Add client</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add-modal-success">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add a new client</h4>
+                </div>
+                <div class="modal-body">
+                    New client created with clientID <strong><span id="add-modal-clientid"></span><br/></strong>
+                    Please remember the API key below as it will not be shown anymore:<br/>
+                    <div class="well">
+                        <div style="display:flex;justify-content:center;align-items:center;">
+                            <h3>API key: <strong><span id="add-modal-api-key"></span></strong></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-block btn-primary btn-lg" data-toggle="modal" data-target="#add-modal" data-keyboard="true">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add a new client
+    </button>
+</div>
+{% endblock %}
+{% block js %}
+<script src="/static/js/user/clients.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
+<script src="/static/js/locationpicker.jquery.js"></script>
+{% endblock %}

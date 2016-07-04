@@ -34,22 +34,27 @@ def unsubscribe():
 @ajax.route("/get/client")
 def getClientInfo():
     clientID = request.args['clientID']
+    includeEvents = 'includeEvents' in request.args
     try:
         client = Client.get(Client.id == clientID)
     except DoesNotExist:
         return json.jsonify({"msg": "no such client"}), 404
-    events = (Event
-              .select(Event, Client)
-              .join(Client)
-              .where((Event.client_id == client.id) & (Event.timestamp >= timeSubtract(days=1))))
     response = {
         "clientID": client.id,
+        "name": client.name,
         "latitude": client.latitude,
         "longitude": client.longitude,
         "address": client.address,
-        "owner": client.owner.id,
-        "events": [event.toFrontendObject(include_id=False) for event in events]
+        "owner": client.owner.id
     }
+    if includeEvents:
+        events = (Event
+                  .select(Event, Client)
+                  .join(Client)
+                  .where((Event.client_id == client.id) & (Event.timestamp >= timeSubtract(days=1))))
+        response.update({
+            "events": [event.toFrontendObject(include_id=False) for event in events]
+        })
     return json.jsonify(**response)
 
 
@@ -90,6 +95,7 @@ def addClient():
     #   apiKey: API key for that client
 
     __paramsList__ = {
+        "name": "str",
         "latitude": "float",
         "longitude": "float",
         "address": "str",
@@ -101,3 +107,27 @@ def addClient():
     params['owner'] = g.user.id
     client = Client.create(**params)
     return json.jsonify(result="success", apiKey=client.api_key, clientID=str(client.id))
+
+
+@ajax.route("/edit/client")
+def editClient():
+    if g.user is None:
+        return json.dumps({"result": "Need to login"})
+    __paramsList__ = {
+        "clientID": "str",
+        "name": "str",
+        "latitude": "float",
+        "longitude": "float",
+        "address": "str",
+    }
+    params = paramsParse(__paramsList__, request.args)
+    try:
+        client = Client.get(Client.id == params['clientID'])
+    except DoesNotExist:
+        return json.jsonify(result="clientid not found"), 404
+    client.name = params['name']
+    client.latitude = params['latitude']
+    client.longitude = params['longitude']
+    client.address = params['address']
+    client.save()
+    return json.jsonify(result="success")
