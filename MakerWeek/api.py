@@ -4,12 +4,38 @@ from flask import request, json, Blueprint
 from peewee import DoesNotExist
 
 from MakerWeek.async import sendNotification
-from MakerWeek.common import paramsParse, overThreshold
+from MakerWeek.common import paramsParse, overThreshold, timeSubtract
 from MakerWeek.database.database import Client, User, Event, ForgotToken, LoginToken, database, LastEvent
 from MakerWeek.realtime import broadcastEvent
 
 api = Blueprint('api', __name__, url_prefix="/api")
 
+
+@api.route("/get/client")
+def getClientInfo():
+    clientID = request.args['clientID']
+    includeEvents = 'includeEvents' in request.args
+    try:
+        client = Client.get(Client.id == clientID)
+    except DoesNotExist:
+        return json.jsonify({"msg": "no such client"}), 404
+    response = {
+        "clientID": client.id,
+        "name": client.name,
+        "latitude": client.latitude,
+        "longitude": client.longitude,
+        "address": client.address,
+        "owner": client.owner.id
+    }
+    if includeEvents:
+        events = (Event
+                  .select(Event, Client)
+                  .join(Client)
+                  .where((Event.client_id == client.id) & (Event.timestamp >= timeSubtract(days=1))))
+        response.update({
+            "events": [event.toFrontendObject(include_id=False) for event in events]
+        })
+    return json.jsonify(**response)
 
 @api.route("/add/event")
 def addEvent():

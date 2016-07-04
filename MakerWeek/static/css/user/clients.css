@@ -10,3 +10,6 @@
     width: inherit;
 }
 
+#delete-alert-success {
+    display: none;
+}

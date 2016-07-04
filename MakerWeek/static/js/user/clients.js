@@ -91,3 +91,19 @@ $("#add-modal").on("show.bs.modal", function(){
     $("#add-longitude").val("");
     $("#add-address").val("");
 })
+
+$("#delete-modal").on("show.bs.modal", function(e){
+    var clientID=$(e.relatedTarget).data("clientid");
+    $("#delete-modal-clientid").text(clientID);
+})
+
+$("#delete-modal-delete-button").on("click", function(){
+    $("#delete-modal-delete-button").html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
+    $("#delete-modal-delete-button").prop("disabled", true);
+    var clientID = $("#delete-modal-clientid").text(clientID);
+    $.getJSON("/ajax/delete/client", {clientID: clientID}, function(data){
+        if (data.result == "success"){
+            $("#delete-alert-success").show(400);
+        }
+    })
+})

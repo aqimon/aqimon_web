@@ -20,7 +20,16 @@ function initMap(latitude, longitude){
     marker.setMap(map)
 }
 
-function initInfo(latitude, longitude, address){
+function setInfo(id, name, latitude, longitude, address){
+    info = {
+        id: id,
+        name: name,
+        latitude: latitude,
+        longitude: longitude,
+        address: address
+    };
+    $("#name").text(name)
+    $("#clientid").text(id);
     $("#latitude").text(latitude);
     $("#longitude").text(longitude);
     $("#address").text(address);
@@ -105,17 +114,18 @@ function addData(data){
 }
 
 $(function(){
-    var lock=false;
     socketio=io("/");
 
     socketio.on("connect", function(){
         console.log("connected to server");
-        room="client_"+clientID.toString();
-        socketio.emit("json", {"action": "joinRoom", "room": room});
+        room="client_"+info.id.toString();
+        socketio.emit("json", {"action": "getRecentClient", "clientID": info.id}, function(data){
+            initChartsData(data);
+            socketio.emit("json", {"action": "joinRoom", "room": room});
+        })
     })
 
     socketio.on("json", function(data){
-        while (lock);
         addData(data);
     })
 
@@ -126,31 +136,79 @@ $(function(){
     });
 
     initCharts();
-
-    $.getJSON("/ajax/get/client", {"clientID": clientID, "includeEvents": 1}, function(data){
-        initMap(data.latitude, data.longitude);
-        initInfo(data.latitude, data.longitude, data.address);
-        lock=true;
-        initChartsData(data.events);
-        lock=false;
-    })
+    initMap(info.latitude, info.longitude);
+    setInfo(info.id, info.name, info.latitude, info.longitude, info.address);
 
     subscribeButton.click(function(){
         subscribeButton.prop("disabled", true);
         subscribeButton.html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
         if (subscribeState=="subscribe"){
-            $.getJSON("/ajax/notification/subscribe", data={"clientID": clientID}, function(data){
+            $.getJSON("/ajax/notification/subscribe", data={"clientID": id}, function(data){
                 subscribeButton.prop("disabled", false);
                 subscribeButton.html("Unsubscribe");
                 subscribeState="unsubscribe";
             })
         } else {
-            $.getJSON("/ajax/notification/unsubscribe", {"clientID": clientID}, function(data){
+            $.getJSON("/ajax/notification/unsubscribe", {"clientID": id}, function(data){
                 subscribeButton.prop("disabled", false);
                 subscribeButton.html("Subscribe");
                 subscribeState="subscribe";
             })
         }
+    });
+})
+
+if (enableEdit){
+    $("#edit-location-picker").locationpicker({
+        location: {
+            latitude: info.latitude,
+            longitude: info.longitude,
+        },
+        locationName: info.address,
+        inputBinding: {
+            latitudeInput: $("#edit-latitude"),
+            longitudeInput: $("#edit-longitude"),
+            locationNameInput: $("#edit-address"),
+        },
+        radius: 0,
+        enableAutocomplete: true,
+        enableReverseGeocode: true
     })
 
-})
+    $("#edit-modal-submit-button").on("click", function(){
+        $("#edit-modal-submit-button").html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
+        $("#edit-modal-submit-button").prop("disabled", true);
+        data = {
+            clientID: $("#edit-modal-client-id").text(),
+            name: $("#edit-client-name").val(),
+            latitude: $("#edit-latitude").val(),
+            longitude: $("#edit-longitude").val(),
+            address: $("#edit-address").val(),
+        };
+        $.getJSON("/ajax/edit/client", data, function(res){
+            if (res.result == "success"){
+                $("#edit-modal-submit-button").html('Save changes');
+                $("#edit-modal-submit-button").prop("disabled", false);
+                setInfo(data.id, data.name, data.latitude, data.longitude, data.address);
+                latlng = {
+                    lat: parseFloat(data.latitude),
+                    lng: parseFloat(data.longitude)
+                };
+                marker.setPosition(latlng);
+                map.panTo(latlng);
+            }
+        })
+    })
+
+    $("#edit-modal").on("shown.bs.modal", function(e){
+        $("#edit-location-picker").locationpicker('autosize');
+    })
+
+    $("#edit-modal").on("show.bs.modal", function(e){
+        $("#edit-modal-client-id").text(info.id);
+        $("#edit-client-name").val(info.name);
+        $("#edit-latitude").val(info.latitude);
+        $("#edit-longitude").val(info.longitude);
+        $("#edit-address").val(info.address);
+    })
+}

@@ -73,6 +73,16 @@ class Client(BaseModel):
     subscriber_list = JSONArrayField(null=False, default=[])
     api_key = CharField(default=lambda: genRandomString(20), unique=True)
 
+    def toFrontendObject(self):
+        response = {
+            'id': str(self.id),
+            'name': self.name,
+            'address': self.address,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'owner': self.owner.id
+        }
+        return response
 
 class Event(BaseModel):
     # auto id field

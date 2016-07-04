@@ -1,8 +1,8 @@
 from flask import Blueprint, g, request, json, redirect
 from peewee import DoesNotExist
 
-from MakerWeek.common import timeSubtract, checkPassword, hashPassword, paramsParse
-from MakerWeek.database.database import Client, Event
+from MakerWeek.common import checkPassword, hashPassword, paramsParse
+from MakerWeek.database.database import Client
 
 ajax = Blueprint('ajax', __name__, url_prefix="/ajax")
 
@@ -29,33 +29,6 @@ def unsubscribe():
     client.subscriber_list.remove(userID)
     client.save()
     return json.jsonify(result="success")
-
-
-@ajax.route("/get/client")
-def getClientInfo():
-    clientID = request.args['clientID']
-    includeEvents = 'includeEvents' in request.args
-    try:
-        client = Client.get(Client.id == clientID)
-    except DoesNotExist:
-        return json.jsonify({"msg": "no such client"}), 404
-    response = {
-        "clientID": client.id,
-        "name": client.name,
-        "latitude": client.latitude,
-        "longitude": client.longitude,
-        "address": client.address,
-        "owner": client.owner.id
-    }
-    if includeEvents:
-        events = (Event
-                  .select(Event, Client)
-                  .join(Client)
-                  .where((Event.client_id == client.id) & (Event.timestamp >= timeSubtract(days=1))))
-        response.update({
-            "events": [event.toFrontendObject(include_id=False) for event in events]
-        })
-    return json.jsonify(**response)
 
 
 @ajax.route("/user_settings/save_general")
@@ -114,7 +87,7 @@ def addClient():
 @ajax.route("/edit/client")
 def editClient():
     if g.user is None:
-        return json.dumps({"result": "Need to login"})
+        return json.jsonify(result="Need to login")
     __paramsList__ = {
         "clientID": "str",
         "name": "str",
@@ -127,9 +100,21 @@ def editClient():
         client = Client.get(Client.id == params['clientID'])
     except DoesNotExist:
         return json.jsonify(result="clientid not found"), 404
+    if client.owner != g.user:
+        return json.jsonify(result="you don't have permission"), 403
     client.name = params['name']
     client.latitude = params['latitude']
     client.longitude = params['longitude']
     client.address = params['address']
     client.save()
     return json.jsonify(result="success")
+
+
+@ajax.route("/delete/client")
+def deleteClient():
+    if g.user is None:
+        return json.jsonify(result="Need to login")
+    clientID = request.args['clientID']
+    client = Client.get(Client.id == clientID)
+    if client.owner != g.user:
+        return json.jsonify(result="you don't have permission"), 403

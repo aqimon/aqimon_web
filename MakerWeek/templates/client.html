@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% set currPage="client" %}
+{% set isOwner=(g.user.id == client.owner) %}
 {% block title %} MakerWeek client {{ client.id }} {% endblock %}
 {% block css %}
 <link rel="stylesheet" href="/static/css/client.css">
@@ -11,13 +12,15 @@
             <div id="map"></div>
         </div>
         <div class="col-md-6 col-xs-6">
-            <h1>Client {{client.id}}</h1>
+            <h1>Client "<span id="name"></span>"</h1>
             <hr/>
             <ul>
+                <li>Client ID: <span id="clientid"></span></li>
                 <li>Latitude: <span id="latitude"></span></li>
                 <li>Longitude: <span id="longitude"></span></li>
                 <li>Address: <span id="address"></span></li>
             </ul>
+            <br/>
             {% if g.user is not none %}
             <div class="row">
                 <div class="col-md-6 col-xs-6">
@@ -29,10 +32,61 @@
                         {% endif %}
                     </button>
                 </div>
+                <div class="col-md-6 col-xs-6">
+                    {% if isOwner %}
+                    <button class="btn btn-block btn-primary" id="edit-button" data-toggle="modal"
+                            data-target="#edit-modal">
+                        Edit
+                    </button>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
         </div>
     </div>
+    {% if isOwner %}
+    <div class="modal fade" id="edit-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Edit client <span id="edit-modal-client-id"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="return false;" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="edit-client-name" class="col-sm-2 control-label">Client name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-client-name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-address" class="col-sm-2 control-label">Address</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-address">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="edit-latitude" class="col-sm-2 control-label">Latitude</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="edit-latitude">
+                            </div>
+                            <label for="edit-longitude" class="col-sm-2 control-label">Longitude</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="edit-longitude">
+                            </div>
+                        </div>
+                        <div id="edit-location-picker"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="edit-modal-submit-button">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div id="charts">
         <ul class="nav nav-tabs" role="tablist">
             <li class="active">
@@ -60,11 +114,10 @@
 </div>
 {% endblock %}
 {% block js %}
-<script src="/static/js/jquery.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places&language=en&region=VN"></script>
 <script src="/static/js/socketio.js"></script>
 <script>
-        clientID="{{client.id}}";
+        info={{ client | tojson | safe }};
         {% if g.user is not none %}
             {% if g.user.id in client.subscriberList %}
                 subscribeState="unsubscribe";
@@ -72,8 +125,15 @@
                 subscribeState="subscribe";
             {% endif %}
         {% endif %}
+        {% if isOwner %}
+        var enableEdit=true;
+        {% else %}
+        var enableEdit=false;
+        {% endif %}
 </script>
 <script src="/static/js/highcharts.js"></script>
-<script src="/static/js/bootstrap.js"></script>
+{% if isOwner %}
+<script src="/static/js/locationpicker.jquery.js"></script>
+{% endif %}
 <script src="/static/js/client.js"></script>
 {% endblock %}

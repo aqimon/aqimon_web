@@ -58,4 +58,4 @@ def map():
 
 @app.route("/client/<clientID>")
 def client(clientID):
-    return render_template("client.html", client=Client.get(Client.id == clientID))
+    return render_template("client.html", client=Client.get(Client.id == clientID).toFrontendObject())

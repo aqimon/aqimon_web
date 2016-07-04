@@ -146,6 +146,38 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="delete-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Delete client <span clas="delete-modal-clientid"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success" id="delete-alert-success">
+                        <strong>Success</strong> Client deleted
+                    </div>
+                    Do you really want to delete this client?<br/>
+                    <h3>THIS ACTION CANNOT BE UNDONE</h3>
+                    After deleting this client:
+                    <ul>
+                        <li>This client will disappear from the website, links will return 404</li>
+                        <li>All of this client's events will be purged.</li>
+                    </ul>
+                    It may take 15 minutes for your client to be deleted from the website.
+                    <strong>You are advised to export this client's data before deleting to prevent data
+                        loss.</strong><br/>
+                    To delete this client, please enter the name of this client below:<br/><br/>
+                    <input type="text" name="client-name" id="delete-modal-client-name" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="delete-modal-delete-button">Delete this client
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <button class="btn btn-block btn-primary btn-lg" data-toggle="modal" data-target="#add-modal" data-keyboard="true">
         <span class="glyphicon glyphicon-plus"></span>
         Add a new client
@@ -154,6 +186,6 @@
 {% endblock %}
 {% block js %}
 <script src="/static/js/user/clients.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places&language=en&region=VN"></script>
 <script src="/static/js/locationpicker.jquery.js"></script>
 {% endblock %}

@@ -1,3 +1,7 @@
+body {
+    padding-top: 80px !important;
+}
+
 #div-map {
     height: 50vh;
 }
@@ -8,4 +12,16 @@
 
 #charts {
     padding-top: 10px;
+}
+
+/* https://github.com/Logicify/jquery-locationpicker-plugin/issues/20#issuecomment-76514654 */
+
+.pac-container {
+    z-index:2000 !important;
+}
+
+#edit-location-picker, #add-location-picker {
+    margin-top: 15px;
+    height: 250px;
+    width: inherit;
 }
