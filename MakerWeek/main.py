@@ -39,7 +39,7 @@ def initDatabase():
     database.connect()
 
 
-@app.teardown_appcontext
+@app.teardown_request
 def deinitDatabase(args):
     if 'hasdb' in g:
         database.close()

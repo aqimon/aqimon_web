@@ -46,6 +46,7 @@ class User(BaseModel):
     username = CharField(unique=True)
     password = CharField()
     email = CharField(unique=True)
+    phone = CharField()
 
     def login(self, password):
         if not checkPassword(self.password, password):
@@ -53,9 +54,9 @@ class User(BaseModel):
         return LoginToken.new(self.id)
 
     @staticmethod
-    def add(username, password, email):
+    def add(username, password, email, phone):
         password = hashPassword(password)
-        User.create(username=username, password=password, email=email)
+        User.create(username=username, password=password, email=email, phone=phone)
 
     @staticmethod
     def logout():

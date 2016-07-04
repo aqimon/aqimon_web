@@ -1,23 +1,3 @@
-$("#edit-modal").on("show.bs.modal", function(e){
-    var button = $(e.relatedTarget);
-    var clientID = button.data("clientid");
-    $.getJSON("/ajax/get/client", {"clientID": clientID}, function(data){
-        $("#edit-modal-client-id").text(data.clientID);
-        $("#edit-client-name").val(data.name);
-        $("#edit-latitude").val(data.latitude);
-        $("#edit-longitude").val(data.longitude);
-        $("#edit-address").val(data.address);
-    });
-})
-
-$("#edit-modal").on("shown.bs.modal", function(e){
-    $("#edit-location-picker").locationpicker('autosize');
-})
-
-$("#add-modal").on("shown.bs.modal", function(e){
-    $("#add-location-picker").locationpicker('autosize');
-})
-
 $(function(){
     $("#edit-location-picker").locationpicker({
         inputBinding: {
@@ -62,6 +42,26 @@ $("#edit-modal-submit-button").on("click", function(){
             $("#edit-modal-submit-button").prop("disabled", false);
         }
     })
+})
+
+$("#edit-modal").on("shown.bs.modal", function(e){
+    $("#edit-location-picker").locationpicker('autosize');
+})
+
+$("#edit-modal").on("show.bs.modal", function(e){
+    var button = $(e.relatedTarget);
+    var clientID = button.data("clientid");
+    $.getJSON("/ajax/get/client", {"clientID": clientID}, function(data){
+        $("#edit-modal-client-id").text(data.clientID);
+        $("#edit-client-name").val(data.name);
+        $("#edit-latitude").val(data.latitude);
+        $("#edit-longitude").val(data.longitude);
+        $("#edit-address").val(data.address);
+    });
+})
+
+$("#add-modal").on("shown.bs.modal", function(e){
+    $("#add-location-picker").locationpicker('autosize');
 })
 
 $("#add-modal-submit-button").on("click", function(){

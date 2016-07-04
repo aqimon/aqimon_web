@@ -64,8 +64,10 @@ def saveGeneralSettings():
         redirect("/login?needToLogin")
     newUsername = request.args['username']
     newEmail = request.args['email']
+    newPhone = request.args['phone']
     g.user.username = newUsername
     g.user.email = newEmail
+    g.user.phone = newPhone
     g.user.save()
     return json.jsonify(result="success")
 
