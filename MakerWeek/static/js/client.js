@@ -77,7 +77,7 @@ function initChartsData(events){
     coLevelArr=[];
 
     for (var i=0; i<events.length; i++) {
-        time=new Date(events[i].timestamp);
+        time=events[i].timestamp;
         temperatureArr.push([time, events[i].temperature]);
         humidityArr.push([time, events[i].humidity]);
         dustLevelArr.push([time, events[i].dustLevel]);
