@@ -33,6 +33,16 @@ def getRecent():
     return response
 
 
+def getRecentClient(clientID):
+    database.connect()
+    events = (Event
+              .select(Event, Client)
+              .join(Client)
+              .where((Event.client_id == clientID) & (Event.timestamp >= timeSubtract(days=1))))
+    response = [event.toFrontendObject(include_id=False) for event in events]
+    database.close()
+    return response
+
 @realtimeServer.on("json")
 def handleIncoming(data):
     # {"action": <str>, "room": <str>}
@@ -46,6 +56,8 @@ def handleIncoming(data):
         socketio.leave_room(data['room'])
     elif action == "getRecent":
         return getRecent()
+    elif action == "getRecentClient":
+        return getRecentClient(data['clientID'])
     else:
         return {"msg": "no such action"}
 

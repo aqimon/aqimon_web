@@ -95,7 +95,7 @@ class Event(BaseModel):
 
     def toFrontendObject(self, include_geo=False, include_id=True):
         response = {
-            "timestamp": self.timestamp.replace(tzinfo=datetime.timezone.utc).timestamp() * 1000,
+            "timestamp": int(self.timestamp.replace(tzinfo=datetime.timezone.utc).timestamp() * 1000),
             "temperature": self.temperature,
             "humidity": self.humidity,
             "dustLevel": self.dustlevel,

@@ -49,7 +49,7 @@ function generateSettings(data){
             tickInterval: 10 * 60 * 1000 // 10 minutes
         },
         series: [{
-            data: [0, 0],
+            data: [],
         }]
     };
     return generalSettings
