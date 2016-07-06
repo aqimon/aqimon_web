@@ -13,3 +13,7 @@
 #delete-alert-success {
     display: none;
 }
+
+table a:not(.btn), .table a:not(.btn) {
+    text-decoration: none !important;
+}
