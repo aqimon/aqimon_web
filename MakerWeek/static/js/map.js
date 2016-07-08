@@ -49,10 +49,11 @@ function generateContent(data){
     var contentString=
         '<div class="infobox"> \
             <div class="infobox-header"> \
-                Client ID: %(clientID)s<br /> \
+                Client: %(name)s<br /> \
             </div> \
             <hr class="infobox-hr"/> \
             <div class="infobox-content"> \
+                <b>Client ID</b>: %(clientID)s<br /> \
                 <b>Latitude</b>: %(latitude).3f<br /> \
                 <b>Longitude</b>: %(longitude).3f<br /> \
                 <b>Address</b>: %(latitude)s<br /> \
@@ -62,9 +63,11 @@ function generateContent(data){
                 <b>CO concentration</b>: %(coLevel).3f<br /> \
                 <b>Timestamp</b>: %(time)s <br /> \
             </div> \
-            <div class="infobox-moreinfo"> \
-                <b><a href="/client/%(clientID)s">More info</a></b> \
-            <div> \
+            <br \> \
+            <a class="btn btn-primary btn-block" href="/client/%(clientID)s"> \
+                <span class="glyphicon glyphicon-new-window"></span> \
+                Client details \
+            </a> \
         </div>';
     var contentString=sprintf(contentString, data);
     return contentString;

@@ -59,3 +59,8 @@ def map():
 @app.route("/client/<clientID>")
 def client(clientID):
     return render_template("client.html", client=Client.get(Client.id == clientID).toFrontendObject())
+
+
+@app.route("/data")
+def data():
+    return render_template("data.html")

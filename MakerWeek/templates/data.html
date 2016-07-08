@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set currPage="data" %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/codemirror.css">
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <h1>Execute SQL queries directly!</h1>
+    <div class="row">
+        <div class="col-xs-8">
+            <textarea class="form-control" id="code-area"></textarea>
+        </div>
+        <div class="col-xs-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Database structure
+                </div>
+                <div class="panel-body">
+                    xxxyyyzzz
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="/static/js/codemirror.js"></script>
+<script src="/static/js/codemirror_sql.js"></script>
+<script src="/static/js/data.js"></script>
+{% endblock %}
