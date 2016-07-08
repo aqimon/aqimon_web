@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, g
+from flask import Flask, render_template, session, g, json
 from peewee import DoesNotExist
 
 from MakerWeek.ajax import ajax
@@ -64,3 +64,8 @@ def client(clientID):
 @app.route("/data")
 def data():
     return render_template("data.html")
+
+
+@app.route("/xmlrpc.php")
+def spam():
+    return json.jsonify(result="fuck you"), 403
