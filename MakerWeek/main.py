@@ -66,6 +66,6 @@ def data():
     return render_template("data.html")
 
 
-@app.route("/xmlrpc.php")
+@app.route("/xmlrpc.php", methods=['POST'])
 def spam():
-    return json.jsonify(result="fuck you"), 403
+    return json.jsonify(result="fuck you")

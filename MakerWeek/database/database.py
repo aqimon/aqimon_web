@@ -109,7 +109,8 @@ class Event(BaseModel):
             })
         if include_id:
             response.update({
-                "clientID": str(self.client_id.id)
+                "clientID": str(self.client_id.id),
+                "name": self.client_id.name
             })
         return response
 
