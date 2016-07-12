@@ -1,15 +1,14 @@
+import datetime
 import random
-import time
 import uuid
 
 import requests
 
 CLIENT_NUM = 4
 
-
 def generateClientInfo(uuid):
     return {
-        "id": uuid,
+        "name": uuid,
         "latitude": random.randint(-300, 300) / 10,
         "longitude": random.randint(-300, 300) / 10,
         "address": "{} Ngo Quyen".format(random.randint(0, 1696))
@@ -23,17 +22,18 @@ def generateEvent(uuid):
         "humidity": random.randint(0, 100),
         "dustlevel": random.randint(0, 10) / 10,
         "colevel": random.randint(0, 10) / 10,
-        "apikey": uuid[1]
+        "apikey": uuid[1],
+        "time": int(currTime.timestamp())
     }
 
 
 def login(session):
     print("Logging in...")
     data = {
-        "username": "spam_account",
-        "password": "spam_account",
+        "username": "x",
+        "password": "x",
     }
-    session.post("http://e3.tuankiet65.moe/login", data=data)
+    session.post("http://localhost:5000/login", data=data)
 
 
 random.seed()
@@ -46,13 +46,16 @@ print("Creating some random client...")
 for i in range(CLIENT_NUM):
     clientUUID = uuid.uuid4()
     client = generateClientInfo(clientUUID)
-    data = session.get("http://e3.tuankiet65.moe/ajax/add/client", params=client).json()
+    data = session.get("http://localhost:5000/ajax/add/client", params=client).json()
     print(data)
-    clients.append((clientUUID, data['apiKey']))
+    clients.append((data['clientID'], data['apiKey']))
+
+currTime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+delta = datetime.timedelta(minutes=5)
 
 print("Now we do some spam")
 while True:
     for uuid in clients:
         event = generateEvent(uuid)
-        session.get("http://e3.tuankiet65.moe/api/add/event", params=event)
-        time.sleep(0.001)
+        session.get("http://localhost:5000/api/add/event", params=event)
+    currTime += delta
