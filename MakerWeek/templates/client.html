@@ -87,29 +87,9 @@
         </div>
     </div>
     {% endif %}
-    <div id="charts">
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="active">
-                <a href="#temperature" aria-controls="temperature" data-toggle="tab" role="tab" id="temperature-tab">Temperature</a>
-            </li>
-            <li>
-                <a href="#humidity" aria-controls="humidity" data-toggle="tab" role="tab" id="humidity-tab">Humidity</a>
-            </li>
-            <li>
-                <a href="#dustLevel" aria-controls="dustLevel" data-toggle="tab" role="tab" id="dustLevel-tab">Dust
-                    concentration</a>
-            </li>
-            <li>
-                <a href="#coLevel" aria-controls="coLevel" data-toggle="tab" role="tab" id="coLevel-tab">CO
-                    concentration</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active fade in" id="temperature"></div>
-            <div class="tab-pane fade" id="humidity"></div>
-            <div class="tab-pane fade" id="dustLevel"></div>
-            <div class="tab-pane fade" id="coLevel"></div>
-        </div>
+    <br/>
+    <div id="chart">
+
     </div>
 </div>
 {% endblock %}
@@ -131,7 +111,7 @@
         var enableEdit=false;
         {% endif %}
 </script>
-<script src="/static/js/highcharts.js"></script>
+<script src="/static/js/highstock.js"></script>
 {% if isOwner %}
 <script src="/static/js/locationpicker.jquery.js"></script>
 {% endif %}

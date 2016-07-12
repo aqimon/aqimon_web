@@ -91,11 +91,15 @@ class Event(BaseModel):
     dustlevel = FloatField()
     humidity = FloatField()
     temperature = FloatField()
-    timestamp = DateTimeField(default=utcTime)
+    timestamp = DateTimeField()
 
     def toFrontendObject(self, include_geo=False, include_id=True):
+        if type(self.timestamp) is datetime.date:
+            self.timestamp = datetime.datetime(self.timestamp.year,
+                                               self.timestamp.month,
+                                               self.timestamp.day)
         response = {
-            "timestamp": int(self.timestamp.replace(tzinfo=datetime.timezone.utc).timestamp() * 1000),
+            "timestamp": self.timestamp.replace(tzinfo=datetime.timezone.utc).timestamp() * 1000,
             "temperature": self.temperature,
             "humidity": self.humidity,
             "dustLevel": self.dustlevel,

@@ -1,12 +1,5 @@
-var map, marker, socketio, currentPane, pointCount=0, obj={};
+var map, marker, socketio, currentPane, chart, init=false;
 var subscribeButton=$("#subscribe-button"), subscribeState="subscribe";
-var specificSettings={
-    title: {
-        temperature: "Temperature (degree Celsius)",
-        humidity: "Humidity (%)",
-        dustLevel: "Dust concentration (m^3)"
-    }
-};
 
 function initMap(latitude, longitude){
     map=new google.maps.Map(document.getElementById("map"), {
@@ -35,82 +28,175 @@ function setInfo(id, name, latitude, longitude, address){
     $("#address").text(address);
 }
 
-function generateSettings(data){
-    var generalSettings={
-        chart: {
-            type: "line",
-            zoomType: "x",
-        },
-        credits: {
-            enabled: false
-        },
-        xAxis: {
-            type: "datetime",
-            tickInterval: 10 * 60 * 1000 // 10 minutes
-        },
-        series: [{
-            data: [],
-        }]
-    };
-    return generalSettings
+function initChart(){
+    chart=$("#chart")
+    chart.highcharts("StockChart", {
+            chart: {
+                zoomType: "x",
+
+            },
+            title: {
+                text: "Graph for client "+info.name
+            },
+            navigator: {
+                adaptToUpdatedData: false,
+                enabled: false
+            },
+            scrollbar: {
+                liveRedraw: false
+            },
+            xAxis: {
+                type: "datetime",
+                minRange: 60*60*3*1000,
+                events: {
+                    afterSetExtremes: function(e){
+                        if ((!e.min) || (!e.max)) return;
+                        loadChartData(e.min/1000, e.max/1000);
+                    }
+                }
+            },
+            yAxis: [{
+                title: {
+                    text: "Temperature (°C)",
+                },
+                opposite: false
+            }, {
+                title: {
+                    text: "Humidity (%)",
+                },
+                opposite: false
+            }, {
+                title: {
+                    text: "Dust concentration (ppm)"
+                }
+            }, {
+                title: {
+                    text: "CO concentration (ppm)"
+                }
+            }],
+            rangeSelector: {
+                buttons: [{
+                    type: 'hour',
+                    count: 3,
+                    text: '3h'
+                },{
+                    type: 'hour',
+                    count: 6,
+                    text: '6h'
+                },{
+                    type: 'hour',
+                    count: 12,
+                    text: '12h'
+                },{
+                    type: 'day',
+                    count: 1,
+                    text: '1d'
+                },{
+                    type: 'week',
+                    count: 1,
+                    text: '1w'
+                },{
+                    type: 'month',
+                    count: 1,
+                    text: '1m'
+                },{
+                    type: 'month',
+                    count: 6,
+                    text: '6m'
+                },{
+                    type: 'ytd',
+                    count: 1,
+                    text: 'YTD'
+                },{
+                    type: 'year',
+                    count: 1,
+                    text: '1y'
+                }],
+               selected: 8
+            },
+            series: [{
+                type: "line",
+                name: "Temperature",
+                tooltip: {
+                    valueSuffix: "°C"
+                },
+                data: [],
+                yAxis: 0,
+            },{
+                type: "line",
+                name: "Humidity",
+                tooltip: {
+                    valueSuffix: "%"
+                },
+                data: [],
+                yAxis: 1
+            },{
+                type: "line",
+                name: "Dust concentration",
+                tooltip: {
+                    valueSuffix: "ppm"
+                },
+                data: [],
+                yAxis: 2
+            },{
+                type: "line",
+                name: "CO concentration",
+                tooltip: {
+                    valueSuffix: "ppm"
+                },
+                data: [],
+                yAxis: 3
+            }]
+        });
 }
 
-function initCharts(){
-    obj.temperature=$("#temperature").highcharts(generateSettings("temperature"));
-    obj.humidity=$("#humidity").highcharts(generateSettings("humidity"));
-    obj.dustLevel=$("#dustLevel").highcharts(generateSettings("dustLevel"));
-    obj.coLevel=$("#coLevel").highcharts(generateSettings("coLevel"));
+function loadChartData(from, to, callback){
+    chart.highcharts().showLoading();
+    if (!(to)) to=Math.round(Date.now()/1000);
+    console.log("Loading data from", from, "to", to);
+    socketio.emit("json", {
+        action: "getEventRange",
+        clientID: info.id,
+        from: from,
+        to: to
+    }, function(data){
+        temperatureArr=[];
+        humidityArr=[];
+        dustArr=[];
+        coArr=[];
 
-    obj.temperature.highcharts().showLoading();
-    obj.humidity.highcharts().showLoading();
-    obj.dustLevel.highcharts().showLoading();
-    obj.coLevel.highcharts().showLoading();
+        for (var i=0; i<data.length; i++){
+            time=data[i].timestamp;
+            temperatureArr.push([time, data[i].temperature]);
+            humidityArr.push([time, data[i].humidity]);
+            dustArr.push([time, data[i].dustLevel]);
+            coArr.push([time, data[i].coLevel]);
+        }
 
-    obj.temperature.highcharts().redraw();
-    currentPane=$("#temperature");
-}
+        chart.highcharts().series[0].setData(temperatureArr);
+        chart.highcharts().series[1].setData(humidityArr);
+        chart.highcharts().series[2].setData(dustArr);
+        chart.highcharts().series[3].setData(coArr);
+        chart.highcharts().hideLoading();
 
-function initChartsData(events){
-    temperatureArr=[];
-    humidityArr=[];
-    dustLevelArr=[];
-    coLevelArr=[];
-
-    for (var i=0; i<events.length; i++) {
-        time=events[i].timestamp;
-        temperatureArr.push([time, events[i].temperature]);
-        humidityArr.push([time, events[i].humidity]);
-        dustLevelArr.push([time, events[i].dustLevel]);
-        coLevelArr.push([time, events[i].coLevel]);
-        pointCount++;
-    }
-
-    obj.temperature.highcharts().series[0].setData(temperatureArr);
-    obj.humidity.highcharts().series[0].setData(humidityArr);
-    obj.dustLevel.highcharts().series[0].setData(dustLevelArr);
-    obj.coLevel.highcharts().series[0].setData(coLevelArr);
-
-    obj.temperature.highcharts().hideLoading();
-    obj.humidity.highcharts().hideLoading();
-    obj.dustLevel.highcharts().hideLoading();
-    obj.coLevel.highcharts().hideLoading();
+        if (callback) callback();
+    })
 }
 
 function addData(data){
     var time=data.timestamp;
-    if (pointCount>100){
-        shift=true;
-    } else {
-        shift=false;
-        pointCount++;
-    }
-    $("#temperature").highcharts().series[0].addPoint([time, data.temperature], redraw=false, shift=shift);
-    $("#humidity").highcharts().series[0].addPoint([time, data.humidity], redraw=false, shift=shift);
-    $("#dustLevel").highcharts().series[0].addPoint([time, data.dustLevel], redraw=false, shift=shift);
-    $("#coLevel").highcharts().series[0].addPoint([time, data.coLevel], redraw=false, shift=shift);
-    if (typeof(currentPane) != "undefined") {
-        currentPane.highcharts().redraw();
-    }
+    chart.highcharts().series[0].addPoint([time, data.temperature], redraw=false);
+    chart.highcharts().series[1].addPoint([time, data.humidity], redraw=false);
+    chart.highcharts().series[2].addPoint([time, data.dustLevel], redraw=false);
+    chart.highcharts().series[3].addPoint([time, data.coLevel], redraw=false);
+    chart.highcharts().redraw();
+}
+
+function timeSubtract(){
+    d1=new Date();
+    d1.setTime(Date.now());
+    d1.setUTCDate(d1.getUTCDate()-1);
+    return Math.round(d1.getTime()/1000);
 }
 
 $(function(){
@@ -118,24 +204,21 @@ $(function(){
 
     socketio.on("connect", function(){
         console.log("connected to server");
-        room="client_"+info.id.toString();
-        socketio.emit("json", {"action": "getRecentClient", "clientID": info.id}, function(data){
-            initChartsData(data);
-            socketio.emit("json", {"action": "joinRoom", "room": room});
-        })
+        if (!init){
+            initChart()
+            loadChartData(0, null, function(){
+                room="client_"+info.id.toString();
+                socketio.emit("json", {"action": "joinRoom", "room": room});
+            })
+            init=true;
+        }
     })
 
     socketio.on("json", function(data){
+        console.log("received data");
         addData(data);
     })
 
-    $("a[id$=-tab]").on("shown.bs.tab", function(e){
-        currentPane=$("#"+$(e.target).attr("aria-controls"));
-        currentPane.highcharts().reflow();
-        currentPane.highcharts().redraw();
-    });
-
-    initCharts();
     initMap(info.latitude, info.longitude);
     setInfo(info.id, info.name, info.latitude, info.longitude, info.address);
 
