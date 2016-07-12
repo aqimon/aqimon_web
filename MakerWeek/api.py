@@ -4,7 +4,7 @@ from flask import request, json, Blueprint
 from peewee import DoesNotExist
 
 from MakerWeek.async import sendNotification
-from MakerWeek.common import paramsParse, overThreshold, timeSubtract
+from MakerWeek.common import paramsParse, overThreshold, timeSubtract, utcNow, fromTimestamp
 from MakerWeek.database.database import Client, User, Event, ForgotToken, LoginToken, database, LastEvent
 from MakerWeek.realtime import broadcastEvent
 
@@ -55,9 +55,11 @@ def addEvent():
         "colevel": "float",
         "apikey": "str"
     }
-
+    if 'time' not in request.args:
+        time = utcNow()
+    else:
+        time = fromTimestamp(request.args['time'])
     params = paramsParse(__paramsList__, request.args)
-
     with database.atomic() as tx:
         try:
             client = Client.get(Client.id == params['client_id'])
@@ -66,7 +68,7 @@ def addEvent():
         if client.api_key != params['apikey']:
             return json.jsonify(result="invalid api key"), 403
         del params['apikey']
-        event = Event.create(**params)
+        event = Event.create(**params, timestamp=time)
         event.save()
         last_event, created = LastEvent.create_or_get(client_id=event.client_id, event_id=event.id)
         last_event.event_id = event.id
