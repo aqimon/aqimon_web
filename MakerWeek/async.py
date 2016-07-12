@@ -20,6 +20,11 @@ def sendMail(dst, subject, content):
     redis.publish("mail", msg)
 
 
-def sendNotification(clientID):
+def sendNotification(clientID, status):
     redis = getRedis()
-    redis.publish("notification", json.dumps({"clientID": clientID}))
+    redis.publish("notification", json.dumps({"clientID": clientID, "status": status}))
+
+
+def deleteClient(clientID):
+    redis = getRedis()
+    redis.publish("deleteclient", json.dumps({"clientID": clientID}))

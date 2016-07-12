@@ -76,7 +76,16 @@ def addEvent():
 
     broadcastEvent(event.toFrontendObject(include_geo=True))
     if overThreshold(event.colevel, event.dustlevel):
-        sendNotification(str(event.client_id.id))
+        if not client.last_notification:
+            sendNotification(str(event.client_id.id), True)
+            client.last_notification = True
+            client.save()
+    else:
+        if client.last_notification:
+            sendNotification(str(event.client_id.id), False)
+            client.last_notification = False
+            client.save()
+
     return json.jsonify(result="success")
 
 

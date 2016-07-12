@@ -72,6 +72,7 @@ class Client(BaseModel):
     owner = ForeignKeyField(rel_model=User, to_field='id')
     subscriber_list = JSONArrayField(null=False, default=[])
     api_key = CharField(default=lambda: genRandomString(20), unique=True)
+    last_notification = BooleanField(default=False)
 
     def toFrontendObject(self):
         response = {
