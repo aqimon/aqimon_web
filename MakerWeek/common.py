@@ -44,3 +44,12 @@ def genRandomString(length):
     rand = random.SystemRandom()
     letters = string.ascii_letters + string.digits
     return ''.join(rand.choice(letters) for _ in range(length))
+
+
+def utcNow():
+    return datetime.datetime.now(datetime.timezone.utc)
+
+
+def fromTimestamp(timestamp):
+    timestamp = int(timestamp)
+    return datetime.datetime.fromtimestamp(timestamp=timestamp, tz=datetime.timezone.utc)
