@@ -1,3 +1,5 @@
+var deleteButtonTimerID=null;
+
 $(function(){
     $("#edit-location-picker").locationpicker({
         inputBinding: {
@@ -94,16 +96,35 @@ $("#add-modal").on("show.bs.modal", function(){
 
 $("#delete-modal").on("show.bs.modal", function(e){
     var clientID=$(e.relatedTarget).data("clientid");
-    $("#delete-modal-clientid").text(clientID);
+    $(".delete-modal-clientid").text(clientID);
+    $("#delete-modal-delete-button").data("countdown", 5).data("clientid", clientID);
+    deleteButtonCountdown();
 })
+
+$("#delete-modal").on("hide.bs.modal", function(){
+    clearTimeout(deleteButtonTimerID);
+})
+
+function deleteButtonCountdown(){
+    var second=parseInt($("#delete-modal-delete-button").data("countdown"));
+    if (second==0){
+        $("#delete-modal-delete-button").prop("disabled", false).html('Delete this client');
+    } else {
+        $("#delete-modal-delete-button").prop("disabled", true).data("countdown", second-1);
+        $("#delete-modal-delete-button").html('Delete this client ('+second.toString()+')');
+        deleteButtonTimerID=setTimeout(deleteButtonCountdown, 1000);
+    }
+}
 
 $("#delete-modal-delete-button").on("click", function(){
     $("#delete-modal-delete-button").html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
     $("#delete-modal-delete-button").prop("disabled", true);
-    var clientID = $("#delete-modal-clientid").text(clientID);
+    var clientID = $("#delete-modal-delete-button").data("clientid");
     $.getJSON("/ajax/delete/client", {clientID: clientID}, function(data){
         if (data.result == "success"){
-            $("#delete-alert-success").show(400);
+            console.log("x");
+            $("#delete-modal").modal("hide");
+            $("#delete-success-modal").modal("show");
         }
     })
 })

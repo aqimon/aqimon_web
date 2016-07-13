@@ -27,4 +27,4 @@ def sendNotification(clientID, status):
 
 def deleteClient(clientID):
     redis = getRedis()
-    redis.publish("deleteclient", json.dumps({"clientID": clientID}))
+    redis.publish("delete_client", json.dumps({"clientID": clientID}))

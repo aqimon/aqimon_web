@@ -151,12 +151,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Delete client <span clas="delete-modal-clientid"></span></h4>
+                    <h4 class="modal-title">Delete client <span class="delete-modal-clientid"></span></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-success" id="delete-alert-success">
-                        <strong>Success</strong> Client deleted
-                    </div>
                     Do you really want to delete this client?<br/>
                     <h3>THIS ACTION CANNOT BE UNDONE</h3>
                     After deleting this client:
@@ -164,11 +161,9 @@
                         <li>This client will disappear from the website, links will return 404</li>
                         <li>All of this client's events will be purged.</li>
                     </ul>
-                    It may take 15 minutes for your client to be deleted from the website.
+                    It may take up to one day for your client to be deleted from the website.
                     <strong>You are advised to export this client's data before deleting to prevent data
                         loss.</strong><br/>
-                    To delete this client, please enter the name of this client below:<br/><br/>
-                    <input type="text" name="client-name" id="delete-modal-client-name" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -178,6 +173,23 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="delete-success-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Delete client <span class="delete-modal-clientid"></span></h4>
+                </div>
+                <div class="modal-body">
+                    You have successfully delete the client <span class="delete-modal-clientid"></span>.<br/>
+                    Please note it may take up to one day for this client's data to be fully deleted.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <button class="btn btn-block btn-primary btn-lg" data-toggle="modal" data-target="#add-modal" data-keyboard="true">
         <span class="glyphicon glyphicon-plus"></span>
         Add a new client

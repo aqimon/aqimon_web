@@ -4,9 +4,9 @@ import time
 
 from redis import StrictRedis
 
-from MakerWeek.async.delete_client import DeleteClient
-from MakerWeek.async.mail import Mail
-from MakerWeek.async.notification import Notification
+from MakerWeek.async_queue.delete_client import DeleteClient
+from MakerWeek.async_queue.mail import Mail
+from MakerWeek.async_queue.notification import Notification
 
 table = {
     "mail": Mail(),
