@@ -2,6 +2,10 @@ import email.mime.text
 import smtplib
 
 
+##
+## Yeah, I know I shouldn't use Gmail, but I'm too freaking lazy to implement SES
+##
+
 class Mail:
     def __init__(self):
         self.EMAIL_USERNAME = "M4k3rW33d@gmail.com"
@@ -23,4 +27,11 @@ class Mail:
         content["From"] = self.EMAIL_USERNAME
         content["To"] = dst
         content["Subject"] = subject
-        self.smtp.sendmail(self.EMAIL_USERNAME, dst, content.as_string())
+        success = False
+        while not success:
+            try:
+                self.smtp.sendmail(self.EMAIL_USERNAME, dst, content.as_string())
+            except Exception:
+                self._login()
+            else:
+                success = True

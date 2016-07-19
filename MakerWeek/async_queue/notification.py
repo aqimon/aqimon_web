@@ -22,7 +22,7 @@ class Notification:
                 msg = json.dumps({
                     "dst": user.email,
                     "subject": "high {}".format(clientID),
-                    "msg": "Client {} has high value readings, which indicated bad air quality.".format(clientID)
+                    "msg": "Client {} has high value readings, which indicates bad air quality.".format(clientID)
                 })
             else:
                 msg = json.dumps({
