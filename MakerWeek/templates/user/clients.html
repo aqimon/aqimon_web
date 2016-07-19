@@ -190,6 +190,38 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <div class="modal fade" id="export-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Export client</h4>
+                </div>
+                <div class="modal-body">
+                    <lable class="radio-inline">
+                        <input type="radio" name="format" value="json"> json
+                    </lable>
+                    <lable class="radio-inline">
+                        <input type="radio" name="format" value="csv"> csv
+                    </lable>
+                    <br/>
+                    <lable class="radio-inline">
+                        <input type="radio" name="compression" value="none"> no compression
+                    </lable>
+                    <lable class="radio-inline">
+                        <input type="radio" name="compression" value="gzip"> gzip
+                    </lable>
+                    <lable class="radio-inline">
+                        <input type="radio" name="compression" value="bzip2"> bzip2
+                    </lable>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Export</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <button class="btn btn-block btn-primary btn-lg" data-toggle="modal" data-target="#add-modal" data-keyboard="true">
         <span class="glyphicon glyphicon-plus"></span>
         Add a new client

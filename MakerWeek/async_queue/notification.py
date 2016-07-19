@@ -1,14 +1,11 @@
 import json
 
 from peewee import *
-from redis import StrictRedis
 
+from MakerWeek.async_queue.redis import sendQueue
 from MakerWeek.database.database import database, Client, User
 
-
 class Notification:
-    redis = StrictRedis()
-
     def __init__(self):
         pass
 
@@ -33,5 +30,5 @@ class Notification:
                     "subject": "low {}".format(clientID),
                     "msg": "low {}".format(clientID)
                 })
-            self.redis.publish("mail", msg)
+            sendQueue("mail", msg)
         database.close()

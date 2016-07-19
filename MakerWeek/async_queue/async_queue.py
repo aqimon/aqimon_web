@@ -5,13 +5,16 @@ import time
 from redis import StrictRedis
 
 from MakerWeek.async_queue.delete_client import DeleteClient
+from MakerWeek.async_queue.export import ExportClient
 from MakerWeek.async_queue.mail import Mail
 from MakerWeek.async_queue.notification import Notification
 
 table = {
     "mail": Mail(),
     "notification": Notification(),
-    "delete_client": DeleteClient()
+    "delete_client": DeleteClient(),
+    "export_client": ExportClient(),
+    # "export_user": ExportUser()
 }
 
 

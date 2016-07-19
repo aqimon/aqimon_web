@@ -1,7 +1,7 @@
 from flask import Blueprint, g, request, json, redirect
 from peewee import DoesNotExist
 
-from MakerWeek.async import deleteClient
+from MakerWeek.async import deleteClient, exportClient
 from MakerWeek.common import checkPassword, hashPassword, paramsParse
 from MakerWeek.database.database import Client
 
@@ -120,4 +120,28 @@ def delClient():
     if client.owner != g.user:
         return json.jsonify(result="you don't have permission"), 403
     deleteClient(clientID)
+    return json.jsonify(result="success")
+
+
+@ajax.route("/export/client")
+def exportClient():
+    if g.user is None:
+        return json.jsonify(result="Need to login")
+    clientID = request.args['clientID']
+    client = Client.get(Client.id == clientID)
+    if client.owner != g.user:
+        return json.jsonify(result="you don't have permission"), 403
+    exportClient(clientID)
+    return json.jsonify(result="success")
+
+
+@ajax.route("/export/user")
+def exportUser():
+    if g.user is None:
+        return json.jsonify(result="Need to login")
+    clientID = request.args['clientID']
+    client = Client.get(Client.id == clientID)
+    if client.owner != g.user:
+        return json.jsonify(result="you don't have permission"), 403
+    # exportClient(clientID)
     return json.jsonify(result="success")
