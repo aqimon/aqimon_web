@@ -18,7 +18,7 @@ def paramsParse(paramsList, paramsValue):
 
 
 def overThreshold(coLevel, dustLevel):
-    return coLevel >= 0 and dustLevel >= 0
+    return coLevel >= 222 and dustLevel >= 0.2
 
 
 def timeSubtract(days=0, hours=0, minutes=0, seconds=0):

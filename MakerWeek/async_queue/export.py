@@ -3,7 +3,7 @@ import csv
 import gzip
 import json
 
-from MakerWeek.async_queue.redis import sendQueue
+from MakerWeek.async_queue.redis_helper import sendQueue
 from MakerWeek.common import genRandomString, utcNow
 from MakerWeek.database.database import database, Client, Event
 

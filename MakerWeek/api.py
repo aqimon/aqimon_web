@@ -55,11 +55,11 @@ def addEvent():
         "colevel": "float",
         "apikey": "str"
     }
-    if 'time' not in request.args:
-        time = utcNow()
-    else:
-        time = fromTimestamp(request.args['time'])
     params = paramsParse(__paramsList__, request.args)
+    if 'time' not in request.args:
+        params['time'] = utcNow()
+    else:
+        params['time'] = fromTimestamp(request.args['time'])
     with database.atomic() as tx:
         try:
             client = Client.get(Client.id == params['client_id'])
@@ -68,7 +68,7 @@ def addEvent():
         if client.api_key != params['apikey']:
             return json.jsonify(result="invalid api key"), 403
         del params['apikey']
-        event = Event.create(**params, timestamp=time)
+        event = Event.create(**params, )
         event.save()
         last_event, created = LastEvent.create_or_get(client_id=event.client_id, event_id=event.id)
         last_event.event_id = event.id

@@ -2,7 +2,7 @@ import json
 
 from peewee import *
 
-from MakerWeek.async_queue.redis import sendQueue
+from MakerWeek.async_queue.redis_helper import sendQueue
 from MakerWeek.database.database import database, Client, User
 
 class Notification:

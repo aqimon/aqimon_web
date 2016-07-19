@@ -226,13 +226,13 @@ $(function(){
         subscribeButton.prop("disabled", true);
         subscribeButton.html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
         if (subscribeState=="subscribe"){
-            $.getJSON("/ajax/notification/subscribe", data={"clientID": id}, function(data){
+            $.getJSON("/ajax/notification/subscribe", data={"clientID": info.id}, function(data){
                 subscribeButton.prop("disabled", false);
                 subscribeButton.html("Unsubscribe");
                 subscribeState="unsubscribe";
             })
         } else {
-            $.getJSON("/ajax/notification/unsubscribe", {"clientID": id}, function(data){
+            $.getJSON("/ajax/notification/unsubscribe", {"clientID": info.id}, function(data){
                 subscribeButton.prop("disabled", false);
                 subscribeButton.html("Subscribe");
                 subscribeState="subscribe";
