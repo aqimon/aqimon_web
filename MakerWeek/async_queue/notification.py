@@ -21,14 +21,14 @@ class Notification:
             if data['status']:
                 msg = json.dumps({
                     "dst": user.email,
-                    "subject": "low {}".format(clientID),
-                    "msg": "low {}".format(clientID)
+                    "subject": "high {}".format(clientID),
+                    "msg": "Client {} has high value readings, which indicated bad air quality.".format(clientID)
                 })
             else:
                 msg = json.dumps({
                     "dst": user.email,
                     "subject": "low {}".format(clientID),
-                    "msg": "low {}".format(clientID)
+                    "msg": "Client {} readings has gone normal.".format(clientID)
                 })
             sendQueue("mail", msg)
         database.close()
