@@ -6,18 +6,14 @@ from flask import session
 from peewee import *
 
 from MakerWeek.common import hashPassword, checkPassword, genRandomString
+from MakerWeek.config import Config
 
-# database = MySQLDatabase(host=app.config['DB_HOST'],
-#                          user=app.config['DB_USER'],
-#                          password=app.config['DB_PASSWORD'],
-#                          database=app.config['DB_USERNAME'],
-#                          fields={"JSONArray": "varchar"})
-
-database = MySQLDatabase(host="localhost",
-                         user="e3",
-                         password="e3e3e3e3",
-                         database="e3",
+database = MySQLDatabase(host=Config.DB_HOST,
+                         user=Config.DB_USER,
+                         password=Config.DB_PASSWORD,
+                         database=Config.DB_NAME,
                          fields={"JSONArray": "varchar"})
+
 
 def utcTime():
     return datetime.datetime.now(datetime.timezone.utc)
@@ -84,6 +80,10 @@ class Client(BaseModel):
             'owner': self.owner.id
         }
         return response
+
+    def getTags(self):
+        tags = [tagsMap.tags_id.title for tagsMap in TagsMap.select(Tags).where(TagsMap.client_id == self.id)]
+        return tags
 
 class Event(BaseModel):
     # auto id field
@@ -162,3 +162,12 @@ class LoginToken(BaseModel):
         if not checkPassword(token_obj.token_hash, token_value):
             raise InvalidToken
         return token_obj.user_id
+
+
+class Tags(BaseModel):
+    title = CharField(index=True)
+
+
+class TagsMap(BaseModel):
+    tags_id = ForeignKeyField(rel_model=Tags, to_field="id", index=True)
+    client_id = ForeignKeyField(rel_model=Client, to_field="id", index=True)

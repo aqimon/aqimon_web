@@ -19,6 +19,9 @@
         body {
            padding-top: 50px;
         }
+        #search-bar {
+            min-width: 250px;
+        }
     </style>
     {% block css %}{% endblock %}
 </head>
@@ -89,6 +92,12 @@
                 {% endfor %}
                 {% endif %}
             </ul>
+            <form class="navbar-form navbar-right" role="search" action="/search" method="get">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="q" placeholder="Search a name, a tag or client ID"
+                           id="search-bar">
+                </div>
+            </form>
         </div>
     </div>
 </nav>

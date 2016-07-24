@@ -4,7 +4,7 @@ from peewee import DoesNotExist
 from MakerWeek.ajax import ajax
 from MakerWeek.api import api
 from MakerWeek.authentication import authentication
-from MakerWeek.common import genRandomString
+from MakerWeek.config import Config
 from MakerWeek.database.database import database, User, Client, LoginToken, InvalidToken
 from MakerWeek.realtime import realtimeServer
 from MakerWeek.user import user
@@ -14,8 +14,9 @@ app.register_blueprint(api)
 app.register_blueprint(authentication)
 app.register_blueprint(user)
 app.register_blueprint(ajax)
+app.config.from_object(Config)
 realtimeServer.init_app(app)
-app.secret_key = genRandomString(512)
+
 
 @app.before_request
 def checkLogin():
@@ -58,7 +59,8 @@ def map():
 
 @app.route("/client/<clientID>")
 def client(clientID):
-    return render_template("client.html", client=Client.get(Client.id == clientID).toFrontendObject())
+    client = Client.get(Client.id == clientID)
+    return render_template("client.html", client=client.toFrontendObject())
 
 
 @app.route("/data")
