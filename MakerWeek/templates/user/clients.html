@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% block title %} MakerWeek user {{ g.user.username }} clients page {% endblock %}
-{% block css %}
-<link rel="stylesheet" href="/static/css/user/clients.css"/>
-{% endblock %}
 {% block content %}
 <div class="container-fluid">
     <h1>My clients</h1>
@@ -63,7 +60,7 @@
                                 <input type="text" class="form-control" id="edit-address">
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="form-group">
                             <label for="edit-latitude" class="col-sm-2 control-label">Latitude</label>
                             <div class="col-sm-4">
                                 <input type="number" class="form-control" id="edit-latitude">
@@ -71,6 +68,12 @@
                             <label for="edit-longitude" class="col-sm-2 control-label">Longitude</label>
                             <div class="col-sm-4">
                                 <input type="number" class="form-control" id="edit-longitude">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-address" class="col-sm-2 control-label">Tags</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-tags" data-role="tagsinput">
                             </div>
                         </div>
                         <div id="edit-location-picker"></div>
@@ -198,22 +201,22 @@
                     <h4 class="modal-title">Export client</h4>
                 </div>
                 <div class="modal-body">
-                    <lable class="radio-inline">
+                    <label class="radio-inline">
                         <input type="radio" name="format" value="json"> json
-                    </lable>
-                    <lable class="radio-inline">
+                    </label>
+                    <label class="radio-inline">
                         <input type="radio" name="format" value="csv"> csv
-                    </lable>
+                    </label>
                     <br/>
-                    <lable class="radio-inline">
+                    <label class="radio-inline">
                         <input type="radio" name="compression" value="none"> no compression
-                    </lable>
-                    <lable class="radio-inline">
+                    </label>
+                    <label class="radio-inline">
                         <input type="radio" name="compression" value="gzip"> gzip
-                    </lable>
-                    <lable class="radio-inline">
+                    </label>
+                    <label class="radio-inline">
                         <input type="radio" name="compression" value="bzip2"> bzip2
-                    </lable>
+                    </label>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -232,4 +235,9 @@
 <script src="/static/js/user/clients.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places&language=en&region=VN"></script>
 <script src="/static/js/locationpicker.jquery.js"></script>
+<script src="/static/js/bootstrap-tagsinput.js"></script>
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/bootstrap-tagsinput.css"/>
+<link rel="stylesheet" href="/static/css/user/clients.css"/>
 {% endblock %}

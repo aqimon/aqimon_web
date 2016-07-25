@@ -37,7 +37,9 @@ $("#edit-modal-submit-button").on("click", function(){
         latitude: $("#edit-latitude").val(),
         longitude: $("#edit-longitude").val(),
         address: $("#edit-address").val(),
+        tags: JSON.stringify($("#edit-tags").tagsinput('items')),
     };
+    console.log(data);
     $.getJSON("/ajax/edit/client", data, function(data){
         if (data.result == "success"){
             $("#edit-modal-submit-button").html('Save changes');
@@ -127,4 +129,8 @@ $("#delete-modal-delete-button").on("click", function(){
             $("#delete-success-modal").modal("show");
         }
     })
+})
+
+$("#edit-tags").tagsinput({
+    focusClass: "bootstrap-tagsinput-focus"
 })

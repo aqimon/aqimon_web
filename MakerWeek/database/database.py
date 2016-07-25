@@ -82,7 +82,7 @@ class Client(BaseModel):
         return response
 
     def getTags(self):
-        tags = [tagsMap.tags_id.title for tagsMap in TagsMap.select(Tags).where(TagsMap.client_id == self.id)]
+        tags = [tagsMap.tag_id for tagsMap in TagsMap.select().join(Tags).where(TagsMap.client_id == self.id)]
         return tags
 
 class Event(BaseModel):
@@ -169,5 +169,5 @@ class Tags(BaseModel):
 
 
 class TagsMap(BaseModel):
-    tags_id = ForeignKeyField(rel_model=Tags, to_field="id", index=True)
+    tag_id = ForeignKeyField(rel_model=Tags, to_field="id", index=True)
     client_id = ForeignKeyField(rel_model=Client, to_field="id", index=True)

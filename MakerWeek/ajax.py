@@ -2,11 +2,37 @@ from flask import Blueprint, g, request, json, redirect
 from peewee import DoesNotExist
 
 from MakerWeek.async import deleteClient, exportClient
-from MakerWeek.common import checkPassword, hashPassword, paramsParse
-from MakerWeek.database.database import Client
+from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract
+from MakerWeek.database.database import Client, Tags, Event, TagsMap
 
 ajax = Blueprint('ajax', __name__, url_prefix="/ajax")
 
+
+@ajax.route("/get/client")
+def getClientInfo():
+    clientID = request.args['clientID']
+    includeEvents = 'includeEvents' in request.args
+    try:
+        client = Client.get(Client.id == clientID)
+    except DoesNotExist:
+        return json.jsonify({"msg": "no such client"}), 404
+    response = {
+        "clientID": client.id,
+        "name": client.name,
+        "latitude": client.latitude,
+        "longitude": client.longitude,
+        "address": client.address,
+        "owner": client.owner.id
+    }
+    if includeEvents:
+        events = (Event
+                  .select(Event, Client)
+                  .join(Client)
+                  .where((Event.client_id == client.id) & (Event.timestamp >= timeSubtract(days=1))))
+        response.update({
+            "events": [event.toFrontendObject(include_id=False) for event in events]
+        })
+    return json.jsonify(**response)
 
 @ajax.route("/notification/subscribe")
 def subscribe():
@@ -95,8 +121,10 @@ def editClient():
         "latitude": "float",
         "longitude": "float",
         "address": "str",
+        "tags": "str"
     }
     params = paramsParse(__paramsList__, request.args)
+    params['tags'] = json.loads(params['tags'])
     try:
         client = Client.get(Client.id == params['clientID'])
     except DoesNotExist:
@@ -108,6 +136,8 @@ def editClient():
     client.longitude = params['longitude']
     client.address = params['address']
     client.save()
+    Tags.addTags(params['tags'])
+    TagsMap.createLink()
     return json.jsonify(result="success")
 
 
