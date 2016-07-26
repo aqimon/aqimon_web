@@ -13,19 +13,25 @@ function initMap(latitude, longitude){
     marker.setMap(map)
 }
 
-function setInfo(id, name, latitude, longitude, address){
+function setInfo(id, name, latitude, longitude, address, tags){
     info = {
         id: id,
         name: name,
         latitude: latitude,
         longitude: longitude,
-        address: address
+        address: address,
+        tags: tags
     };
     $("#name").text(name)
     $("#clientid").text(id);
     $("#latitude").text(latitude);
     $("#longitude").text(longitude);
     $("#address").text(address);
+    $("#tags").html("");
+    for (i=0; i<tags.length; i++){
+        a=$("<a></a>").prop("href", "/tags/"+encodeURI(tags[i])).addClass("label label-info").text(tags[i]);
+        $("#tags").append(a).append("\n");
+    }
 }
 
 function initChart(){
@@ -220,7 +226,7 @@ $(function(){
     })
 
     initMap(info.latitude, info.longitude);
-    setInfo(info.id, info.name, info.latitude, info.longitude, info.address);
+    setInfo(info.id, info.name, info.latitude, info.longitude, info.address, info.tags);
 
     subscribeButton.click(function(){
         subscribeButton.prop("disabled", true);
@@ -267,12 +273,13 @@ if (enableEdit){
             latitude: $("#edit-latitude").val(),
             longitude: $("#edit-longitude").val(),
             address: $("#edit-address").val(),
+            tags: JSON.stringify($("#edit-tags").tagsinput("items"))
         };
         $.getJSON("/ajax/edit/client", data, function(res){
             if (res.result == "success"){
                 $("#edit-modal-submit-button").html('Save changes');
                 $("#edit-modal-submit-button").prop("disabled", false);
-                setInfo(data.id, data.name, data.latitude, data.longitude, data.address);
+                setInfo(data.id, data.name, data.latitude, data.longitude, data.address, $("#edit-tags").tagsinput("items"));
                 latlng = {
                     lat: parseFloat(data.latitude),
                     lng: parseFloat(data.longitude)
@@ -293,5 +300,12 @@ if (enableEdit){
         $("#edit-latitude").val(info.latitude);
         $("#edit-longitude").val(info.longitude);
         $("#edit-address").val(info.address);
+        $("#edit-tags").tagsinput("removeAll");
+        for (i=0; i<info.tags.length; i++)
+            $("#edit-tags").tagsinput("add", info.tags[i]);
+    })
+
+    $("#edit-tags").tagsinput({
+        focusClass: "bootstrap-tagsinput-focus"
     })
 }

@@ -37,6 +37,7 @@ class BaseModel(Model):
 class IncorrectPassword(Exception):
     pass
 
+
 class User(BaseModel):
     # auto id field
     username = CharField(unique=True)
@@ -77,13 +78,15 @@ class Client(BaseModel):
             'address': self.address,
             'latitude': self.latitude,
             'longitude': self.longitude,
-            'owner': self.owner.id
+            'owner': self.owner.id,
+            'tags': [tag.title for tag in self.getTags()]
         }
         return response
 
     def getTags(self):
         tags = [tagsMap.tag_id for tagsMap in TagsMap.select().join(Tags).where(TagsMap.client_id == self.id)]
         return tags
+
 
 class Event(BaseModel):
     # auto id field
@@ -140,6 +143,7 @@ class ForgotToken(BaseModel):
 class InvalidToken(Exception):
     pass
 
+
 class LoginToken(BaseModel):
     token_key = CharField(primary_key=True)
     token_hash = CharField()
@@ -171,3 +175,11 @@ class Tags(BaseModel):
 class TagsMap(BaseModel):
     tag_id = ForeignKeyField(rel_model=Tags, to_field="id", index=True)
     client_id = ForeignKeyField(rel_model=Client, to_field="id", index=True)
+
+    @staticmethod
+    def link(client, tags):
+        with database.atomic():
+            TagsMap.delete().where(TagsMap.client_id == client).execute()
+            for tagTitle in tags:
+                tag, _ = Tags.get_or_create(title=tagTitle)
+                TagsMap.create(tag_id=tag, client_id=client)

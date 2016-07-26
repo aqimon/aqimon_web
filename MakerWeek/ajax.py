@@ -3,7 +3,7 @@ from peewee import DoesNotExist
 
 from MakerWeek.async import deleteClient, exportClient
 from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract
-from MakerWeek.database.database import Client, Tags, Event, TagsMap
+from MakerWeek.database.database import Client, Event, TagsMap
 
 ajax = Blueprint('ajax', __name__, url_prefix="/ajax")
 
@@ -22,7 +22,8 @@ def getClientInfo():
         "latitude": client.latitude,
         "longitude": client.longitude,
         "address": client.address,
-        "owner": client.owner.id
+        "owner": client.owner.id,
+        "tags": [tag.title for tag in client.getTags()]
     }
     if includeEvents:
         events = (Event
@@ -33,6 +34,7 @@ def getClientInfo():
             "events": [event.toFrontendObject(include_id=False) for event in events]
         })
     return json.jsonify(**response)
+
 
 @ajax.route("/notification/subscribe")
 def subscribe():
@@ -108,6 +110,9 @@ def addClient():
     params = paramsParse(__paramsList__, request.args)
     params['owner'] = g.user.id
     client = Client.create(**params)
+    if 'tags' in request.args:
+        tags = json.loads(request.args['tags'])
+        TagsMap.link(client, tags)
     return json.jsonify(result="success", apiKey=client.api_key, clientID=str(client.id))
 
 
@@ -136,8 +141,7 @@ def editClient():
     client.longitude = params['longitude']
     client.address = params['address']
     client.save()
-    Tags.addTags(params['tags'])
-    TagsMap.createLink()
+    TagsMap.link(client, params['tags'])
     return json.jsonify(result="success")
 
 

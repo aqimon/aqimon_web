@@ -107,14 +107,20 @@
                                 <input type="text" class="form-control" id="add-address">
                             </div>
                         </div>
-                        <div class="row">
-                            <label for="add-latitude" class="col-sm-2 control-label">Latitude</label>
+                        <div class="form-group">
+                            <label for="edit-latitude" class="col-sm-2 control-label">Latitude</label>
                             <div class="col-sm-4">
                                 <input type="number" class="form-control" id="add-latitude">
                             </div>
-                            <label for="add-longitude" class="col-sm-2 control-label">Longitude</label>
+                            <label for="edit-longitude" class="col-sm-2 control-label">Longitude</label>
                             <div class="col-sm-4">
                                 <input type="number" class="form-control" id="add-longitude">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-address" class="col-sm-2 control-label">Tags</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="add-tags" data-role="tagsinput">
                             </div>
                         </div>
                         <div id="add-location-picker"></div>
@@ -232,12 +238,12 @@
 </div>
 {% endblock %}
 {% block js %}
-<script src="/static/js/user/clients.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places&language=en&region=VN"></script>
 <script src="/static/js/locationpicker.jquery.js"></script>
 <script src="/static/js/bootstrap-tagsinput.js"></script>
+<script src="/static/js/user/clients.js"></script>
 {% endblock %}
 {% block css %}
-<link rel="stylesheet" href="/static/css/bootstrap-tagsinput.css"/>
-<link rel="stylesheet" href="/static/css/user/clients.css"/>
+<link rel="stylesheet" href="/static/css/bootstrap-tagsinput.css">
+<link rel="stylesheet" href="/static/css/user/clients.css">
 {% endblock %}

@@ -1,33 +1,5 @@
 var deleteButtonTimerID=null;
 
-$(function(){
-    $("#edit-location-picker").locationpicker({
-        inputBinding: {
-            latitudeInput: $("#edit-latitude"),
-            longitudeInput: $("#edit-longitude"),
-            locationNameInput: $("#edit-address"),
-        },
-        radius: 0,
-        enableAutocomplete: true,
-        enableReverseGeocode: true
-    });
-
-    $("#add-location-picker").locationpicker({
-        location: {
-            latitude: 0,
-            longitude: 0,
-        },
-        inputBinding: {
-            latitudeInput: $("#add-latitude"),
-            longitudeInput: $("#add-longitude"),
-            locationNameInput: $("#add-address"),
-        },
-        radius: 0,
-        enableAutocomplete: true,
-        enableReverseGeocode: true
-    })
-})
-
 $("#edit-modal-submit-button").on("click", function(){
     $("#edit-modal-submit-button").html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
     $("#edit-modal-submit-button").prop("disabled", true);
@@ -49,7 +21,20 @@ $("#edit-modal-submit-button").on("click", function(){
 })
 
 $("#edit-modal").on("shown.bs.modal", function(e){
-    $("#edit-location-picker").locationpicker('autosize');
+    $("#edit-location-picker").locationpicker({
+        location: {
+            latitude: $("#edit-latitude").val(),
+            longitude: $("#edit-longitude").val(),
+        },
+        inputBinding: {
+            latitudeInput: $("#edit-latitude"),
+            longitudeInput: $("#edit-longitude"),
+            locationNameInput: $("#edit-address"),
+        },
+        radius: 0,
+        enableAutocomplete: true,
+        enableReverseGeocode: true
+    });
 })
 
 $("#edit-modal").on("show.bs.modal", function(e){
@@ -61,11 +46,27 @@ $("#edit-modal").on("show.bs.modal", function(e){
         $("#edit-latitude").val(data.latitude);
         $("#edit-longitude").val(data.longitude);
         $("#edit-address").val(data.address);
+        $("#edit-tags").tagsinput("removeAll");
+        for (i=0; i<data.tags.length; i++)
+            $("#edit-tags").tagsinput("add", data.tags[i]);
     });
 })
 
 $("#add-modal").on("shown.bs.modal", function(e){
-    $("#add-location-picker").locationpicker('autosize');
+    $("#add-location-picker").locationpicker({
+        location: {
+            latitude: 0,
+            longitude: 0,
+        },
+        inputBinding: {
+            latitudeInput: $("#add-latitude"),
+            longitudeInput: $("#add-longitude"),
+            locationNameInput: $("#add-address"),
+        },
+        radius: 0,
+        enableAutocomplete: true,
+        enableReverseGeocode: true
+    })
 })
 
 $("#add-modal-submit-button").on("click", function(){
@@ -76,6 +77,7 @@ $("#add-modal-submit-button").on("click", function(){
         latitude: $("#add-latitude").val(),
         longitude: $("#add-longitude").val(),
         address: $("#add-address").val(),
+        tags: JSON.stringify($("#add-tags").tagsinput("items"))
     };
     $.getJSON("/ajax/add/client", data, function(data){
         if (data.result == "success"){
@@ -132,5 +134,9 @@ $("#delete-modal-delete-button").on("click", function(){
 })
 
 $("#edit-tags").tagsinput({
+    focusClass: "bootstrap-tagsinput-focus"
+})
+
+$("#add-tags").tagsinput({
     focusClass: "bootstrap-tagsinput-focus"
 })
