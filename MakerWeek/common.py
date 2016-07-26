@@ -1,4 +1,5 @@
 import datetime
+import json
 import random
 import string
 
@@ -13,6 +14,13 @@ def paramsParse(paramsList, paramsValue):
             tmp = int(tmp)
         elif paramType == "float":
             tmp = float(tmp)
+        elif paramType == "json":
+            tmp = json.loads(tmp)
+        elif paramType == "bool":
+            if tmp == "true":
+                tmp = True
+            else:
+                tmp = False
         params[paramName] = tmp
     return params
 

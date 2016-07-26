@@ -60,6 +60,9 @@ def map():
 @app.route("/client/<clientID>")
 def client(clientID):
     client = Client.get(Client.id == clientID)
+    if client.private:
+        if client.owner != g.user:
+            return "nothing here", 403
     return render_template("client.html", client=client.toFrontendObject())
 
 

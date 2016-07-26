@@ -1,8 +1,8 @@
 from flask import Blueprint, g, request, json, redirect
-from peewee import DoesNotExist
+from peewee import DoesNotExist, fn, SQL
 
 from MakerWeek.async import deleteClient, exportClient
-from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract
+from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract, fromTimestamp
 from MakerWeek.database.database import Client, Event, TagsMap
 
 ajax = Blueprint('ajax', __name__, url_prefix="/ajax")
@@ -16,6 +16,9 @@ def getClientInfo():
         client = Client.get(Client.id == clientID)
     except DoesNotExist:
         return json.jsonify({"msg": "no such client"}), 404
+    if client.private:
+        if client.owner != g.user:
+            return "", 403
     response = {
         "clientID": client.id,
         "name": client.name,
@@ -23,7 +26,8 @@ def getClientInfo():
         "longitude": client.longitude,
         "address": client.address,
         "owner": client.owner.id,
-        "tags": [tag.title for tag in client.getTags()]
+        "tags": [tag.title for tag in client.getTags()],
+        "private": client.private
     }
     if includeEvents:
         events = (Event
@@ -103,6 +107,7 @@ def addClient():
         "latitude": "float",
         "longitude": "float",
         "address": "str",
+        "private": "bool",
     }
 
     if g.user is None:
@@ -110,9 +115,8 @@ def addClient():
     params = paramsParse(__paramsList__, request.args)
     params['owner'] = g.user.id
     client = Client.create(**params)
-    if 'tags' in request.args:
-        tags = json.loads(request.args['tags'])
-        TagsMap.link(client, tags)
+    tags = json.loads(request.args['tags'])
+    TagsMap.link(client, tags)
     return json.jsonify(result="success", apiKey=client.api_key, clientID=str(client.id))
 
 
@@ -126,10 +130,10 @@ def editClient():
         "latitude": "float",
         "longitude": "float",
         "address": "str",
-        "tags": "str"
+        "tags": "json",
+        "private": "bool"
     }
     params = paramsParse(__paramsList__, request.args)
-    params['tags'] = json.loads(params['tags'])
     try:
         client = Client.get(Client.id == params['clientID'])
     except DoesNotExist:
@@ -140,6 +144,7 @@ def editClient():
     client.latitude = params['latitude']
     client.longitude = params['longitude']
     client.address = params['address']
+    client.private = params['private']
     client.save()
     TagsMap.link(client, params['tags'])
     return json.jsonify(result="success")
@@ -179,3 +184,78 @@ def exportUser():
         return json.jsonify(result="you don't have permission"), 403
     # exportClient(clientID)
     return json.jsonify(result="success")
+
+
+@ajax.route("/get/client_data_range")
+def getEventRange(clientID, rangeFrom, rangeTo):
+    # asumming 5 min interval
+    client = Client.get(Client.id == clientID)
+    dateFrom = fromTimestamp(rangeFrom)
+    dateTo = fromTimestamp(rangeTo)
+    delta = dateTo - dateFrom
+    if client.private and (client.owner != g.user):
+        return "", 403
+    if (delta.days <= 1):
+        # range <= 1 day, return all
+        # 288 points
+        print("1 day query")
+        events = (Event
+                  .select()
+                  .where((Event.client_id == client) & (Event.timestamp >= dateFrom) & (Event.timestamp <= dateTo))
+                  .order_by(Event.timestamp))
+    elif (delta.days <= 3):
+        # range <= 3 days, 10 minutes period
+        # 432 points
+        print("3 days query")
+        events = (Event
+                  .select(SQL(
+            "(timestamp - interval (MINUTE(timestamp) mod 10) MINUTE - interval SECOND(timestamp) SECOND) AS timestamp"),
+            fn.AVG(Event.temperature).alias("temperature"),
+            fn.AVG(Event.humidity).alias("humidity"),
+            fn.AVG(Event.dustlevel).alias("dustlevel"),
+            fn.AVG(Event.colevel).alias("colevel"))
+                  .where((Event.client_id == client) & (Event.timestamp >= dateFrom) & (Event.timestamp <= dateTo))
+                  .group_by(fn.DATE(Event.timestamp), fn.HOUR(Event.timestamp), SQL("MINUTE(timestamp) div 10"))
+                  .order_by(Event.timestamp))
+    elif (delta.days <= 7):
+        # range <= 1 week, 20 minutes period
+        # 504 points
+        print("7 days query")
+        events = (Event
+                  .select(SQL(
+            "(timestamp - interval (MINUTE(timestamp) mod 20) MINUTE - interval SECOND(timestamp) SECOND) AS timestamp"),
+            fn.AVG(Event.temperature).alias("temperature"),
+            fn.AVG(Event.humidity).alias("humidity"),
+            fn.AVG(Event.dustlevel).alias("dustlevel"),
+            fn.AVG(Event.colevel).alias("colevel"))
+                  .where((Event.client_id == client) & (Event.timestamp >= dateFrom) & (Event.timestamp <= dateTo))
+                  .group_by(fn.DATE(Event.timestamp), fn.HOUR(Event.timestamp), SQL("MINUTE(timestamp) div 20"))
+                  .order_by(Event.timestamp))
+    elif (delta.days <= 30):
+        # range <= 1 month, 2 hour period, average
+        # 372 points per type
+        print("30 days query")
+        events = (Event
+                  .select(SQL(
+            "(timestamp - interval MINUTE(timestamp) MINUTE - interval SECOND(timestamp) SECOND) AS timestamp"),
+            fn.AVG(Event.temperature).alias("temperature"),
+            fn.AVG(Event.humidity).alias("humidity"),
+            fn.AVG(Event.dustlevel).alias("dustlevel"),
+            fn.AVG(Event.colevel).alias("colevel"))
+                  .where((Event.client_id == client) & (Event.timestamp >= dateFrom) & (Event.timestamp <= dateTo))
+                  .group_by(fn.DATE(Event.timestamp), SQL("HOUR(timestamp) div 2"))
+                  .order_by(Event.timestamp))
+    else:
+        print(">1 month query")
+        # range >=1 month, 1 day period, average
+        # min 365/366 datapoints per type
+        events = (Event
+                  .select(fn.DATE(Event.timestamp).alias("timestamp"),
+                          fn.AVG(Event.temperature).alias("temperature"),
+                          fn.AVG(Event.humidity).alias("humidity"),
+                          fn.AVG(Event.dustlevel).alias("dustlevel"),
+                          fn.AVG(Event.colevel).alias("colevel"))
+                  .where((Event.client_id == client) & (Event.timestamp >= dateFrom) & (Event.timestamp <= dateTo))
+                  .group_by(fn.DATE(Event.timestamp))
+                  .order_by(Event.timestamp))
+    return json.jsonify(result=[event.toFrontendObject(include_id=False) for event in events])

@@ -70,6 +70,7 @@ class Client(BaseModel):
     subscriber_list = JSONArrayField(null=False, default=[])
     api_key = CharField(default=lambda: genRandomString(20), unique=True)
     last_notification = BooleanField(default=False)
+    private = BooleanField(default=False)
 
     def toFrontendObject(self):
         response = {
@@ -79,7 +80,8 @@ class Client(BaseModel):
             'latitude': self.latitude,
             'longitude': self.longitude,
             'owner': self.owner.id,
-            'tags': [tag.title for tag in self.getTags()]
+            'tags': [tag.title for tag in self.getTags()],
+            'private': self.private
         }
         return response
 

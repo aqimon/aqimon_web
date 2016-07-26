@@ -11,6 +11,10 @@ $("#edit-modal-submit-button").on("click", function(){
         address: $("#edit-address").val(),
         tags: JSON.stringify($("#edit-tags").tagsinput('items')),
     };
+    if ($("#edit-private").prop("checked"))
+        data.private="true";
+    else
+        data.private="false";
     console.log(data);
     $.getJSON("/ajax/edit/client", data, function(data){
         if (data.result == "success"){
@@ -46,6 +50,7 @@ $("#edit-modal").on("show.bs.modal", function(e){
         $("#edit-latitude").val(data.latitude);
         $("#edit-longitude").val(data.longitude);
         $("#edit-address").val(data.address);
+        $("#edit-private").prop("checked", data.private);
         $("#edit-tags").tagsinput("removeAll");
         for (i=0; i<data.tags.length; i++)
             $("#edit-tags").tagsinput("add", data.tags[i]);
@@ -79,6 +84,10 @@ $("#add-modal-submit-button").on("click", function(){
         address: $("#add-address").val(),
         tags: JSON.stringify($("#add-tags").tagsinput("items"))
     };
+    if ($("#add-private").prop("checked"))
+        data.private="true";
+    else
+        data.private="false";
     $.getJSON("/ajax/add/client", data, function(data){
         if (data.result == "success"){
             $("#add-modal-submit-button").html('Add client');
@@ -96,6 +105,8 @@ $("#add-modal").on("show.bs.modal", function(){
     $("#add-latitude").val("");
     $("#add-longitude").val("");
     $("#add-address").val("");
+    $("#add-private").prop("checked", false);
+    $("#add-tags").tagsinput("removeAll");
 })
 
 $("#delete-modal").on("show.bs.modal", function(e){

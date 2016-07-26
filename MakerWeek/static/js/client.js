@@ -13,23 +13,16 @@ function initMap(latitude, longitude){
     marker.setMap(map)
 }
 
-function setInfo(id, name, latitude, longitude, address, tags){
-    info = {
-        id: id,
-        name: name,
-        latitude: latitude,
-        longitude: longitude,
-        address: address,
-        tags: tags
-    };
-    $("#name").text(name)
-    $("#clientid").text(id);
-    $("#latitude").text(latitude);
-    $("#longitude").text(longitude);
-    $("#address").text(address);
+function setInfo(data){
+    info = data;
+    $("#name").text(info.name)
+    $("#clientid").text(info.id);
+    $("#latitude").text(info.latitude);
+    $("#longitude").text(info.longitude);
+    $("#address").text(info.address);
     $("#tags").html("");
-    for (i=0; i<tags.length; i++){
-        a=$("<a></a>").prop("href", "/tags/"+encodeURI(tags[i])).addClass("label label-info").text(tags[i]);
+    for (i=0; i<info.tags.length; i++){
+        a=$("<a></a>").prop("href", "/tags/"+encodeURI(info.tags[i])).addClass("label label-info").text(info.tags[i]);
         $("#tags").append(a).append("\n");
     }
 }
@@ -226,7 +219,7 @@ $(function(){
     })
 
     initMap(info.latitude, info.longitude);
-    setInfo(info.id, info.name, info.latitude, info.longitude, info.address, info.tags);
+    setInfo(info);
 
     subscribeButton.click(function(){
         subscribeButton.prop("disabled", true);
@@ -275,11 +268,16 @@ if (enableEdit){
             address: $("#edit-address").val(),
             tags: JSON.stringify($("#edit-tags").tagsinput("items"))
         };
+        if ($("#edit-private").prop("checked"))
+            data.private="true";
+        else
+            data.private="false";
         $.getJSON("/ajax/edit/client", data, function(res){
             if (res.result == "success"){
                 $("#edit-modal-submit-button").html('Save changes');
                 $("#edit-modal-submit-button").prop("disabled", false);
-                setInfo(data.id, data.name, data.latitude, data.longitude, data.address, $("#edit-tags").tagsinput("items"));
+                data.tags=JSON.parse(data.tags)
+                setInfo(data);
                 latlng = {
                     lat: parseFloat(data.latitude),
                     lng: parseFloat(data.longitude)
@@ -300,6 +298,7 @@ if (enableEdit){
         $("#edit-latitude").val(info.latitude);
         $("#edit-longitude").val(info.longitude);
         $("#edit-address").val(info.address);
+        $("#edit-private").prop("checked", info.private);
         $("#edit-tags").tagsinput("removeAll");
         for (i=0; i<info.tags.length; i++)
             $("#edit-tags").tagsinput("add", info.tags[i]);
