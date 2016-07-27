@@ -49,7 +49,10 @@ def login():
     session['wsTokenKey'], session['wsTokenValue'] = WebsocketToken.new(user)
     if 'remember-me' in request.form:
         session.permanent = True
-    return redirect(request.form['from'])
+    if 'previous' in session:
+        return redirect(session['previous'])
+    else:
+        return redirect("/")
 
 
 @authentication.route("/signout")

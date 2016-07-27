@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, g, json
+from flask import Flask, render_template, session, g, json, request
 
 from MakerWeek.ajax import ajax
 from MakerWeek.api import api
@@ -22,19 +22,21 @@ def checkLogin():
     if ('tokenKey' not in session) or ('tokenValue' not in session) or ('wsTokenKey' not in session) or (
                 'wsTokenValue' not in session):
         g.user = None
+        session['previous'] = request.path
     else:
         try:
             g.user = LoginToken.use(session['tokenKey'], session['tokenValue'])
             wsUser = WebsocketToken.use(session['wsTokenKey'], session['wsTokenValue'])
         except (InvalidToken):
             User.logout()
+            session['previous'] = request.path
             return
         if wsUser != g.user:
             User.logout()
+            session['previous'] = request.path
             return
         g.wsTokenKey = session['wsTokenKey']
         g.wsTokenValue = session['wsTokenValue']
-
 
 
 @app.before_request
