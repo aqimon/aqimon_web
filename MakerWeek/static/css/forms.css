@@ -18,6 +18,10 @@ h1 {
     display: none;
 }
 
+.well {
+    padding-left: 35px;
+    padding-right: 35px;
+}
 .glyphicon .spinning {
             animation: spin 1s infinite linear;
             -webkit-animation: spin2 1s infinite linear;

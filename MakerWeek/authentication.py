@@ -47,6 +47,8 @@ def login():
     except (DoesNotExist, IncorrectPassword):
         return redirect("/login?failure")
     session['wsTokenKey'], session['wsTokenValue'] = WebsocketToken.new(user)
+    if 'remember-me' in request.form:
+        session.permanent = True
     return redirect(request.form['from'])
 
 
@@ -76,8 +78,11 @@ def resetPassword():
     return json.jsonify(result="success")
 
 
-@authentication.route("/forgot2/<token>", methods=["GET"])
-def resetPassword2(token):
+@authentication.route("/forgot2", methods=["GET"])
+def resetPassword2():
+    if 'token' not in request.args:
+        return redirect("/")
+    token = request.args['token']
     with database.atomic() as tx:
         try:
             token_obj = ForgotToken.get((ForgotToken.token == token) & (ForgotToken.timestamp >= timeSubtract(days=1)))

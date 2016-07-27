@@ -30,15 +30,20 @@
             <strong>You need to login to proceed futher</strong>
         </div>
         <form action="/login" method="post">
-            <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+            <div class="form-group">
                 <input placeholder="Your username" name="username" type="text" class="form-control">
             </div>
-            <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <div class="form-group">
                 <input type="password" name="password" placeholder="Your password" class="form-control">
             </div>
             <input type="hidden" name="from" value="{{request.args['from']}}">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="remember-me"><b>Remember me (for up to one month)</b>
+                    </label>
+                </div>
+            </div>
             <button type="submit" class="btn btn-block btn-primary btn-lg">Log in</button>
             <a href="/forgot" type="button" class="btn btn-block btn-lg btn-info">
                 I forgot my password

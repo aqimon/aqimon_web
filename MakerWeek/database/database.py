@@ -57,10 +57,7 @@ class User(BaseModel):
 
     @staticmethod
     def logout():
-        del session['tokenKey']
-        del session['tokenValue']
-        del session['wsTokenKey']
-        del session['wsTokenValue']
+        session.clear()
 
 
 class Client(BaseModel):

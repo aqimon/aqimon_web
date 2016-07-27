@@ -12,10 +12,12 @@ class ProductionConfig(object):
 class DevelopmentConfig(object):
     DEBUG = True
     PROPAGATE_EXCEPTIONS = True
+    SERVER_NAME = "localhost:5000"
 
 
 class Config(DevelopmentConfig):
     SECRET_KEY = genRandomString(256)
+    PREFERRED_URL_SCHEME = "http"
 
     PORT = 5000
 
