@@ -79,12 +79,20 @@ $(function(){
 
     socketio.on("connect", function (){
         console.log("connected to server");
-        socketio.emit("json", {"action": "getRecent"}, function (data){
-            for (i=0; i<data.length; i++){
+        param = {
+            "action": "getRecent"
+        };
+        if (wsTokenKey && wsTokenValue){
+            param.wsTokenKey=wsTokenKey;
+            param.wsTokenValue=wsTokenValue;
+        }
+        socketio.emit("json", param, function(data){
+            for (i=0; i<data.length; i++)
                 setClient(data[i]);
-            }
-        });
-        socketio.emit("json", {"action": "joinRoom", "room": "index"})
+            socketio.emit("json", {"action": "joinClientRoom", "clientid": "index"});
+            param.action="joinAllPrivateRooms";
+            socketio.emit("json", param);
+        })
     });
 
     socketio.on("connect_error", function (data){

@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, session, g, json
 from peewee import DoesNotExist
 
-from MakerWeek import async_queue
+from MakerWeek import async
 from MakerWeek.common import hashPassword, timeSubtract, genRandomString
-from MakerWeek.database.database import User, ForgotToken, database, IncorrectPassword
+from MakerWeek.database.database import User, ForgotToken, database, IncorrectPassword, WebsocketToken
 
 authentication = Blueprint("authentication", __name__, url_prefix="")
 
@@ -39,9 +39,14 @@ def login():
     username = request.form['username']
     password = request.form['password']
     try:
-        session['tokenKey'], session['tokenValue'] = User.get(User.username == username).login(password)
+        user = User.get(User.username == username)
+    except DoesNotExist:
+        return redirect("/login?failure")
+    try:
+        session['tokenKey'], session['tokenValue'] = user.login(password)
     except (DoesNotExist, IncorrectPassword):
         return redirect("/login?failure")
+    session['wsTokenKey'], session['wsTokenValue'] = WebsocketToken.new(user)
     return redirect(request.form['from'])
 
 
@@ -67,7 +72,7 @@ def resetPassword():
     mailContent = render_template("authentication/forgotEmail.html",
                                   token=ft_obj.token,
                                   expiration=ft_obj.timestamp.isoformat())
-    async_queue.sendMail(email, "MakerWeek reset your password", mailContent)
+    async.sendMail(email, "MakerWeek reset your password", mailContent)
     return json.jsonify(result="success")
 
 
@@ -85,5 +90,5 @@ def resetPassword2(token):
         token_obj.delete_instance()
     mailContent = render_template("authentication/forgot2Email.html",
                                   newPassword=newPassword)
-    async_queue.sendMail(user.email, "New password", mailContent)
+    async.sendMail(user.email, "New password", mailContent)
     return redirect("/login?resetSuccess")

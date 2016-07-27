@@ -5,7 +5,8 @@ from peewee import DoesNotExist
 
 from MakerWeek.async import sendNotification
 from MakerWeek.common import paramsParse, overThreshold, utcNow, fromTimestamp
-from MakerWeek.database.database import Client, User, Event, ForgotToken, LoginToken, database, LastEvent, Tags, TagsMap
+from MakerWeek.database.database import Client, User, Event, ForgotToken, LoginToken, database, LastEvent, Tags, \
+    TagsMap, WebsocketToken
 from MakerWeek.realtime import broadcastEvent
 
 api = Blueprint('api', __name__, url_prefix="/api")
@@ -46,7 +47,7 @@ def addEvent():
         last_event.event_id = event.id
         last_event.save()
 
-    broadcastEvent(event.toFrontendObject(include_geo=True))
+    broadcastEvent(event.toFrontendObject(include_geo=True), private=client.private)
     if overThreshold(event.colevel, event.dustlevel):
         if not client.last_notification:
             sendNotification(str(event.client_id.id), True)
@@ -63,5 +64,6 @@ def addEvent():
 
 @api.route("/debug/burn")
 def burn():
-    database.create_tables([User, Client, Event, ForgotToken, LoginToken, LastEvent, Tags, TagsMap], safe=False)
+    database.create_tables([User, Client, Event, ForgotToken, LoginToken, LastEvent, Tags, TagsMap, WebsocketToken],
+                           safe=False)
     return json.jsonify(result="success")

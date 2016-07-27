@@ -11,7 +11,9 @@ def generateClientInfo(uuid):
         "name": uuid,
         "latitude": random.randint(-300, 300) / 10,
         "longitude": random.randint(-300, 300) / 10,
-        "address": "{} Ngo Quyen".format(random.randint(0, 1696))
+        "address": "{} Ngo Quyen".format(random.randint(0, 1696)),
+        "private": "true",
+        "tags": '["bot", "automatic", "testbot"]'
     }
 
 
@@ -23,15 +25,15 @@ def generateEvent(uuid):
         "dustlevel": random.randint(0, 10) / 10,
         "colevel": random.randint(0, 10) / 10,
         "apikey": uuid[1],
-        "time": int(currTime.timestamp())
+        "time": int(currTime.timestamp()),
     }
 
 
 def login(session):
     print("Logging in...")
     data = {
-        "username": "x",
-        "password": "x",
+        "username": "y",
+        "password": "y",
     }
     session.post("http://localhost:5000/login", data=data)
 

@@ -1,11 +1,10 @@
 from flask import Flask, render_template, session, g, json
-from peewee import DoesNotExist
 
 from MakerWeek.ajax import ajax
 from MakerWeek.api import api
 from MakerWeek.authentication import authentication
 from MakerWeek.config import Config
-from MakerWeek.database.database import database, User, Client, LoginToken, InvalidToken
+from MakerWeek.database.database import database, Client, LoginToken, InvalidToken, WebsocketToken, User
 from MakerWeek.realtime import realtimeServer
 from MakerWeek.user import user
 
@@ -20,18 +19,22 @@ realtimeServer.init_app(app)
 
 @app.before_request
 def checkLogin():
-    if ('tokenKey' not in session) or ('tokenValue' not in session):
+    if ('tokenKey' not in session) or ('tokenValue' not in session) or ('wsTokenKey' not in session) or (
+                'wsTokenValue' not in session):
         g.user = None
     else:
         try:
-            userID = LoginToken.use(session['tokenKey'], session['tokenValue'])
+            g.user = LoginToken.use(session['tokenKey'], session['tokenValue'])
+            wsUser = WebsocketToken.use(session['wsTokenKey'], session['wsTokenValue'])
         except (InvalidToken):
-            g.user = None
+            User.logout()
             return
-        try:
-            g.user = User.get(User.id == userID)
-        except DoesNotExist:
-            g.user = None
+        if wsUser != g.user:
+            User.logout()
+            return
+        g.wsTokenKey = session['wsTokenKey']
+        g.wsTokenValue = session['wsTokenValue']
+
 
 
 @app.before_request
@@ -41,7 +44,7 @@ def initDatabase():
 
 
 @app.teardown_request
-def deinitDatabase(args):
+def deinitDatabase(_):
     if 'hasdb' in g:
         database.close()
         del g.hasdb

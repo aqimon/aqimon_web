@@ -1,0 +1,14 @@
+{% macro wsAuthInfo() %}
+<script>
+    {% if g.user is none %}
+        wsTokenKey=null;
+        wsTokenValue=null;
+    {% else %}
+        wsTokenKey="{{ g.wsTokenKey }}";
+        wsTokenValue="{{ g.wsTokenValue }}";
+    {% endif %}
+
+
+
+</script>
+{% endmacro %}

@@ -57,7 +57,10 @@ class User(BaseModel):
 
     @staticmethod
     def logout():
-        session.clear()
+        del session['tokenKey']
+        del session['tokenValue']
+        del session['wsTokenKey']
+        del session['wsTokenValue']
 
 
 class Client(BaseModel):
@@ -185,3 +188,27 @@ class TagsMap(BaseModel):
             for tagTitle in tags:
                 tag, _ = Tags.get_or_create(title=tagTitle)
                 TagsMap.create(tag_id=tag, client_id=client)
+
+
+class WebsocketToken(BaseModel):
+    user_id = ForeignKeyField(rel_model=User, to_field="id")
+    token_key = CharField(primary_key=True)
+    token_hash = CharField()
+
+    @staticmethod
+    def new(user_id):
+        token_key = genRandomString(32)
+        token_value = genRandomString(128)
+        token_hash = hashPassword(token_value)
+        WebsocketToken.create(token_key=token_key, token_hash=token_hash, user_id=user_id)
+        return token_key, token_value
+
+    @staticmethod
+    def use(token_key, token_value):
+        try:
+            token_obj = WebsocketToken.get(WebsocketToken.token_key == token_key)
+        except DoesNotExist:
+            raise InvalidToken
+        if not checkPassword(token_obj.token_hash, token_value):
+            raise InvalidToken
+        return token_obj.user_id

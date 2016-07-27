@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "functions.html" import wsAuthInfo %}
 {% set currPage="map" %}
 {% block title %} MakerWeek map {% endblock %}
 {% block css %}
@@ -11,6 +12,7 @@
 </div>
 {% endblock %}
 {% block js %}
+{{ wsAuthInfo() }}
 <script src="/static/js/jquery.js"></script>
 <script src="/static/js/sprintf.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places&language=en&region=VN"></script>
