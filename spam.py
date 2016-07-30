@@ -4,7 +4,7 @@ import uuid
 
 import requests
 
-CLIENT_NUM = 4
+CLIENT_NUM = 100
 
 def generateClientInfo(uuid):
     return {
@@ -32,14 +32,15 @@ def generateEvent(uuid):
 def login(session):
     print("Logging in...")
     data = {
-        "username": "y",
-        "password": "y",
+        "username": "x",
+        "password": "x",
     }
     session.post("http://localhost:5000/login", data=data)
 
 
 random.seed()
 clients = []
+counter = 0
 
 session = requests.Session()
 login(session)
@@ -59,5 +60,5 @@ print("Now we do some spam")
 while True:
     for uuid in clients:
         event = generateEvent(uuid)
-        session.get("http://localhost:5000/api/add/event", params=event)
+        print(session.get("http://localhost:5000/add/event", params=event).text)
     currTime += delta

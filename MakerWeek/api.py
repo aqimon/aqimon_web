@@ -5,8 +5,7 @@ from peewee import DoesNotExist
 
 from MakerWeek.async import sendNotification
 from MakerWeek.common import paramsParse, overThreshold, utcNow, fromTimestamp
-from MakerWeek.database.database import Client, User, Event, ForgotToken, LoginToken, database, LastEvent, Tags, \
-    TagsMap, WebsocketToken
+from MakerWeek.database.database import Client, Event, database, LastEvent, createAllTables
 from MakerWeek.realtime import broadcastEvent
 
 api = Blueprint('api', __name__, url_prefix="/api")
@@ -34,7 +33,7 @@ def addEvent():
         params['timestamp'] = utcNow()
     else:
         params['timestamp'] = fromTimestamp(request.args['time'])
-    with database.atomic() as tx:
+    with database.atomic():
         try:
             client = Client.get(Client.id == params['client_id'])
         except DoesNotExist:
@@ -62,8 +61,4 @@ def addEvent():
     return json.jsonify(result="success")
 
 
-@api.route("/debug/burn")
-def burn():
-    database.create_tables([User, Client, Event, ForgotToken, LoginToken, LastEvent, Tags, TagsMap, WebsocketToken],
-                           safe=False)
-    return json.jsonify(result="success")
+api.add_url_rule(rule="/debug/burn", view_func=createAllTables)

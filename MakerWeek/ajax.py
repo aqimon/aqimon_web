@@ -3,7 +3,7 @@ from peewee import DoesNotExist, fn, SQL
 
 from MakerWeek.async import deleteClient, exportClient
 from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract, fromTimestamp
-from MakerWeek.database.database import Client, Event, TagsMap
+from MakerWeek.database.database import Client, Event, TagsMap, Tags
 
 ajax = Blueprint('ajax', __name__, url_prefix="/ajax")
 
@@ -259,3 +259,37 @@ def getEventRange(clientID, rangeFrom, rangeTo):
                   .group_by(fn.DATE(Event.timestamp))
                   .order_by(Event.timestamp))
     return json.jsonify(result=[event.toFrontendObject(include_id=False) for event in events])
+
+
+@ajax.route("/tags/top5")
+def tagsTop5():
+    raw = (Tags
+           .select(Tags.title, Tags.description)
+           .join(TagsMap)
+           .group_by(Tags.id)
+           .order_by(fn.COUNT(TagsMap.client_id))
+           .limit(5))
+    result = []
+    for q in raw:
+        result.append({"title": q.title, "description": q.description})
+    return json.jsonify(result)
+
+
+@ajax.route("/tags/suggest")
+def tagsSuggest():
+    query = request.args['q']
+    words = query.split(" ")
+    words[-1] += '*'
+    query = " ".join(words)
+    raw = (Tags
+           .select(Tags.title, Tags.description)
+           .join(TagsMap)
+           .where(SQL("MATCH(title) AGAINST(%s IN BOOLEAN MODE)", (query,)))
+           .group_by(Tags.id)
+           .order_by(fn.COUNT(TagsMap.client_id))
+           .limit(5))
+
+    result = []
+    for q in raw:
+        result.append({"title": q.title, "description": q.description})
+    return json.jsonify(result)

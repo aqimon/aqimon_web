@@ -1,5 +1,26 @@
 var deleteButtonTimerID=null;
 
+var tagsSuggestion = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    prefetch: "/ajax/tags/top5",
+    remote: {
+        url: "/ajax/tags/suggest?q=%query",
+        wildcard: "%query"
+    }
+})
+
+
+$("#edit-tags").tagsinput({
+    focusClass: "bootstrap-tagsinput-focus",
+    typeaheadjs: {
+        source: tagsSuggestion.ttAdapter(),
+        displayKey: "title",
+        valueKey: "title",
+        name: "edittags",
+    }
+})
+
 $("#edit-modal-submit-button").on("click", function(){
     $("#edit-modal-submit-button").html('<span class="glyphicon glyphicon-refresh spinning"></span> Loading');
     $("#edit-modal-submit-button").prop("disabled", true);
@@ -144,10 +165,12 @@ $("#delete-modal-delete-button").on("click", function(){
     })
 })
 
-$("#edit-tags").tagsinput({
-    focusClass: "bootstrap-tagsinput-focus"
-})
-
 $("#add-tags").tagsinput({
-    focusClass: "bootstrap-tagsinput-focus"
+    focusClass: "bootstrap-tagsinput-focus",
+    typeaheadjs: {
+        source: tagsSuggestion.ttAdapter(),
+        displayKey: "title",
+        valueKey: "title",
+        name: "edittags",
+    }
 })

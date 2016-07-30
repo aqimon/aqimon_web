@@ -3,7 +3,10 @@
 {% set isOwner=(g.user.id == client.owner) %}
 {% block title %} MakerWeek client {{ client.id }} {% endblock %}
 {% block css %}
+{% if isOwner %}
+<link rel="stylesheet" href="/static/css/bootstrap-tagsinput-typeahead.css">
 <link rel="stylesheet" href="/static/css/bootstrap-tagsinput.css">
+{% endif %}
 <link rel="stylesheet" href="/static/css/client.css">
 {% endblock %}
 {% block content %}
@@ -134,6 +137,7 @@
 {% if isOwner %}
 <script src="/static/js/locationpicker.jquery.js"></script>
 <script src="/static/js/bootstrap-tagsinput.js"></script>
+<script src="/static/js/typeahead.bundle.min.js"></script>
 {% endif %}
 <script src="/static/js/client.js"></script>
 {% endblock %}

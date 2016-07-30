@@ -19,6 +19,18 @@ def utcTime():
     return datetime.datetime.now(datetime.timezone.utc)
 
 
+def createAllTables():
+    # first: create all tables
+    database.create_tables([User, Client, Event, ForgotToken, LoginToken, LastEvent, Tags, TagsMap, WebsocketToken],
+                           safe=False)
+    # second: create fulltext index:
+    #   Client.name
+    #   Tags.title
+    #   User.username?
+    database.execute_sql("ALTER TABLE client ADD FULLTEXT(name)")
+    database.execute_sql("ALTER TABLE tags ADD FULLTEXT(title)")
+    return json.dumps({"result": "success"})
+
 class JSONArrayField(Field):
     db_field = "longtext"
 
@@ -36,6 +48,7 @@ class BaseModel(Model):
 
 class IncorrectPassword(Exception):
     pass
+
 
 
 class User(BaseModel):
@@ -67,6 +80,7 @@ class Client(BaseModel):
     latitude = FloatField()
     longitude = FloatField()
     owner = ForeignKeyField(rel_model=User, to_field='id')
+    description = TextField()
     subscriber_list = JSONArrayField(null=False, default=[])
     api_key = CharField(default=lambda: genRandomString(20), unique=True)
     last_notification = BooleanField(default=False)
@@ -172,7 +186,7 @@ class LoginToken(BaseModel):
 
 class Tags(BaseModel):
     title = CharField(index=True)
-
+    description = TextField()
 
 class TagsMap(BaseModel):
     tag_id = ForeignKeyField(rel_model=Tags, to_field="id", index=True)

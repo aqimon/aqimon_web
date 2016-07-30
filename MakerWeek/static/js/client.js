@@ -304,7 +304,23 @@ if (enableEdit){
             $("#edit-tags").tagsinput("add", info.tags[i]);
     })
 
+    var tagsSuggestion = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: "/ajax/tags/top5",
+        remote: {
+            url: "/ajax/tags/suggest?q=%query",
+            wildcard: "%query"
+        }
+    })
+
     $("#edit-tags").tagsinput({
-        focusClass: "bootstrap-tagsinput-focus"
+        focusClass: "bootstrap-tagsinput-focus",
+        typeaheadjs: {
+            source: tagsSuggestion.ttAdapter(),
+            displayKey: "title",
+            valueKey: "title",
+            name: "edittags",
+        }
     })
 }
