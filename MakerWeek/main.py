@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, g, json, request
+from flask import Flask, render_template, session, g, request
 
 from MakerWeek.ajax import ajax
 from MakerWeek.api import api
@@ -76,6 +76,6 @@ def data():
     return render_template("data.html")
 
 
-@app.route("/xmlrpc.php", methods=['POST'])
-def spam():
-    return json.jsonify(result="fuck you")
+@app.route("/search")
+def search():
+    return render_template("search.html")

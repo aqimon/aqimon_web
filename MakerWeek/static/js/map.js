@@ -12,25 +12,25 @@ markersList={};
 currentOpenInfobox=null;
 
 function setClient(data){
-    var clientID=data.clientID;
+    var id=data.id;
     data.time=Date(data.time).toString()
-    if (clientID in markersList) {
-        markersList[clientID].infobox.setContent(generateContent(data));
-        markersList[clientID].marker.setAnimation(google.maps.Animation.BOUNCE);
+    if (id in markersList) {
+        markersList[id].infobox.setContent(generateContent(data));
+        markersList[id].marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function(client){
             console.log(client);
             client.marker.setAnimation(null);
-        }, 1000, markersList[clientID]);
+        }, 1000, markersList[id]);
     } else {
-        markersList[clientID]=newMarker(data);
-        markersList[clientID].marker.setAnimation(google.maps.Animation.DROP);
+        markersList[id]=newMarker(data);
+        markersList[id].marker.setAnimation(google.maps.Animation.DROP);
     }
 }
 function newMarker(data){
     var marker=new google.maps.Marker({
         position: {lat: data.latitude, lng: data.longitude},
         map: map,
-        title: sprintf("Client %(clientID)s", data)
+        title: sprintf("Client %(name)s", data)
     });
     var infobox=new google.maps.InfoWindow({
         content: generateContent(data)
@@ -53,7 +53,7 @@ function generateContent(data){
             </div> \
             <hr class="infobox-hr"/> \
             <div class="infobox-content"> \
-                <b>Client ID</b>: %(clientID)s<br /> \
+                <b>Client ID</b>: %(id)s<br /> \
                 <b>Latitude</b>: %(latitude).3f<br /> \
                 <b>Longitude</b>: %(longitude).3f<br /> \
                 <b>Address</b>: %(latitude)s<br /> \
@@ -64,7 +64,7 @@ function generateContent(data){
                 <b>Timestamp</b>: %(time)s <br /> \
             </div> \
             <br \> \
-            <a class="btn btn-primary btn-block" href="/client/%(clientID)s"> \
+            <a class="btn btn-primary btn-block" href="/client/%(id)s"> \
                 <span class="glyphicon glyphicon-new-window"></span> \
                 Client details \
             </a> \

@@ -1,29 +1,12 @@
 {% extends "base.html" %}
-{% set currPage="index" %}
-{% block title %} MakerWeek {% endblock %}
+{% set currPage="search" %}
 {% block css %}
-<style>
-    #index-searchbar {
-        width: 80vw;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .text-center {
-        text-align: center
-    }
-
-</style>
+<link rel="stylesheet" href="/static/css/search-page.css">
 {% endblock %}
 {% block content %}
-<div class="jumbotron">
-    <div class="container">
-        <h1>MakerWeek</h1>
-    </div>
-</div>
 <div id="index-searchbar">
     <h1 class="text-center">Try typing something here</h1>
-    <form action="/search" method="post" role="form">
+    <form onsubmit="initiateSearch(); return false;">
         <div class="input-group">
             <div class="input-group-btn">
                 <button type="button"
@@ -64,7 +47,7 @@
                             <li>+<i>keyword</i>: Only return results that contain <i>keyword</i></li>
                             <li>-<i>keyword</i>: Only return results that don't contain <i>keyword</i></li>
                             <li>"<i>keyword</i>": Only return results that contain the exact phrase</li>
-                            <li>tags:<i>keyword</i>: Only return results that hthe tag <i>keyword</i></li>
+                            <li>tags:<i>keyword</i>: Only return results that has the tag <i>keyword</i></li>
                             <li>username:<i>keyword</i>: Only return results which its owner is <i>keyword</i></li>
                         </ul>
                     </div>
@@ -73,13 +56,10 @@
         </div>
     </form>
 </div>
+<div id="result">
+</div>
 {% endblock %}
 {% block js %}
-<script>
-        $("#search-dropdown-options li").on("click", function(){
-            $("#search-dropdown-text").text($(this).text());
-        });
-        $("#search-dropdown-text").text("Client");
-
-</script>
+<script src="/static/js/sprintf.js"></script>
+<script src="/static/js/search-page.js"></script>
 {% endblock %}

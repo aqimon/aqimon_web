@@ -3,7 +3,7 @@ from peewee import DoesNotExist, fn, SQL
 
 from MakerWeek.async import deleteClient, exportClient
 from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract, fromTimestamp
-from MakerWeek.database.database import Client, Event, TagsMap, Tags
+from MakerWeek.database.database import Client, LastEvent, Event, TagsMap, Tags, User
 
 ajax = Blueprint('ajax', __name__, url_prefix="/ajax")
 
@@ -293,3 +293,58 @@ def tagsSuggest():
     for q in raw:
         result.append({"title": q.title, "description": q.description})
     return json.jsonify(result)
+
+
+@ajax.route("/search")
+def navbarSearch():
+    type = request.args['type']
+    keywords = request.args['q']
+    if 'page' in request.args:
+        page = int(request.args['page'])
+    else:
+        page = 1
+    if type == "Tags":
+        query = (Tags
+                 .select()
+                 .where(SQL("MATCH(title) AGAINST(%s IN BOOLEAN MODE)", (keywords,))
+                        | SQL("MATCH(description) AGAINST(%s IN BOOLEAN MODE)", (keywords,)))
+                 .paginate(page, 10))
+        return json.jsonify([{
+                                 "title": tag.title,
+                                 "description": tag.description} for tag in query])
+    elif type == "User":
+        query = (User
+                 .select()
+                 .where(SQL("MATCH(username) AGAINST(%s IN BOOLEAN MODE)", (keywords,)))
+                 .paginate(page, 10))
+        return json.jsonify([{
+                                 "username": user.title} for user in query])
+    elif type == "Client":
+        keywords = request.args['q']
+        tags = []
+        names = []
+        for keyword in keywords.split(" "):
+            if keyword.startswith("tags:"):
+                tags.append(keyword[5:])
+            else:
+                names.append(keyword)
+        names[-1] += '*'
+
+        query = (LastEvent
+                 .select()
+                 .join(Client, on=(LastEvent.client_id == Client.id))
+                 .join(TagsMap, on=(TagsMap.client_id == Client.id))
+                 .join(Tags, on=(Tags.id == TagsMap.tag_id))
+                 .where(SQL("MATCH(name) AGAINST(%s IN BOOLEAN MODE)", (" ".join(names),)))
+                 .group_by(Client.id))
+        if len(tags) != 0:
+            query = (query
+                     .where(SQL("MATCH(title) AGAINST(%s IN BOOLEAN MODE)", (" ".join(tags),))))
+        if g.user is None:
+            query = (query
+                     .where(~Client.private))
+        else:
+            query = (query
+                     .where(~Client.private | (Client.private & Client.owner == g.user)))
+        query = query.paginate(page, 10)
+        return json.jsonify([q.event_id.toFrontendObject(include_id=True, include_geo=True) for q in query])

@@ -24,11 +24,12 @@ def createAllTables():
     database.create_tables([User, Client, Event, ForgotToken, LoginToken, LastEvent, Tags, TagsMap, WebsocketToken],
                            safe=False)
     # second: create fulltext index:
-    #   Client.name
-    #   Tags.title
-    #   User.username?
+
     database.execute_sql("ALTER TABLE client ADD FULLTEXT(name)")
+    database.execute_sql("ALTER TABLE client ADD FULLTEXT(description)")
     database.execute_sql("ALTER TABLE tags ADD FULLTEXT(title)")
+    database.execute_sql("ALTER TABLE tags ADD FULLTEXT(description)")
+    database.execute_sql("ALTER TABLE user ADD FULLTEXT(user)")
     return json.dumps({"result": "success"})
 
 class JSONArrayField(Field):
@@ -80,7 +81,7 @@ class Client(BaseModel):
     latitude = FloatField()
     longitude = FloatField()
     owner = ForeignKeyField(rel_model=User, to_field='id')
-    description = TextField()
+    description = TextField(default="")
     subscriber_list = JSONArrayField(null=False, default=[])
     api_key = CharField(default=lambda: genRandomString(20), unique=True)
     last_notification = BooleanField(default=False)
@@ -133,8 +134,9 @@ class Event(BaseModel):
             })
         if include_id:
             response.update({
-                "clientID": str(self.client_id.id),
-                "name": self.client_id.name
+                "id": str(self.client_id.id),
+                "name": self.client_id.name,
+                'tags': [tag.title for tag in self.client_id.getTags()],
             })
         return response
 
@@ -142,7 +144,6 @@ class Event(BaseModel):
 class LastEvent(BaseModel):
     client_id = ForeignKeyField(rel_model=Client, to_field='id', primary_key=True)
     event_id = ForeignKeyField(rel_model=Event, to_field='id')
-
 
 class ForgotToken(BaseModel):
     token = CharField(primary_key=True, default=lambda: genRandomString(128))
@@ -185,8 +186,8 @@ class LoginToken(BaseModel):
 
 
 class Tags(BaseModel):
-    title = CharField(index=True)
-    description = TextField()
+    title = CharField(index=True, unique=True)
+    description = TextField(default="")
 
 class TagsMap(BaseModel):
     tag_id = ForeignKeyField(rel_model=Tags, to_field="id", index=True)
