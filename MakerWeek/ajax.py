@@ -64,16 +64,13 @@ def unsubscribe():
     return json.jsonify(result="success")
 
 
-@ajax.route("/user_settings/save_general")
+@ajax.route("/user_settings/save_general", methods=["POST"])
 def saveGeneralSettings():
     if g.user is None:
         redirect("/login?needToLogin")
-    newUsername = request.args['username']
-    newEmail = request.args['email']
-    newPhone = request.args['phone']
-    g.user.username = newUsername
-    g.user.email = newEmail
-    g.user.phone = newPhone
+    g.user.email = request.form['email']
+    g.user.phone = request.form['phone']
+    g.user.name = request.form['name']
     g.user.save()
     return json.jsonify(result="success")
 
@@ -295,6 +292,27 @@ def tagsSuggest():
     return json.jsonify(result)
 
 
+@ajax.route("/tags/list_clients")
+def tagsListClients():
+    title = request.args['title']
+    if 'page' not in request.args:
+        page = 1
+    else:
+        page = int(request.args['page'])
+    query = (LastEvent
+             .select(LastEvent, Client)
+             .join(Event)
+             .join(Client)
+             .join(TagsMap)
+             .join(Tags)
+             .where(Tags.title == title)
+             .group_by(Tags.id)
+             .paginate(page, 10))
+
+    return json.jsonify(
+        [q.event_id.toFrontendObject(include_id=True, include_geo=True, include_owner=True) for q in query])
+
+
 @ajax.route("/search")
 def navbarSearch():
     type = request.args['type']
@@ -305,20 +323,28 @@ def navbarSearch():
         page = 1
     if type == "Tags":
         query = (Tags
-                 .select()
+                 .select(Tags.title, Tags.description, fn.COUNT(SQL("client_id_id")).alias("count"))
+                 .join(TagsMap)
                  .where(SQL("MATCH(title) AGAINST(%s IN BOOLEAN MODE)", (keywords,))
                         | SQL("MATCH(description) AGAINST(%s IN BOOLEAN MODE)", (keywords,)))
-                 .paginate(page, 10))
+                 .group_by(TagsMap.tag_id)
+                 .paginate(page, 12)
+                 .dicts())
         return json.jsonify([{
-                                 "title": tag.title,
-                                 "description": tag.description} for tag in query])
+                                 "title": tag['title'],
+                                 "description": tag['description'],
+                                 "count": tag['count']
+                             } for tag in query])
     elif type == "User":
         query = (User
                  .select()
-                 .where(SQL("MATCH(username) AGAINST(%s IN BOOLEAN MODE)", (keywords,)))
+                 .where(SQL("MATCH(username) AGAINST(%s IN BOOLEAN MODE)", (keywords,))
+                        | SQL("MATCH(name) AGAINST(%s IN BOOLEAN MODE)", (keywords,)))
                  .paginate(page, 10))
         return json.jsonify([{
-                                 "username": user.title} for user in query])
+                                 "username": user.title,
+                                 "name": user.name,
+                                 "avatar": user.avatar} for user in query])
     elif type == "Client":
         keywords = request.args['q']
         tags = []
@@ -336,7 +362,7 @@ def navbarSearch():
                  .join(User, on=(Client.owner == User.id))
                  .join(TagsMap, on=(TagsMap.client_id == Client.id))
                  .join(Tags, on=(Tags.id == TagsMap.tag_id))
-                 .where(SQL("MATCH(name) AGAINST(%s IN BOOLEAN MODE)", (" ".join(names),)))
+                 .where(SQL("MATCH(t2.name) AGAINST(%s IN BOOLEAN MODE)", (" ".join(names),)))
                  .group_by(Client.id))
         if len(tags) != 0:
             query = (query

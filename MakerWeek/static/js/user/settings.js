@@ -1,7 +1,7 @@
 var generalButton=$("#general-submit"), passwordButton=$("#password-submit");
 
 
-$("#username, #email").on("input", function(){
+$("#phone, #name, #email").on("input", function(){
     generalButton.prop("disabled", false);
 })
 
@@ -10,13 +10,16 @@ $("input[id|=password]").on("input", function(e){
 })
 
 generalButton.click(function(){
+    $("#success-alert").hide();
+    $("#error-alert").hide();
     generalButton.html('<span class="glyphicon glyphicon-refresh spinning"></span> Saving');
     generalButton.prop('disabled', true);
     data={
-        username: $("#username").val(),
         email: $("#email").val(),
+        phone: $("#phone").val(),
+        name: $("#name").val()
     }
-    $.getJSON("/ajax/user_settings/save_general", data, function(data){
+    $.post("/ajax/user_settings/save_general", data, function(data){
         generalButton.html("Save");
         generalButton.prop("disabled", false);
         if (data.result=="success"){
@@ -28,6 +31,8 @@ generalButton.click(function(){
 })
 
 passwordButton.click(function(){
+    $("#success-alert").hide();
+    $("#error-alert").hide();
     if (($("#password-new").val())!=($("#password-new-repeat").val())) {
         return;
     }
@@ -50,3 +55,6 @@ passwordButton.click(function(){
         }
     })
 })
+
+$('#image-cropper').cropit();
+$('#image-cropper').cropit("imageSrc", "https://a.thumbs.redditmedia.com/g1LcJBivSVWumldk-5AV9mDLjLCaPhzTJuq87NOoeW4.jpg");

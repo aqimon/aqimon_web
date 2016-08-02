@@ -2,20 +2,25 @@
 {% block title %} MakerWeek user {{ g.user.username }} settings {% endblock %}
 {% block css %}
 <link rel="stylesheet" href="/static/css/forms.css"/>
+<style>
+    .cropit-preview {
+          /* You can specify preview size in CSS */
+          width: 200px;
+          height: 200px;
+        }
+
+
+</style>
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
     <div class="page-header">
         <h1>Account settings</h1>
     </div>
-    <div class="alert alert-success alert-dismissable" role="alert" id="success-alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                aria-hidden="true">&times;</span></button>
+    <div class="alert alert-success" role="alert" id="success-alert">
         <strong>Settings saved</strong>
     </div>
-    <div class="alert alert-danger alert-dismissable" role="alert" id="error-alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                aria-hidden="true">&times;</span></button>
+    <div class="alert alert-danger" role="alert" id="error-alert">
         <strong>Oh nose!</strong> Whatever errors happened
     </div>
     <div class="row">
@@ -27,11 +32,28 @@
                     </h4>
                 </div>
                 <div class="panel-body">
-                    <form action="#" class="form-horizontal" onclick="return false;">
+                    <form action="#" class="form-horizontal" onsubmit="return false;">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Avatar</label>
+                            <div class="col-sm-10">
+                                <div id="image-cropper">
+                                    <div class="cropit-preview"></div>
+                                    <input type="range" class="cropit-image-zoom-input"/>
+                                    <input type="file" class="cropit-image-input"/>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="username" class="control-label col-sm-2">Username</label>
                             <div class="col-sm-10">
-                                <input id="username" type="text" class="form-control" value="{{ g.user.username }}">
+                                <input id="username" type="text" class="form-control" value="{{ g.user.username }}"
+                                       disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="control-label col-sm-2">Name</label>
+                            <div class="col-sm-10">
+                                <input id="name" type="text" class="form-control" value="{{ g.user.name }}">
                             </div>
                         </div>
                         <div class="form-group">
@@ -47,7 +69,7 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-block btn-primary btn-lg" id="general-submit"
-                                disabled="true">Save
+                                disabled>Save
                         </button>
                     </form>
                 </div>
@@ -91,5 +113,6 @@
 </div>
 {% endblock %}
 {% block js %}
-<script src="/static/js/user_settings.js"></script>
+<script src="/static/js/jquery.cropit.js"></script>
+<script src="/static/js/user/settings.js"></script>
 {% endblock %}

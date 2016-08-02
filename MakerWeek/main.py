@@ -79,3 +79,8 @@ def data():
 @app.route("/search")
 def search():
     return render_template("search.html")
+
+
+@app.route("/tags/<tagTitle>")
+def tagPage(tagTitle):
+    return render_template("tags.html", tagTitle=tagTitle)

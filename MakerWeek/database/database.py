@@ -29,8 +29,10 @@ def createAllTables():
     database.execute_sql("ALTER TABLE client ADD FULLTEXT(description)")
     database.execute_sql("ALTER TABLE tags ADD FULLTEXT(title)")
     database.execute_sql("ALTER TABLE tags ADD FULLTEXT(description)")
-    database.execute_sql("ALTER TABLE user ADD FULLTEXT(user)")
+    database.execute_sql("ALTER TABLE user ADD FULLTEXT(username)")
+    database.execute_sql("ALTER TABLE user ADD FULLTEXT(name)")
     return json.dumps({"result": "success"})
+
 
 class JSONArrayField(Field):
     db_field = "longtext"
@@ -51,13 +53,14 @@ class IncorrectPassword(Exception):
     pass
 
 
-
 class User(BaseModel):
     # auto id field
     username = CharField(unique=True)
     password = CharField()
     email = CharField(unique=True)
     phone = CharField()
+    avatar = CharField(default="noavatar.png")
+    name = CharField(default="")
 
     def login(self, password):
         if not checkPassword(self.password, password):
@@ -140,7 +143,8 @@ class Event(BaseModel):
             })
         if include_owner:
             response.update({
-                "owner": self.client_id.owner.username
+                "owner_username": self.client_id.owner.username,
+                "owner_name": self.client_id.owner.name
             })
         return response
 
@@ -148,6 +152,7 @@ class Event(BaseModel):
 class LastEvent(BaseModel):
     client_id = ForeignKeyField(rel_model=Client, to_field='id', primary_key=True)
     event_id = ForeignKeyField(rel_model=Event, to_field='id')
+
 
 class ForgotToken(BaseModel):
     token = CharField(primary_key=True, default=lambda: genRandomString(128))
@@ -192,6 +197,7 @@ class LoginToken(BaseModel):
 class Tags(BaseModel):
     title = CharField(index=True, unique=True)
     description = TextField(default="")
+
 
 class TagsMap(BaseModel):
     tag_id = ForeignKeyField(rel_model=Tags, to_field="id", index=True)
