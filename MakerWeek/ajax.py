@@ -333,6 +333,7 @@ def navbarSearch():
         query = (LastEvent
                  .select()
                  .join(Client, on=(LastEvent.client_id == Client.id))
+                 .join(User, on=(Client.owner == User.id))
                  .join(TagsMap, on=(TagsMap.client_id == Client.id))
                  .join(Tags, on=(Tags.id == TagsMap.tag_id))
                  .where(SQL("MATCH(name) AGAINST(%s IN BOOLEAN MODE)", (" ".join(names),)))
@@ -347,4 +348,5 @@ def navbarSearch():
             query = (query
                      .where(~Client.private | (Client.private & Client.owner == g.user)))
         query = query.paginate(page, 10)
-        return json.jsonify([q.event_id.toFrontendObject(include_id=True, include_geo=True) for q in query])
+        return json.jsonify(
+            [q.event_id.toFrontendObject(include_id=True, include_geo=True, include_owner=True) for q in query])

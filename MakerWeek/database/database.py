@@ -114,7 +114,7 @@ class Event(BaseModel):
     temperature = FloatField()
     timestamp = DateTimeField()
 
-    def toFrontendObject(self, include_geo=False, include_id=True):
+    def toFrontendObject(self, include_geo=False, include_id=True, include_owner=False):
         if type(self.timestamp) is datetime.date:
             self.timestamp = datetime.datetime(self.timestamp.year,
                                                self.timestamp.month,
@@ -137,6 +137,10 @@ class Event(BaseModel):
                 "id": str(self.client_id.id),
                 "name": self.client_id.name,
                 'tags': [tag.title for tag in self.client_id.getTags()],
+            })
+        if include_owner:
+            response.update({
+                "owner": self.client_id.owner.username
             })
         return response
 
