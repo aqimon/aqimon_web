@@ -13,7 +13,8 @@ app.register_blueprint(api)
 app.register_blueprint(authentication)
 app.register_blueprint(user)
 app.register_blueprint(ajax)
-app.config.from_object(Config)
+config = Config()
+app.config.from_object(config)
 realtimeServer.init_app(app)
 
 

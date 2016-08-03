@@ -70,7 +70,7 @@ def saveGeneralSettings():
         redirect("/login?needToLogin")
     g.user.email = request.form['email']
     g.user.phone = request.form['phone']
-    g.user.name = request.form['name']
+    g.user.realname = request.form['realname']
     g.user.save()
     return json.jsonify(result="success")
 
@@ -160,14 +160,14 @@ def delClient():
 
 
 @ajax.route("/export/client")
-def exportClient():
+def exportClientRoute():
     if g.user is None:
         return json.jsonify(result="Need to login")
     clientID = request.args['clientID']
     client = Client.get(Client.id == clientID)
     if client.owner != g.user:
         return json.jsonify(result="you don't have permission"), 403
-    exportClient(clientID)
+    exportClient(clientID, request.args['format'], request.args['compression'])
     return json.jsonify(result="success")
 
 
@@ -306,7 +306,6 @@ def tagsListClients():
              .join(TagsMap)
              .join(Tags)
              .where(Tags.title == title)
-             .group_by(Tags.id)
              .paginate(page, 10))
 
     return json.jsonify(
@@ -335,7 +334,7 @@ def navbarSearch():
                                  "description": tag['description'],
                                  "count": tag['count']
                              } for tag in query])
-    elif type == "User":
+    elif type == "Users":
         query = (User
                  .select()
                  .where(SQL("MATCH(username) AGAINST(%s IN BOOLEAN MODE)", (keywords,))
@@ -345,8 +344,7 @@ def navbarSearch():
                                  "username": user.title,
                                  "name": user.name,
                                  "avatar": user.avatar} for user in query])
-    elif type == "Client":
-        keywords = request.args['q']
+    elif type == "Clients":
         tags = []
         names = []
         for keyword in keywords.split(" "):
@@ -357,12 +355,12 @@ def navbarSearch():
         names[-1] += '*'
 
         query = (LastEvent
-                 .select()
+                 .select(LastEvent, Client, User, TagsMap, Tags)
                  .join(Client, on=(LastEvent.client_id == Client.id))
                  .join(User, on=(Client.owner == User.id))
                  .join(TagsMap, on=(TagsMap.client_id == Client.id))
                  .join(Tags, on=(Tags.id == TagsMap.tag_id))
-                 .where(SQL("MATCH(t2.name) AGAINST(%s IN BOOLEAN MODE)", (" ".join(names),)))
+                 .where(SQL("MATCH(name) AGAINST(%s IN BOOLEAN MODE)", (" ".join(names),)))
                  .group_by(Client.id))
         if len(tags) != 0:
             query = (query

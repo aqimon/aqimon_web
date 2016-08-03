@@ -30,6 +30,6 @@ def deleteClient(clientID):
     redis.publish("delete_client", json.dumps({"clientID": clientID}))
 
 
-def exportClient(clientID):
+def exportClient(clientID, format, compression):
     redis = getRedis()
-    redis.publish("export_client", json.dumps({"clientID": clientID}))
+    redis.publish("export_client", json.dumps({"clientID": clientID, "format": format, "compression": compression}))

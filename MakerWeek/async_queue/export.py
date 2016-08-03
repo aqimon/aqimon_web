@@ -2,11 +2,14 @@ import bz2
 import csv
 import gzip
 import json
+import os
 
 from MakerWeek.async_queue.redis_helper import sendQueue
-from MakerWeek.common import genRandomString, utcNow
+from MakerWeek.common import utcNow
 from MakerWeek.database.database import database, Client, Event
+from MakerWeek.config import Config
 
+config = Config()
 
 class ExportClient:
     def __init__(self):
@@ -35,23 +38,24 @@ class ExportClient:
         except ValueError:
             raise FileFormatNotSupported
 
-        fileName = "../static/export/client/client_{username}_{clientid}_{time}_{random}{ext}{compExt}".format(
+        fileName = "client_{username}_{clientid}_{time}{ext}{compExt}".format(
             username=client.owner.username,
             clientid=str(client.id),
-            time=utcNow().timestamp(),
-            random=genRandomString(6),
+            time=int(utcNow().timestamp()),
             ext=fileExt,
             compExt=compExt)
+        filePath = os.path.join(config.EXPORT_FOLDER, fileName)
 
         if data['compression'] == "none":
-            file = open(fileName, "w")
+            file = open(filePath, "w")
         elif data['compression'] == "gzip":
-            file = gzip.open(fileName, "w")
+            file = gzip.open(filePath, "wt")
         else:
-            file = bz2.open(fileName, "w")
+            file = bz2.open(filePath, "wt")
 
         events = (Event
                   .select(Event, Client)
+                  .join(Client)
                   .where(Event.client_id == client))
         events = [event.toFrontendObject(include_id=False) for event in events]
 
@@ -60,10 +64,13 @@ class ExportClient:
         elif data['format'] == "csv":
             self._writeCSVData(file, events)
         file.close()
+        link = "{http}://{domain}/static/exports/{fileName}".format(http=Config.PREFERRED_URL_SCHEME,
+                                                                    domain=Config.SERVER_NAME,
+                                                                    fileName=fileName)
         sendQueue("mail", json.dumps({
             "dst": client.owner.email,
             "subject": "Export client {}".format(str(client.id)),
-            "content": "client_{username}_{clientid}_{time}_{random}{ext}{compExt}"
+            "msg": "<a href=\"{link}\">{link}</a>".format(link=link)
         }))
 
     def _writeJSONData(self, file, client, events):
@@ -71,10 +78,10 @@ class ExportClient:
         data.update({
             "events": events
         })
-        json.dump(data, file)
+        json.dump(data, file, indent=4)
 
     def _writeCSVData(self, file, events):
-        __fieldname__ = ["timestamp", "temperature", "humidity", "dustlevel", "colevel"]
+        __fieldname__ = ["timestamp", "temperature", "humidity", "dustLevel", "coLevel"]
         writer = csv.DictWriter(file, __fieldname__)
         writer.writeheader()
         writer.writerows(events)

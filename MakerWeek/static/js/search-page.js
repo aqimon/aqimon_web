@@ -3,7 +3,6 @@ var searchType, searchQuery, resultPage;
 $("#search-dropdown-options li").on("click", function(){
     $("#search-dropdown-text").text($(this).text());
 });
-$("#search-dropdown-text").text("Client");
 
 function initiateSearch(){
     searchType = $("#search-dropdown-text").text();
@@ -32,8 +31,9 @@ function resultLoad(searchType, searchQuery, resultPage){
             $("#result-loading").hide();
             $("#load-more").show();
         }
+        console.log(recv);
         for (var i=0; i<recv.length; i++){
-            if (searchType == "Client")
+            if (searchType == "Clients")
                 $("#result").append(generateClientResultEntry(recv[i]));
             else if (searchType == "Tags")
                 $("#result").append(generateTagResultEntry(recv[i]));

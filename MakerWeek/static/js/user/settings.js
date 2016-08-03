@@ -1,7 +1,7 @@
 var generalButton=$("#general-submit"), passwordButton=$("#password-submit");
 
 
-$("#phone, #name, #email").on("input", function(){
+$("#phone, #realname, #email").on("input", function(){
     generalButton.prop("disabled", false);
 })
 
@@ -17,7 +17,7 @@ generalButton.click(function(){
     data={
         email: $("#email").val(),
         phone: $("#phone").val(),
-        name: $("#name").val()
+        realname: $("#real").val()
     }
     $.post("/ajax/user_settings/save_general", data, function(data){
         generalButton.html("Save");

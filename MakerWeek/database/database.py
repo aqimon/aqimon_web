@@ -24,13 +24,12 @@ def createAllTables():
     database.create_tables([User, Client, Event, ForgotToken, LoginToken, LastEvent, Tags, TagsMap, WebsocketToken],
                            safe=False)
     # second: create fulltext index:
-
     database.execute_sql("ALTER TABLE client ADD FULLTEXT(name)")
     database.execute_sql("ALTER TABLE client ADD FULLTEXT(description)")
     database.execute_sql("ALTER TABLE tags ADD FULLTEXT(title)")
     database.execute_sql("ALTER TABLE tags ADD FULLTEXT(description)")
     database.execute_sql("ALTER TABLE user ADD FULLTEXT(username)")
-    database.execute_sql("ALTER TABLE user ADD FULLTEXT(name)")
+    database.execute_sql("ALTER TABLE user ADD FULLTEXT(realname)")
     return json.dumps({"result": "success"})
 
 
@@ -60,7 +59,7 @@ class User(BaseModel):
     email = CharField(unique=True)
     phone = CharField()
     avatar = CharField(default="noavatar.png")
-    name = CharField(default="")
+    realname = CharField(default="")
 
     def login(self, password):
         if not checkPassword(self.password, password):
@@ -98,6 +97,7 @@ class Client(BaseModel):
             'latitude': self.latitude,
             'longitude': self.longitude,
             'owner': self.owner.id,
+            'owner_username': self.owner.username,
             'tags': [tag.title for tag in self.getTags()],
             'private': self.private
         }
@@ -144,7 +144,7 @@ class Event(BaseModel):
         if include_owner:
             response.update({
                 "owner_username": self.client_id.owner.username,
-                "owner_name": self.client_id.owner.name
+                "owner_realname": self.client_id.owner.realname
             })
         return response
 

@@ -6,8 +6,8 @@ function generateClientResultEntry(data){
         tags+=sprintf("<a href=\"/tags/%s\" class=\"label label-info\">%s</a> ", data.tags[i], data.tags[i]);
     }
     data.tags = tags;
-    if (data.owner_name == "")
-        data.owner_name = data.owner_username;
+    if (data.owner_realname == "")
+        data.owner_realname = data.owner_username;
     contentString=
         '<div class="result-entry"> \
             <div class="result-entry-left"> \
@@ -26,7 +26,7 @@ function generateClientResultEntry(data){
                     Address: %(address)s<br /> \
                 </div> \
                 <div class="result-entry-left-secondary"> \
-                    Owner: <a href="/user/%(owner_username)s">%(owner_name)s</a><br /> \
+                    Owner: <a href="/user/%(owner_username)s">%(owner_realname)s</a><br /> \
                 </div> \
             </div> \
             <div class="result-entry-right"> \
