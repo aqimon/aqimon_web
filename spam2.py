@@ -29,7 +29,7 @@ def generateClient():
 
 
 def generateRandomTags():
-    return [genRandomString(1) for _ in range(6)]
+    return [genRandomString(4) for _ in range(6)]
 
 
 currTime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
@@ -38,7 +38,7 @@ clients = []
 
 print("client spam")
 with database.atomic():
-    for _ in range(10000):
+    for _ in range(1000):
         clients.append(Client.create(**generateClient()))
         TagsMap.link(clients[-1], generateRandomTags())
         event = Event.create(**generateEvent(clients[-1]))

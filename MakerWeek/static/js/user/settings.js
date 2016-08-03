@@ -1,9 +1,10 @@
 var generalButton=$("#general-submit"), passwordButton=$("#password-submit");
 
-
-$("#phone, #realname, #email").on("input", function(){
+function enableGeneralButton(){
     generalButton.prop("disabled", false);
-})
+}
+
+$("#phone, #realname, #email").on("input", enableGeneralButton)
 
 $("input[id|=password]").on("input", function(e){
     passwordButton.prop("disabled", false);
@@ -17,7 +18,12 @@ generalButton.click(function(){
     data={
         email: $("#email").val(),
         phone: $("#phone").val(),
-        realname: $("#real").val()
+        realname: $("#realname").val(),
+        avatar: $('#image-cropper').cropit('export', {
+                    type: 'image/jpeg',
+                    quality: 0.75,
+                    originalSize: true
+                })
     }
     $.post("/ajax/user_settings/save_general", data, function(data){
         generalButton.html("Save");
@@ -56,5 +62,22 @@ passwordButton.click(function(){
     })
 })
 
-$('#image-cropper').cropit();
-$('#image-cropper').cropit("imageSrc", "https://a.thumbs.redditmedia.com/g1LcJBivSVWumldk-5AV9mDLjLCaPhzTJuq87NOoeW4.jpg");
+$('#image-cropper').cropit({
+    $zoomSlider: $(".cropit-image-zoom-input"),
+    $fileInput: $(".cropit-image-input"),
+    onFileChange: enableGeneralButton,
+    onZoomChange: enableGeneralButton,
+    onOffsetChange: enableGeneralButton,
+    imageState: {
+        src: "http://localhost:5000/static/avatar/"+avatar
+    }
+});
+$("#cropit-image-upload-btn").on("click", function(){
+    $(".cropit-image-input").click();
+})
+$("#cropit-rotate-left").on("click", function(){
+    $('#image-cropper').cropit("rotateCCW")
+})
+$("#cropit-rotate-right").on("click", function(){
+    $('#image-cropper').cropit("rotateCW")
+})

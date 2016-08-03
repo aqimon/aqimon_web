@@ -33,3 +33,4 @@ class Config(DevelopmentConfig):
 
     def __init__(self):
         self.EXPORT_FOLDER = os.path.join(self.ROOT_FOLDER, "static/exports")
+        self.AVATAR_FOLDER = os.path.join(self.ROOT_FOLDER, "static/avatar")

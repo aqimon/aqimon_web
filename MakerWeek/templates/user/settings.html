@@ -4,12 +4,36 @@
 <link rel="stylesheet" href="/static/css/forms.css"/>
 <style>
     .cropit-preview {
-          /* You can specify preview size in CSS */
-          width: 200px;
-          height: 200px;
-        }
-
-
+        width: 200px;
+        height: 200px;
+    }
+    .cropit-image-zoom-input {
+        width: 60% !important;
+        display: inline !important;
+        margin: 0 10px 10px 10px;
+    }
+    .cropit-image-input {
+        display: none !important;
+    }
+    .btn-group {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    /* http://bootsnipp.com/snippets/featured/glyphicon-animate-rotation-and-flip */
+    .glyphicon-flip {
+          filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1);
+          -webkit-transform: scale(1, -1);
+          -moz-transform: scale(1, -1);
+          -ms-transform: scale(1, -1);
+          -o-transform: scale(1, -1);
+          transform: scale(1, -1);
+    }
+    .cropit-preview.cropit-image-loading .spinner {
+      opacity: 1;
+    }
+    .cropit-image-zoom-input[disabled] {
+      opacity: .2;
+    }
 </style>
 {% endblock %}
 {% block content %}
@@ -24,7 +48,7 @@
         <strong>Oh nose!</strong> Whatever errors happened
     </div>
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-lg-6">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4>
@@ -36,10 +60,39 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">Avatar</label>
                             <div class="col-sm-10">
-                                <div id="image-cropper">
-                                    <div class="cropit-preview"></div>
-                                    <input type="range" class="cropit-image-zoom-input"/>
-                                    <input type="file" class="cropit-image-input"/>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div id="image-cropper">
+                                            <div class="cropit-preview"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="zoom-container">
+                                            <span class="glyphicon glyphicon-picture" style="font-size:15px;"></span>
+                                            <input type="range" class="cropit-image-zoom-input"/>
+                                            <span class="glyphicon glyphicon-picture" style="font-size:20px;"></span>
+                                        </div>
+                                        <div class="btn-group btn-group-sm btn-group-justified">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-default" id="cropit-rotate-left">
+                                                    <span class="glyphicon glyphicon-repeat glyphicon-flip"></span>
+                                                    Rotate left
+                                                </button>
+                                            </div>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-default" id="cropit-rotate-right">
+                                                    <span class="glyphicon glyphicon-repeat"></span>
+                                                    Rotate right
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-primary btn-block"
+                                                id="cropit-image-upload-btn">
+                                            <span class="glyphicon glyphicon-open"></span>
+                                            Select an image
+                                        </button>
+                                        <input type="file" class="cropit-image-input"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +128,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-6">
+        <div class="col-lg-6">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4>
@@ -103,7 +156,7 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-block btn-primary btn-lg" id="password-submit"
-                                disabled="true">Save
+                                disabled>Save
                         </button>
                     </form>
                 </div>
@@ -113,6 +166,10 @@
 </div>
 {% endblock %}
 {% block js %}
+<script>
+    avatar = "{{ g.user.avatar }}";
+
+</script>
 <script src="/static/js/jquery.cropit.js"></script>
 <script src="/static/js/user/settings.js"></script>
 {% endblock %}

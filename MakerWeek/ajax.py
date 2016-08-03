@@ -1,9 +1,15 @@
+import binascii
+import os
+
 from flask import Blueprint, g, request, json, redirect
 from peewee import DoesNotExist, fn, SQL
 
 from MakerWeek.async import deleteClient, exportClient
 from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract, fromTimestamp
+from MakerWeek.config import Config
 from MakerWeek.database.database import Client, LastEvent, Event, TagsMap, Tags, User
+
+config = Config()
 
 ajax = Blueprint('ajax', __name__, url_prefix="/ajax")
 
@@ -71,6 +77,12 @@ def saveGeneralSettings():
     g.user.email = request.form['email']
     g.user.phone = request.form['phone']
     g.user.realname = request.form['realname']
+    avatarURI = request.form['avatar']
+    if not avatarURI.startswith("data:image/jpeg;base64,"):
+        return json.jsonify(result="invalid avatar"), 400
+    with open(os.path.join(config.AVATAR_FOLDER, g.user.username + ".jpg"), "wb") as f:
+        f.write(binascii.a2b_base64(avatarURI[23:]))
+    g.user.avatar = g.user.username + ".jpg"
     g.user.save()
     return json.jsonify(result="success")
 
