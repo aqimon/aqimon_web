@@ -32,5 +32,5 @@ class Config(DevelopmentConfig):
     AMAZON_SECRET_ACCESS_KEY = os.getenv("AMAZON_SECRET_ACCESS_KEY")
 
     def __init__(self):
-        self.EXPORT_FOLDER = os.path.join(self.ROOT_FOLDER, "static/exports")
+        self.EXPORT_FOLDER = os.path.join(self.ROOT_FOLDER, "static/export")
         self.AVATAR_FOLDER = os.path.join(self.ROOT_FOLDER, "static/avatar")

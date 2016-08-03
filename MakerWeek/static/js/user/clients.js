@@ -10,6 +10,26 @@ var tagsSuggestion = new Bloodhound({
     }
 })
 
+$("#export-modal").on("show.bs.modal", function(e){
+    $(".export-modal-clientid").text($(e.relatedTarget).data("clientid"));
+})
+
+
+$("#export-button").on("click", function(){
+    $("#export-button").html("Loading");
+    $("#export-button").prop("disabled", true);
+    $.getJSON("/ajax/export/client", {
+        clientID: $(".export-modal-clientid").text(),
+        format: $('input[name=format]:checked').val(),
+        compression: $('input[name=compression]:checked').val()
+    }, function(){
+        $("#export-modal").modal('hide');
+        $("#export-button").html("Export");
+        $("#export-button").prop("disabled", false);
+        $(".export-success-modal-clientid").text($(".export-modal-clientid").text());
+        $("#export-success-modal").modal('show');
+    })
+})
 
 $("#edit-tags").tagsinput({
     focusClass: "bootstrap-tagsinput-focus",

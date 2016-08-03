@@ -6,8 +6,8 @@ import os
 
 from MakerWeek.async_queue.redis_helper import sendQueue
 from MakerWeek.common import utcNow
-from MakerWeek.database.database import database, Client, Event
 from MakerWeek.config import Config
+from MakerWeek.database.database import database, Client, Event
 
 config = Config()
 
@@ -64,9 +64,9 @@ class ExportClient:
         elif data['format'] == "csv":
             self._writeCSVData(file, events)
         file.close()
-        link = "{http}://{domain}/static/exports/{fileName}".format(http=Config.PREFERRED_URL_SCHEME,
-                                                                    domain=Config.SERVER_NAME,
-                                                                    fileName=fileName)
+        link = "{http}://{domain}/static/export/{fileName}".format(http=Config.PREFERRED_URL_SCHEME,
+                                                                   domain=Config.SERVER_NAME,
+                                                                   fileName=fileName)
         sendQueue("mail", json.dumps({
             "dst": client.owner.email,
             "subject": "Export client {}".format(str(client.id)),

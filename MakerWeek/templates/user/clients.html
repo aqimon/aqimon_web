@@ -222,9 +222,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Export client</h4>
+                    <h4 class="modal-title">Export client <span class="export-modal-clientid"></span></h4>
                 </div>
                 <div class="modal-body">
+                    Format:
                     <label class="radio-inline">
                         <input type="radio" name="format" value="json"> json
                     </label>
@@ -232,6 +233,7 @@
                         <input type="radio" name="format" value="csv"> csv
                     </label>
                     <br/>
+                    Compression:
                     <label class="radio-inline">
                         <input type="radio" name="compression" value="none"> no compression
                     </label>
@@ -244,7 +246,23 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Export</button>
+                    <button type="button" class="btn btn-primary" id="export-button">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="export-success-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Export client <span class="export-success-modal-clientid"></span></h4>
+                </div>
+                <div class="modal-body">
+                    The data is being processed and the link to download will be sent to your email.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
