@@ -195,9 +195,21 @@ def exportUser():
     return json.jsonify(result="success")
 
 
+def getMinEventTimestamp(clientID):
+    query = (Event
+             .select(fn.MIN(Event.timestamp).alias("timestamp"))
+             .where((Event.client_id == clientID))
+             .get())
+    return query.timestamp.timestamp()
+
 @ajax.route("/get/client_data_range")
-def getEventRange(clientID, rangeFrom, rangeTo):
+def getEventRange():
     # asumming 5 min interval
+    clientID = request.args['clientID']
+    rangeFrom = int(request.args['from'])
+    if rangeFrom == -1:
+        rangeFrom = getMinEventTimestamp(clientID)
+    rangeTo = int(request.args['to'])
     client = Client.get(Client.id == clientID)
     dateFrom = fromTimestamp(rangeFrom)
     dateTo = fromTimestamp(rangeTo)
@@ -267,7 +279,7 @@ def getEventRange(clientID, rangeFrom, rangeTo):
                   .where((Event.client_id == client) & (Event.timestamp >= dateFrom) & (Event.timestamp <= dateTo))
                   .group_by(fn.DATE(Event.timestamp))
                   .order_by(Event.timestamp))
-    return json.jsonify(result=[event.toFrontendObject(include_id=False) for event in events])
+    return json.jsonify([event.toFrontendObject(include_id=False) for event in events])
 
 
 @ajax.route("/tags/top5")

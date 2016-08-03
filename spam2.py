@@ -2,7 +2,7 @@ import datetime
 import random
 
 from MakerWeek.common import genRandomString
-from MakerWeek.database.database import database, Event, Client, TagsMap, LastEvent
+from MakerWeek.database.database import database, Event, Client
 
 database.connect()
 
@@ -36,25 +36,29 @@ currTime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 delta = datetime.timedelta(minutes=5)
 clients = []
 
-print("client spam")
-with database.atomic():
-    for _ in range(1000):
-        clients.append(Client.create(**generateClient()))
-        TagsMap.link(clients[-1], generateRandomTags())
-        event = Event.create(**generateEvent(clients[-1]))
-        LastEvent.create(client_id=clients[-1], event_id=event)
-        if _ % 100 == 0:
-            print(_)
-
-
-# print("Now we do some spam")
-# while currTime.year>=2013:
-#     events.append(generateEvent())
-#     currTime-=delta
-#
-# print("Generated {} entries".format(len(events)))
-#
+# print("client spam")
 # with database.atomic():
-#     for i in range(0, len(events), 1000):
-#         print("Import from {} to {}".format(i, i+1000), end="\r")
-#         Event.insert_many(events[i:i+1000]).execute()
+#     for _ in range(1000):
+#         clients.append(Client.create(**generateClient()))
+#         TagsMap.link(clients[-1], generateRandomTags())
+#         event = Event.create(**generateEvent(clients[-1]))
+#         LastEvent.create(client_id=clients[-1], event_id=event)
+#         if _ % 100 == 0:
+#             print(_)
+
+events = []
+
+c = Client.create(**generateClient())
+print("Created new client has UUID {}".format(str(c.id)))
+
+print("Now we do some spam")
+for i in range(100):
+    events.append(generateEvent(str(c.id)))
+    currTime -= delta
+
+print("Generated {} entries".format(len(events)))
+
+with database.atomic():
+    for i in range(0, len(events), 1000):
+        print("Import from {} to {}".format(i, i + 1000), end="\r")
+        Event.insert_many(events[i:i + 1000]).execute()

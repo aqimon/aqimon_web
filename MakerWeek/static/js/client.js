@@ -27,7 +27,7 @@ function setInfo(data){
     }
 }
 
-function initChart(){
+function initChart(tempSeries, humidSeries, dustSeries, coSeries){
     chart=$("#chart")
     chart.highcharts("StockChart", {
             chart: {
@@ -37,9 +37,15 @@ function initChart(){
             title: {
                 text: "Graph for client "+info.name
             },
+            legend: {
+                enabled: true,
+                align: 'right',
+                verticalAlign: 'top'
+
+            },
             navigator: {
                 adaptToUpdatedData: false,
-                enabled: false
+                enabled: true
             },
             scrollbar: {
                 liveRedraw: false
@@ -49,7 +55,16 @@ function initChart(){
                 minRange: 60*60*3*1000,
                 events: {
                     afterSetExtremes: function(e){
+                        console.log(e.min, e.max);
                         if ((!e.min) || (!e.max)) return;
+//                        var tmp=this;
+//                        if ((e.max-e.min)>=365*24*60*60*1000){
+//                            var max=e.max;
+//                            var min=e.max-365*24*60*60*1000;
+//                            window.setTimeout(function() {
+//                                tmp.setExtremes(min, max);
+//                            }, 1);
+//                        }
                         loadChartData(e.min/1000, e.max/1000);
                     }
                 }
@@ -110,8 +125,14 @@ function initChart(){
                     type: 'year',
                     count: 1,
                     text: '1y'
+                },{
+                    type: 'all',
+                    text: 'All'
                 }],
-               selected: 8
+               selected: 9,
+               inputDateFormat: "%Y-%m-%d %H-%M",
+               inputEditDateFormat: "%Y-%m-%d %H-%M",
+               inputBoxWidth: 140
             },
             series: [{
                 type: "line",
@@ -119,7 +140,7 @@ function initChart(){
                 tooltip: {
                     valueSuffix: "°C"
                 },
-                data: [],
+                data: tempSeries,
                 yAxis: 0,
             },{
                 type: "line",
@@ -127,7 +148,7 @@ function initChart(){
                 tooltip: {
                     valueSuffix: "%"
                 },
-                data: [],
+                data: humidSeries,
                 yAxis: 1
             },{
                 type: "line",
@@ -135,7 +156,7 @@ function initChart(){
                 tooltip: {
                     valueSuffix: "ppm"
                 },
-                data: [],
+                data: dustSeries,
                 yAxis: 2
             },{
                 type: "line",
@@ -143,18 +164,20 @@ function initChart(){
                 tooltip: {
                     valueSuffix: "ppm"
                 },
-                data: [],
+                data: coSeries,
                 yAxis: 3
             }]
         });
 }
 
 function loadChartData(from, to, callback){
-    chart.highcharts().showLoading();
-    if (!(to)) to=Math.round(Date.now()/1000);
+    if (init)
+        chart.highcharts().showLoading();
+    if (!(to)) to=Date.now()/1000;
+    from = Math.round(from);
+    to = Math.round(to);
     console.log("Loading data from", from, "to", to);
-    socketio.emit("json", {
-        action: "getEventRange",
+    $.getJSON("/ajax/get/client_data_range", {
         clientID: info.id,
         from: from,
         to: to
@@ -171,13 +194,15 @@ function loadChartData(from, to, callback){
             dustArr.push([time, data[i].dustLevel]);
             coArr.push([time, data[i].coLevel]);
         }
-
-        chart.highcharts().series[0].setData(temperatureArr);
-        chart.highcharts().series[1].setData(humidityArr);
-        chart.highcharts().series[2].setData(dustArr);
-        chart.highcharts().series[3].setData(coArr);
-        chart.highcharts().hideLoading();
-
+        if (!init)
+            initChart(temperatureArr, humidityArr, dustArr, coArr);
+        else {
+            chart.highcharts().series[0].setData(temperatureArr);
+            chart.highcharts().series[1].setData(humidityArr);
+            chart.highcharts().series[2].setData(dustArr);
+            chart.highcharts().series[3].setData(coArr);
+            chart.highcharts().hideLoading();
+        }
         if (callback) callback();
     })
 }
@@ -204,12 +229,11 @@ $(function(){
     socketio.on("connect", function(){
         console.log("connected to server");
         if (!init){
-            initChart()
-            loadChartData(0, null, function(){
+            loadChartData(-1, null, function(){
+                init=true;
                 room="client_"+info.id.toString();
                 socketio.emit("json", {"action": "joinRoom", "room": room});
             })
-            init=true;
         }
     })
 
