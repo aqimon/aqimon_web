@@ -4,6 +4,7 @@ import smtplib
 
 ##
 ## Yeah, I know I shouldn't use Gmail, but I'm too freaking lazy to implement SES
+## Also the stupid sandbox
 ##
 
 class Mail:

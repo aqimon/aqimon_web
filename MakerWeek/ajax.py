@@ -319,7 +319,12 @@ def tagsListClients():
              .join(Tags)
              .where(Tags.title == title)
              .paginate(page, 10))
-
+    if g.user is None:
+        query = (query
+                 .where(~Client.private))
+    else:
+        query = (query
+                 .where(~Client.private | (Client.private & Client.owner == g.user)))
     return json.jsonify(
         [q.event_id.toFrontendObject(include_id=True, include_geo=True, include_owner=True) for q in query])
 

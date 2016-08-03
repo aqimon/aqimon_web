@@ -19,16 +19,21 @@ class Notification:
         for userID in client.subscriber_list:
             user = User.get(User.id == userID)
             if data['status']:
-                msg = json.dumps({
+                email = json.dumps({
                     "dst": user.email,
                     "subject": "high {}".format(clientID),
                     "msg": "Client {} has high value readings, which indicates bad air quality.".format(clientID)
                 })
             else:
-                msg = json.dumps({
+                email = json.dumps({
                     "dst": user.email,
                     "subject": "low {}".format(clientID),
                     "msg": "Client {} readings has gone normal.".format(clientID)
                 })
-            sendQueue("mail", msg)
+            sms = email
+            del sms['subject']
+            sms.dst = user.phone
+
+            sendQueue("mail", email)
+            sendQueue("sms", sms)
         database.close()

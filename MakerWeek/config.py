@@ -28,8 +28,8 @@ class Config(DevelopmentConfig):
     DB_USER = "e3"
     DB_PASSWORD = "e3e3e3e3"
 
-    AMAZON_SES_KEY = os.getenv("AMAZON_SES_KEY")
-    AMAZON_SNS_KEY = os.getenv("AMAZON_SNS_KEY")
+    AMAZON_ACCESS_KEY_ID = os.getenv("AMAZON_ACCESS_KEY_ID")
+    AMAZON_SECRET_ACCESS_KEY = os.getenv("AMAZON_SECRET_ACCESS_KEY")
 
     def __init__(self):
         self.EXPORT_FOLDER = os.path.join(self.ROOT_FOLDER, "static/exports")
