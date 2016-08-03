@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 {% set currPage="index" %}
+{% from "functions.html" import wsAuthInfo %}
 {% block title %} MakerWeek {% endblock %}
 {% block css %}
 <style>
+    .infobox-header {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .infobox-hr {
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
     #index-searchbar {
-        width: 80vw;
-        max-width: 600px;
+        max-width: 800px;
         margin: 0 auto;
     }
 
@@ -16,6 +26,23 @@
     body {
        padding-top: 50px;
     }
+    .grey-background {
+        background-color: #ecf0f1;
+        width: 100%;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    #map {
+        width: 60%;
+        height: 60vh;
+        margin: 0 auto;
+        margin-bottom: 20px;
+    }
+    #map-button {
+        width: 100%;
+        margin: 0 auto;
+        margin-bottom: 30px;
+    }
 </style>
 {% endblock %}
 {% block content %}
@@ -24,57 +51,64 @@
         <h1>MakerWeek</h1>
     </div>
 </div>
-<div id="index-searchbar">
-    <h1 class="text-center">Try typing something here</h1>
-    <form action="/search" method="post" role="form">
-        <div class="input-group">
-            <div class="input-group-btn">
-                <button type="button"
-                        class="btn btn-default dropdown-toggle"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"><span id="search-dropdown-text"></span> <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="search-dropdown-options">
-                    <li><a href="#">Clients</a></li>
-                    <li><a href="#">Tags</a></li>
-                    <li><a href="#">Users</a></li>
-                </ul>
-            </div>
-            <input type="text" class="form-control" name="q" id="searchbar"
-                   placeholder="Search for clients, tags and more">
-        </div>
-        <br/>
-        <div class="panel-group" role="tablist" aria-multiselectable="true" id="accordion">
-            <div class="panel panel-info">
-                <div class="panel-heading" role="tab" id="search-tips-heading">
-                    <h2 class="panel-title">
-                        <a role="button"
-                           data-toggle="collapse"
-                           href="#search-tips"
-                           aria-expanded="true"
-                           aria-controls="search-tips"
-                           data-parent="#accordion">
-                            Search tips
-                        </a>
-                        <span class="caret"></span>
-                    </h2>
+<div class="container">
+    <h1 class="text-center">You are seeing live data sending from clients around the world</h1>
+    <div id="map"></div>
+    <a href="/map" class="btn btn-info" id="map-button">For a bigger map, click here</a>
+</div>
+<div class="grey-background">
+    <div id="index-searchbar">
+        <h1 class="text-center">Try typing something here to search</h1>
+        <form onsubmit="redirectToSearchPage(); return false;">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button"
+                            class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"><span id="search-dropdown-text"></span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" id="search-dropdown-options">
+                        <li><a href="#">Clients</a></li>
+                        <li><a href="#">Tags</a></li>
+                        <li><a href="#">Users</a></li>
+                    </ul>
                 </div>
-                <div class="panel-collapse collapse" role="tabpanel" id="search-tips"
-                     aria-labelledby="search-tips-heading">
-                    <div class="panel-body">
-                        <ul>
-                            <li>+<i>keyword</i>: Only return results that contain <i>keyword</i></li>
-                            <li>-<i>keyword</i>: Only return results that don't contain <i>keyword</i></li>
-                            <li>"<i>keyword</i>": Only return results that contain the exact phrase</li>
-                            <li>tags:<i>keyword</i>: Only return results that hthe tag <i>keyword</i></li>
-                            <li>username:<i>keyword</i>: Only return results which its owner is <i>keyword</i></li>
-                        </ul>
+                <input type="text" class="form-control" name="q" id="searchbar"
+                       placeholder="Search for clients, tags and more">
+            </div>
+            <br/>
+            <div class="panel-group" role="tablist" aria-multiselectable="true" id="accordion">
+                <div class="panel panel-info">
+                    <div class="panel-heading" role="tab" id="search-tips-heading">
+                        <h2 class="panel-title">
+                            <a role="button"
+                               data-toggle="collapse"
+                               href="#search-tips"
+                               aria-expanded="true"
+                               aria-controls="search-tips"
+                               data-parent="#accordion">
+                                Search tips
+                            </a>
+                            <span class="caret"></span>
+                        </h2>
+                    </div>
+                    <div class="panel-collapse collapse" role="tabpanel" id="search-tips"
+                         aria-labelledby="search-tips-heading">
+                        <div class="panel-body">
+                            <ul>
+                                <li>+<i>keyword</i>: Only return results that contain <i>keyword</i></li>
+                                <li>-<i>keyword</i>: Only return results that don't contain <i>keyword</i></li>
+                                <li>"<i>keyword</i>": Only return results that contain the exact phrase</li>
+                                <li>tags:<i>keyword</i>: Only return results that hthe tag <i>keyword</i></li>
+                                <li>username:<i>keyword</i>: Only return results which its owner is <i>keyword</i></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 {% endblock %}
 {% block js %}
@@ -82,7 +116,11 @@
         $("#search-dropdown-options li").on("click", function(){
             $("#search-dropdown-text").text($(this).text());
         });
-        $("#search-dropdown-text").text("Client");
-
+        $("#search-dropdown-text").text("Clients");
+        {{ wsAuthInfo() }}
 </script>
+<script src="/static/js/sprintf.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places&language=en&region=VN"></script>
+<script src="/static/js/socketio.js"></script>
+<script src="/static/js/map.js"></script>
 {% endblock %}

@@ -19,7 +19,19 @@ class SMS:
         ))
 
     def handler(self, data):
+        if data['dst'][0] == '+':
+            data['dst'] = data['dst'][1:]
+        if 'transactional' in data:
+            msgAttr = {
+                "AWS.SNS.SMS.SMSType": {
+                    "DataType": "String",
+                    "StringValue": "Transactional"
+                }
+            }
+        else:
+            msgAttr = {}
         print(self.sns.publish(
             PhoneNumber=data['dst'],
-            Message=data['msg']
+            Message=data['msg'],
+            MessageAttributes=msgAttr
         ))

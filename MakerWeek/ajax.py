@@ -1,13 +1,14 @@
 import binascii
+import datetime
 import os
 
 from flask import Blueprint, g, request, json, redirect
 from peewee import DoesNotExist, fn, SQL
 
-from MakerWeek.async import deleteClient, exportClient
-from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract, fromTimestamp
+from MakerWeek.async import deleteClient, exportClient, sendSMSVerify
+from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract, fromTimestamp, verifyPhoneNumber
 from MakerWeek.config import Config
-from MakerWeek.database.database import Client, LastEvent, Event, TagsMap, Tags, User
+from MakerWeek.database.database import Client, LastEvent, Event, TagsMap, Tags, User, PhoneVerification
 
 config = Config()
 
@@ -75,7 +76,6 @@ def saveGeneralSettings():
     if g.user is None:
         redirect("/login?needToLogin")
     g.user.email = request.form['email']
-    g.user.phone = request.form['phone']
     g.user.realname = request.form['realname']
     avatarURI = request.form['avatar']
     if not avatarURI.startswith("data:image/jpeg;base64,"):
@@ -201,6 +201,7 @@ def getMinEventTimestamp(clientID):
              .where((Event.client_id == clientID))
              .get())
     return query.timestamp.timestamp()
+
 
 @ajax.route("/get/client_data_range")
 def getEventRange():
@@ -403,3 +404,62 @@ def navbarSearch():
         query = query.paginate(page, 10)
         return json.jsonify(
             [q.event_id.toFrontendObject(include_id=True, include_geo=True, include_owner=True) for q in query])
+
+
+@ajax.route("/initiatePhoneVerification")
+def initiatePhoneVerification():
+    if g.user is None:
+        return json.jsonify(result="need to login")
+    phone = request.args['phone']
+    if not verifyPhoneNumber(phone):
+        return json.jsonify(result="invalid number")
+    try:
+        obj = PhoneVerification.get((PhoneVerification.user_id == g.user) & (PhoneVerification.phone == phone))
+    except DoesNotExist:
+        pass
+    else:
+        obj.delete_instance()
+    finally:
+        obj = PhoneVerification.create(phone=phone, user_id=g.user)
+    sendSMSVerify(phone, obj.verifyCode)
+    return json.jsonify(result="success")
+
+
+@ajax.route("/resendPhoneVerification")
+def resendPhoneVerification():
+    if g.user is None:
+        return json.jsonify(result="need to login")
+    phone = request.args['phone']
+    if not verifyPhoneNumber(phone):
+        return json.jsonify(result="invalid number")
+    try:
+        obj = PhoneVerification.get((PhoneVerification.user_id == g.user) & (PhoneVerification.phone == phone))
+    except DoesNotExist:
+        return json.jsonify(result="not found")
+    sendSMSVerify(phone, obj.verifyCode)
+    return json.jsonify(result="success")
+
+
+@ajax.route("/answerPhoneVerification")
+def answerPhoneVerification():
+    if g.user is None:
+        return json.jsonify(result="need to login")
+    phone = request.args['phone']
+    try:
+        obj = PhoneVerification.get((PhoneVerification.user_id == g.user) & (PhoneVerification.phone == phone))
+    except DoesNotExist:
+        return json.jsonify(result="not found")
+    if timeSubtract(hours=1) > obj.timestamp.replace(tzinfo=datetime.timezone.utc):
+        obj.delete_instance()
+        return json.jsonify(result="timeout")
+    if obj.tryCount >= 5:
+        obj.delete_instance()
+        return json.jsonify(result="too many attempts")
+    if str(obj.verifyCode) != request.args['verifyCode']:
+        obj.tryCount += 1
+        obj.save()
+        return json.jsonify(result="wrong code")
+    obj.user_id.phone = obj.phone
+    obj.user_id.save()
+    obj.delete_instance()
+    return json.jsonify(result="success")

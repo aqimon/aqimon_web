@@ -4,6 +4,7 @@ import random
 import string
 
 import bcrypt
+import phonenumbers
 
 
 def paramsParse(paramsList, paramsValue):
@@ -61,3 +62,16 @@ def utcNow():
 def fromTimestamp(timestamp):
     timestamp = int(timestamp)
     return datetime.datetime.fromtimestamp(timestamp=timestamp, tz=datetime.timezone.utc)
+
+
+def verifyPhoneNumber(phone):
+    try:
+        obj = phonenumbers.parse(phone, None)
+    except phonenumbers.NumberParseException:
+        return False
+    return phonenumbers.is_valid_number(obj) and phonenumbers.is_possible_number(obj)
+
+
+def genRandomNumber(rangeFrom, rangeTo):
+    rand = random.SystemRandom()
+    return rand.randint(rangeFrom, rangeTo)

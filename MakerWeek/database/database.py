@@ -5,7 +5,7 @@ import uuid
 from flask import session
 from peewee import *
 
-from MakerWeek.common import hashPassword, checkPassword, genRandomString
+from MakerWeek.common import hashPassword, checkPassword, genRandomString, genRandomNumber
 from MakerWeek.config import Config
 
 database = MySQLDatabase(host=Config.DB_HOST,
@@ -21,8 +21,9 @@ def utcTime():
 
 def createAllTables():
     # first: create all tables
-    database.create_tables([User, Client, Event, ForgotToken, LoginToken, LastEvent, Tags, TagsMap, WebsocketToken],
-                           safe=False)
+    database.create_tables(
+        [User, Client, Event, ForgotToken, LoginToken, LastEvent, Tags, TagsMap, WebsocketToken, PhoneVerification],
+        safe=False)
     # second: create fulltext index:
     database.execute_sql("ALTER TABLE client ADD FULLTEXT(name)")
     database.execute_sql("ALTER TABLE client ADD FULLTEXT(description)")
@@ -234,3 +235,11 @@ class WebsocketToken(BaseModel):
         if not checkPassword(token_obj.token_hash, token_value):
             raise InvalidToken
         return token_obj.user_id
+
+
+class PhoneVerification(BaseModel):
+    phone = CharField()
+    user_id = ForeignKeyField(rel_model=User, to_field="id", index=True, unique=True)
+    verifyCode = IntegerField(default=lambda: genRandomNumber(100000, 999999))
+    timestamp = DateTimeField(default=utcTime)
+    tryCount = IntegerField(default=0)

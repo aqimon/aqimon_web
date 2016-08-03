@@ -7,11 +7,14 @@ from redis import StrictRedis
 from MakerWeek.async_queue.delete_client import DeleteClient
 from MakerWeek.async_queue.export import ExportClient
 from MakerWeek.async_queue.mail import Mail
+from MakerWeek.async_queue.mail_ses import SESMailVerify
 from MakerWeek.async_queue.notification import Notification
 from MakerWeek.async_queue.sms import SMS
 
 table = {
     "mail": Mail(),
+    # "mail": SESMail(),
+    "mail_verify": SESMailVerify(),
     "notification": Notification(),
     "delete_client": DeleteClient(),
     "export_client": ExportClient(),

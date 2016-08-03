@@ -1,10 +1,11 @@
 import datetime
 import random
+import time
 import uuid
 
 import requests
 
-CLIENT_NUM = 100
+CLIENT_NUM = 2
 
 def generateClientInfo(uuid):
     return {
@@ -12,7 +13,7 @@ def generateClientInfo(uuid):
         "latitude": random.randint(-300, 300) / 10,
         "longitude": random.randint(-300, 300) / 10,
         "address": "{} Ngo Quyen".format(random.randint(0, 1696)),
-        "private": "true",
+        "private": "false",
         "tags": '["bot", "automatic", "testbot"]'
     }
 
@@ -55,10 +56,11 @@ for i in range(CLIENT_NUM):
 
 currTime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 delta = datetime.timedelta(minutes=5)
-
+input()
 print("Now we do some spam")
 while True:
     for uuid in clients:
         event = generateEvent(uuid)
-        print(session.get("http://localhost:5000/add/event", params=event).text)
+        print(session.get("http://localhost:5000/api/add/event", params=event).text)
     currTime += delta
+    time.sleep(10)

@@ -33,3 +33,9 @@ def deleteClient(clientID):
 def exportClient(clientID, format, compression):
     redis = getRedis()
     redis.publish("export_client", json.dumps({"clientID": clientID, "format": format, "compression": compression}))
+
+
+def sendSMSVerify(phone, verifyCode):
+    redis = getRedis()
+    redis.publish("sms", json.dumps(
+        {"dst": phone, "transactional": True, "msg": "Your verification code is {}".format(verifyCode)}))

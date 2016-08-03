@@ -1,13 +1,67 @@
-var generalButton=$("#general-submit"), passwordButton=$("#password-submit");
+var generalButton=$("#general-submit"), passwordButton=$("#password-submit"), phone;
 
 function enableGeneralButton(){
     generalButton.prop("disabled", false);
 }
 
-$("#phone, #realname, #email").on("input", enableGeneralButton)
+$("#verify-resend").on("click", function(){
+    $("#error-alert-modal").hide();
+    $("#verify-resend").html("Loading");
+    $("#verify-resend").prop("disabled", true);
+    $.getJSON("/ajax/resendPhoneVerification", {"phone": phone}, function(data){
+        if (data.result != "success"){
+            $("#verify-code-modal").modal('show');
+        }
+        $("#verify-resend").html("Resend code");
+        $("#verify-resend").prop("disabled", false);
+    })
+})
+
+
+$("#phone-submit").on("click", function(){
+    $("#success-alert").hide();
+    $("#error-alert").hide();
+    phone = $("#phone").val();
+    $("#phone-submit").html("Loading");
+    $("#phone-submit").prop("disabled", true);
+    $.getJSON("/ajax/initiatePhoneVerification", {"phone": phone}, function(data){
+        if (data.result == "invalid number"){
+            $("#error").text("Invalid phone number");
+            $("#error-alert").show(400);
+        } else {
+            $("#verify-code-modal").modal('show');
+        }
+        $("#phone-submit").html("Verify and save");
+        $("#phone-submit").prop("disabled", false);
+    })
+})
+
+$("#verify-submit").on("click", function(){
+    $("#error-alert-modal").hide();
+    $("#verify-submit").html("Loading");
+    $("#verify-submit").prop("disabled", true);
+    verifyCode = $("#verify-code").val();
+    $.getJSON("/ajax/answerPhoneVerification", {"phone": phone, "verifyCode": verifyCode}, function(data){
+        if (data.result == 'success') {
+            $("#verify-code-modal").modal('hide');
+            $("#success-alert").show(400);
+        } else {
+            $("#error-modal").text(data.result);
+            $("#error-alert-modal").show(400);
+        }
+        $("#verify-submit").html("Verify code");
+        $("#verify-submit").prop("disabled", false);
+    })
+})
+
+$("#realname, #email").on("input", enableGeneralButton)
 
 $("input[id|=password]").on("input", function(e){
     passwordButton.prop("disabled", false);
+})
+
+$("#phone").on("input", function(e){
+    $("#phone-submit").prop("disabled", false);
 })
 
 generalButton.click(function(){
@@ -17,12 +71,10 @@ generalButton.click(function(){
     generalButton.prop('disabled', true);
     data={
         email: $("#email").val(),
-        phone: $("#phone").val(),
         realname: $("#realname").val(),
         avatar: $('#image-cropper').cropit('export', {
                     type: 'image/jpeg',
-                    quality: 0.75,
-                    originalSize: true
+                    quality: 0.9
                 })
     }
     $.post("/ajax/user_settings/save_general", data, function(data){

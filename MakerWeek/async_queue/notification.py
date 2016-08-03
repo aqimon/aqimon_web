@@ -15,25 +15,23 @@ class Notification:
         try:
             client = Client.get(Client.id == clientID)
         except DoesNotExist:
+            print("Client does not exist")
             return
         for userID in client.subscriber_list:
             user = User.get(User.id == userID)
             if data['status']:
-                email = json.dumps({
+                email = {
                     "dst": user.email,
                     "subject": "high {}".format(clientID),
                     "msg": "Client {} has high value readings, which indicates bad air quality.".format(clientID)
-                })
+                }
             else:
-                email = json.dumps({
+                email = {
                     "dst": user.email,
                     "subject": "low {}".format(clientID),
                     "msg": "Client {} readings has gone normal.".format(clientID)
-                })
-            sms = email
-            del sms['subject']
-            sms.dst = user.phone
-
-            sendQueue("mail", email)
-            sendQueue("sms", sms)
+                }
+            sendQueue("mail", json.dumps(email))
+            email['dst'] = user.phone
+            sendQueue("sms", json.dumps(email))
         database.close()

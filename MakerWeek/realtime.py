@@ -115,5 +115,5 @@ def handleIncoming(data):
 def broadcastEvent(obj, private=False):
     if not private:
         realtimeServer.send(obj, json=True, room="index")
-    clientRoom = "client_{}".format(obj['clientID'])
+    clientRoom = "client_{}".format(obj['id'])
     realtimeServer.send(obj, json=True, room=clientRoom)
