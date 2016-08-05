@@ -121,7 +121,7 @@ $('#image-cropper').cropit({
     onZoomChange: enableGeneralButton,
     onOffsetChange: enableGeneralButton,
     imageState: {
-        src: "http://localhost:5000/static/avatar/"+avatar
+        src: avatarSrc
     }
 });
 $("#cropit-image-upload-btn").on("click", function(){

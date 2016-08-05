@@ -13,7 +13,8 @@
                         class="btn btn-default dropdown-toggle"
                         data-toggle="dropdown"
                         aria-haspopup="true"
-                        aria-expanded="false"><span id="search-dropdown-text">Clients</span> <span class="caret"></span>
+                        aria-expanded="false"><span id="search-dropdown-text">{{search_type}}</span> <span
+                        class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" id="search-dropdown-options">
                     <li><a href="#">Clients</a></li>
@@ -22,7 +23,7 @@
                 </ul>
             </div>
             <input type="text" class="form-control" name="q" id="searchbar"
-                   placeholder="Search for clients, tags and more">
+                   placeholder="Search for clients, tags and more" value="{{ q }}">
         </div>
         <br/>
         <div class="panel-group" role="tablist" aria-multiselectable="true" id="accordion">
@@ -49,6 +50,7 @@
                             <li>"<i>keyword</i>": Only return results that contain the exact phrase</li>
                             <li>tags:<i>keyword</i>: Only return results that has the tag <i>keyword</i></li>
                             <li>username:<i>keyword</i>: Only return results which its owner is <i>keyword</i></li>
+                            <li><b>Only clients which have sent at lease once will appear here, to prevent spam</b></li>
                         </ul>
                     </div>
                 </div>
@@ -73,4 +75,9 @@
 <script src="/static/js/moment.js"></script>
 <script src="/static/js/objects-list.js"></script>
 <script src="/static/js/search-page.js"></script>
+<script>
+    if ({{init}})
+        initiateSearch();
+
+</script>
 {% endblock %}

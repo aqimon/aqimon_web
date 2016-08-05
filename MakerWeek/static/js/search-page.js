@@ -10,6 +10,7 @@ function initiateSearch(){
     resultPage=1;
     $("#result").html("");
     $("#result-loading").show();
+    $("#load-more").hide();
     resultLoad(searchType, searchQuery, resultPage);
 }
 

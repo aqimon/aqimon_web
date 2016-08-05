@@ -2,14 +2,14 @@ import datetime
 import random
 
 from MakerWeek.common import genRandomString
-from MakerWeek.database.database import database, Event, Client
+from MakerWeek.database.database import database, Event
 
 database.connect()
 
 
 def generateEvent(uuid):
     return {
-        "client_id": uuid,
+        "client_id": "71c5d852e55f4963b567120923b8eb24",
         "temperature": random.randint(22, 35),
         "humidity": random.randint(0, 100),
         "dustlevel": random.randint(0, 10) / 10,
@@ -47,13 +47,13 @@ clients = []
 #             print(_)
 
 events = []
-
-c = Client.create(**generateClient())
-print("Created new client has UUID {}".format(str(c.id)))
+#
+# c = Client.create(**generateClient())
+# print("Created new client has UUID {}".format(str(c.id)))
 
 print("Now we do some spam")
-for i in range(100):
-    events.append(generateEvent(str(c.id)))
+for i in range(10000):
+    events.append(generateEvent("xxx"))
     currTime -= delta
 
 print("Generated {} entries".format(len(events)))

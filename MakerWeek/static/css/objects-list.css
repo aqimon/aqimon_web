@@ -95,34 +95,40 @@
 }
 
 @media (min-width: 768px) and (max-width: 992px) {
-    .result-entry-tag {
+    .result-entry-tag, .result-entry-user {
         width: 49%;
         margin-right: 2%;
     }
 
-    .result-entry-tag:nth-child(2n) {
+    .result-entry-tag:nth-child(2n) .result-entry-user:nth-child(2n){
         margin-right: 0;
     }
 }
 
 @media (min-width: 992px) and (max-width: 1200px) {
-    .result-entry-tag {
+    .result-entry-tag, .result-entry-user {
         width: 31.9%;
         margin-right: 2%;
     }
 
-    .result-entry-tag:nth-child(3n) {
+    .result-entry-tag:nth-child(3n) .result-entry-user:nth-child(3n){
         margin-right: 0;
     }
 }
 
 @media (min-width: 1200px){
-    .result-entry-tag {
+    .result-entry-tag, .result-entry-user {
         width: 24.25%;
         margin-right: 1%;
     }
 
-    .result-entry-tag:nth-child(4n) {
+    .result-entry-tag:nth-child(4n) .result-entry-user:nth-child(4n){
         margin-right: 0;
     }
+}
+
+.result-entry-avatar img {
+    height: 100px;
+    width: 100px;
+    float: left;
 }

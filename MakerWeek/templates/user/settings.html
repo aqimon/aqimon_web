@@ -211,8 +211,7 @@
 {% endblock %}
 {% block js %}
 <script>
-    avatar = "{{ g.user.avatar }}";
-
+    avatarSrc = "{{ url_for("static", filename="avatar/"+g.user.avatar) }}";
 </script>
 <script src="/static/js/jquery.cropit.js"></script>
 <script src="/static/js/user/settings.js"></script>

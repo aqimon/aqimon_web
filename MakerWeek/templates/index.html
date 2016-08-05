@@ -102,6 +102,8 @@
                                 <li>"<i>keyword</i>": Only return results that contain the exact phrase</li>
                                 <li>tags:<i>keyword</i>: Only return results that hthe tag <i>keyword</i></li>
                                 <li>username:<i>keyword</i>: Only return results which its owner is <i>keyword</i></li>
+                                <li><b>Only clients which have sent at lease once will appear here, to prevent spam</b>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -117,8 +119,14 @@
             $("#search-dropdown-text").text($(this).text());
         });
         $("#search-dropdown-text").text("Clients");
-        {{ wsAuthInfo() }}
+        function redirectToSearchPage(){
+            location.href = "/search?type="
+                            +encodeURIComponent($("#search-dropdown-text").text())
+                            +"&q="
+                            +encodeURIComponent($("#searchbar").val());
+        }
 </script>
+{{ wsAuthInfo() }}
 <script src="/static/js/sprintf.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places&language=en&region=VN"></script>
 <script src="/static/js/socketio.js"></script>

@@ -80,6 +80,28 @@ function generateClientResultEntry(data){
     return sprintf(contentString, data);
 }
 
+function generateUserResultEntry(data){
+    if (data.realname == "")
+        data.realname = data.username;
+    contentString=
+        '<div class="result-entry result-entry-user"> \
+            <div class="result-entry-avatar"> \
+                <img src="%(avatar)s" class="img-circle" /> \
+            </div> \
+            <div class="result-entry-left"> \
+                <span class="h3"> \
+                 <a href="/user/%(username)s"> \
+                    User <i>%(realname)s</i> \
+                 </a> \
+                </span> \
+                <div class="result-entry-left-secondary"> \
+                    Username: %(username)s \
+                </div> \
+            </div> \
+        </div>';
+    return sprintf(contentString, data);
+}
+
 function generateTagResultEntry(data){
     contentString=
         '<div class="result-entry result-entry-tag"> \

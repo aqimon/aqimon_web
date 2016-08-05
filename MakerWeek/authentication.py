@@ -29,7 +29,8 @@ def register():
     username = request.form['username']
     password = request.form['password']
     email = request.form['email']
-    User.add(username, password, email, phone)
+    realname = request.form['realname']
+    User.add(username, password, email, realname)
     return redirect("/login?created")
 
 
@@ -85,7 +86,7 @@ def resetPassword2():
     if 'token' not in request.args:
         return redirect("/")
     token = request.args['token']
-    with database.atomic() as tx:
+    with database.atomic():
         try:
             token_obj = ForgotToken.get((ForgotToken.token == token) & (ForgotToken.timestamp >= timeSubtract(days=1)))
         except DoesNotExist:

@@ -2,7 +2,7 @@ import binascii
 import datetime
 import os
 
-from flask import Blueprint, g, request, json, redirect
+from flask import Blueprint, g, request, json, redirect, url_for
 from peewee import DoesNotExist, fn, SQL
 
 from MakerWeek.async import deleteClient, exportClient, sendSMSVerify
@@ -368,12 +368,13 @@ def navbarSearch():
         query = (User
                  .select()
                  .where(SQL("MATCH(username) AGAINST(%s IN BOOLEAN MODE)", (keywords,))
-                        | SQL("MATCH(name) AGAINST(%s IN BOOLEAN MODE)", (keywords,)))
+                        | SQL("MATCH(realname) AGAINST(%s IN BOOLEAN MODE)", (keywords,)))
                  .paginate(page, 10))
         return json.jsonify([{
-                                 "username": user.title,
-                                 "name": user.name,
-                                 "avatar": user.avatar} for user in query])
+                                 "username": user.username,
+                                 "realname": user.realname,
+                                 "avatar": url_for("static", filename=os.path.join("avatar", user.avatar))} for user in
+                             query])
     elif type == "Clients":
         tags = []
         names = []
@@ -400,7 +401,7 @@ def navbarSearch():
                      .where(~Client.private))
         else:
             query = (query
-                     .where(~Client.private | (Client.private & Client.owner == g.user)))
+                     .where(~Client.private | (Client.private & (Client.owner == g.user))))
         query = query.paginate(page, 10)
         return json.jsonify(
             [q.event_id.toFrontendObject(include_id=True, include_geo=True, include_owner=True) for q in query])

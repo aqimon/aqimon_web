@@ -79,7 +79,10 @@ def data():
 
 @app.route("/search")
 def search():
-    return render_template("search.html")
+    if 'type' in request.args and 'q' in request.args:
+        if request.args['type'] in ["Clients", "Tags", "Users"]:
+            return render_template("search.html", search_type=request.args['type'], q=request.args['q'], init=1)
+    return render_template("search.html", search_type="Clients", q="", init=0)
 
 
 @app.route("/tags/<tagTitle>")

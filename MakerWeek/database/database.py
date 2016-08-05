@@ -55,10 +55,10 @@ class IncorrectPassword(Exception):
 
 class User(BaseModel):
     # auto id field
-    username = CharField(unique=True)
+    username = CharField(unique=True, max_length=100)
     password = CharField()
-    email = CharField(unique=True)
-    phone = CharField()
+    email = CharField(unique=True, max_length=100)
+    phone = CharField(default="")
     avatar = CharField(default="noavatar.png")
     realname = CharField(default="")
 
@@ -68,9 +68,9 @@ class User(BaseModel):
         return LoginToken.new(self.id)
 
     @staticmethod
-    def add(username, password, email, phone):
+    def add(username, password, email, realname):
         password = hashPassword(password)
-        User.create(username=username, password=password, email=email, phone=phone)
+        User.create(username=username, password=password, email=email, realname=realname)
 
     @staticmethod
     def logout():
@@ -86,7 +86,7 @@ class Client(BaseModel):
     owner = ForeignKeyField(rel_model=User, to_field='id')
     description = TextField(default="")
     subscriber_list = JSONArrayField(null=False, default=[])
-    api_key = CharField(default=lambda: genRandomString(20), unique=True)
+    api_key = CharField(default=lambda: genRandomString(20), unique=True, max_length=20)
     last_notification = BooleanField(default=False)
     private = BooleanField(default=False)
 
@@ -156,7 +156,7 @@ class LastEvent(BaseModel):
 
 
 class ForgotToken(BaseModel):
-    token = CharField(primary_key=True, default=lambda: genRandomString(128))
+    token = CharField(primary_key=True, default=lambda: genRandomString(128), max_length=128)
     timestamp = DateTimeField(default=utcTime)
     user_id = ForeignKeyField(rel_model=User, to_field='id')
 
@@ -172,8 +172,8 @@ class InvalidToken(Exception):
 
 
 class LoginToken(BaseModel):
-    token_key = CharField(primary_key=True)
-    token_hash = CharField()
+    token_key = CharField(primary_key=True, max_length=32)
+    token_hash = CharField(max_length=128)
     user_id = ForeignKeyField(rel_model=User, to_field='id')
 
     @staticmethod
@@ -196,7 +196,7 @@ class LoginToken(BaseModel):
 
 
 class Tags(BaseModel):
-    title = CharField(index=True, unique=True)
+    title = CharField(index=True, unique=True, max_length=100)
     description = TextField(default="")
 
 
@@ -215,8 +215,8 @@ class TagsMap(BaseModel):
 
 class WebsocketToken(BaseModel):
     user_id = ForeignKeyField(rel_model=User, to_field="id")
-    token_key = CharField(primary_key=True)
-    token_hash = CharField()
+    token_key = CharField(primary_key=True, max_length=32)
+    token_hash = CharField(max_length=128)
 
     @staticmethod
     def new(user_id):
@@ -238,7 +238,7 @@ class WebsocketToken(BaseModel):
 
 
 class PhoneVerification(BaseModel):
-    phone = CharField()
+    phone = CharField(max_length=50)
     user_id = ForeignKeyField(rel_model=User, to_field="id", index=True, unique=True)
     verifyCode = IntegerField(default=lambda: genRandomNumber(100000, 999999))
     timestamp = DateTimeField(default=utcTime)
