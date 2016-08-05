@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% set currPage="client" %}
+{% from "functions.html" import wsAuthInfo %}
 {% set isOwner=(g.user.id == client.owner) %}
 {% block title %} MakerWeek client {{ client.id }} {% endblock %}
 {% block css %}
@@ -139,4 +140,5 @@
 <script src="/static/js/locationpicker.jquery.js"></script>
 {% endif %}
 <script src="/static/js/client.js"></script>
+{{ wsAutoInfo() }}
 {% endblock %}

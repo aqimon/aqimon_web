@@ -231,9 +231,8 @@ $(function(){
         if (!init){
             loadChartData(-1, null, function(){
                 init=true;
-                room="client_"+info.id.toString();
                 data = {
-                    room: room,
+                    clientid: info.id,
                     action: "joinClientRoom"
                 };
                 if (wsTokenKey && wsTokenValue){

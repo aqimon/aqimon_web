@@ -65,13 +65,14 @@ def joinRoom(clientID, wsTokenKey=None, wsTokenValue=None):
         client = Client.get(Client.id == clientID)
     except DoesNotExist:
         return {"msg": "client not found"}
-    if client.private and ((wsTokenKey is None) or (wsTokenValue is None)):
-        return {"msg": "need to auth"}
-    try:
-        _ = WebsocketToken.use(wsTokenKey, wsTokenValue)
-    except InvalidToken:
-        return {"msg": "invalid token"}
-    socketio.join_room("client_{}".format(client.id))
+    if client.private:
+        if (wsTokenKey is None) or (wsTokenValue is None):
+            return {"msg": "need to auth"}
+        try:
+            _ = WebsocketToken.use(wsTokenKey, wsTokenValue)
+        except InvalidToken:
+            return {"msg": "invalid token"}
+    socketio.join_room("client_{}".format(clientID))
     return {"msg": "ok"}
 
 
