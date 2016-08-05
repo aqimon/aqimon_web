@@ -232,7 +232,15 @@ $(function(){
             loadChartData(-1, null, function(){
                 init=true;
                 room="client_"+info.id.toString();
-                socketio.emit("json", {"action": "joinRoom", "room": room});
+                data = {
+                    room: room,
+                    action: "joinClientRoom"
+                };
+                if (wsTokenKey && wsTokenValue){
+                    data.wsTokenKey=wsTokenKey;
+                    data.wsTokenValue=wsTokenValue;
+                }
+                socketio.emit("json", data);
             })
         }
     })
