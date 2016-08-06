@@ -1,4 +1,5 @@
 from flask import Flask, render_template, session, g, request
+from peewee import DoesNotExist
 
 from MakerWeek.ajax import ajax
 from MakerWeek.api import api
@@ -88,3 +89,12 @@ def search():
 @app.route("/tags/<tagTitle>")
 def tagPage(tagTitle):
     return render_template("tags.html", tagTitle=tagTitle)
+
+
+@app.route("/user/<username>")
+def userPage(username):
+    try:
+        user = User.get(User.username == username)
+    except DoesNotExist:
+        return "no such user", 404
+    return render_template("user.html", user=user)

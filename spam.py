@@ -1,10 +1,10 @@
 import datetime
 import random
 import time
-
+import uuid
 import requests
 
-CLIENT_NUM = 2
+CLIENT_NUM = 10
 
 def generateClientInfo(uuid):
     return {
@@ -32,10 +32,10 @@ def generateEvent(uuid):
 def login(session):
     print("Logging in...")
     data = {
-        "username": "x",
-        "password": "x",
+        "username": "tuankiet65",
+        "password": "123456",
     }
-    session.post("https://e3.tuankiet65.moe/login", data=data)
+    session.post("http://localhost:5000/login", data=data)
 
 
 random.seed()
@@ -45,20 +45,18 @@ counter = 0
 session = requests.Session()
 login(session)
 
-# print("Creating some random client...")
-# for i in range(CLIENT_NUM):
-#     clientUUID = uuid.uuid4()
-#     client = generateClientInfo(clientUUID)
-#     data = session.get("http://localhost:5000/ajax/add/client", params=client).json()
-#     print(data)
-#     clients.append((data['clientID'], data['apiKey']))
-#
+print("Creating some random client...")
+for i in range(CLIENT_NUM):
+    clientUUID = uuid.uuid4()
+    client = generateClientInfo(clientUUID)
+    data = session.get("http://localhost:5000/ajax/add/client", params=client).json()
+    print(data)
+    clients.append((data['clientID'], data['apiKey']))
+
 currTime = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
-# delta = datetime.timedelta(minutes=5)
-# input()
-xxxxx = ("e3aab777-1513-4f2f-8ed2-715951d2c308", "MagHF2DwdyEXrR2Kq91S")
+delta = datetime.timedelta(minutes=5)
+
 print("Now we do some spam")
-while True:
-    event = generateEvent(xxxxx)
-    print(session.get("https://e3.tuankiet65.moe/api/add/event", params=event).text)
-    time.sleep(10)
+for client in clients:
+    event = generateEvent(client)
+    print(session.get("http://localhost:5000/api/add/event", params=event).text)

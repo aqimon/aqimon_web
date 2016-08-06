@@ -464,3 +464,27 @@ def answerPhoneVerification():
     obj.user_id.save()
     obj.delete_instance()
     return json.jsonify(result="success")
+
+
+@ajax.route("/get/user_clients")
+def getUserClients():
+    username = request.args['username']
+    try:
+        page = int(request.args['page'])
+    except Exception:
+        page = 1
+    try:
+        user = User.get(User.username == username)
+    except DoesNotExist:
+        return "user not found", 404
+    query = (LastEvent
+             .select(LastEvent, Client, User)
+             .join(Client, on=(LastEvent.client_id == Client.id))
+             .join(User, on=(Client.owner == User.id))
+             .where(Client.owner == user)
+             .paginate(page, 10))
+    if (g.user is None) or (g.user != user):
+        query = (query
+                 .where(~Client.private))
+    return json.jsonify(
+        [q.event_id.toFrontendObject(include_id=True, include_geo=True, include_owner=True) for q in query])

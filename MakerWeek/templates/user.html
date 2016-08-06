@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% set currPage="user" %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/objects-list.css">
+<style>
+    .img-circle {
+        width: 100px;
+        height: 100px;
+        margin-right: 20px;
+        float: left;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="jumbotron">
+    <div class="container-fluid" style="display:flex;justify-content:center;align-items:center;width:100%;break-after: always;">
+            <img class="img-circle" src="{{ url_for('static', filename='avatar/'+user.avatar) }}" />
+            <h2>{{user.realname}}</h2>
+            <h4><i>Username: {{user.username}}</i></h4>
+        </div>
+    </div>
+</div>
+<div id="result-container">
+    <h1>Client list</h1>
+    <div id="result-loading" style="display:block !important;">
+        Loading...
+    </div>
+    <div id="result">
+
+    </div>
+    <button class="btn btn-block btn-primary btn-lg" id="load-more" style="display:none;">
+        Load more results
+    </button>
+</div>
+{% endblock %}
+{% block js %}
+<script src="/static/js/sprintf.js"></script>
+<script src="/static/js/moment.js"></script>
+<script src="/static/js/objects-list.js"></script>
+<script src="/static/js/tags.js"></script>
+<script>
+    username = "{{user.username}}";
+    $(function(){
+        resultPage=1;
+        $("#result").html("");
+        $("#result-loading").show();
+        $("#load-more").hide();
+        resultLoad(resultPage);
+    })
+
+    $("#load-more").on("click", function(){
+        $("#load-more").text("Loading");
+        $("#load-more").prop("disabled", true);
+        resultPage++;
+        resultLoad(resultPage);
+    })
+
+    function resultLoad(resultPage){
+        $.getJSON("/ajax/get/user_clients", {page: resultPage, username: username}, function(recv){
+            if (resultPage == 1){
+                $("#result-loading").hide();
+                $("#load-more").show();
+            }
+            console.log(recv);
+            for (var i=0; i<recv.length; i++){
+                $("#result").append(generateClientResultEntry(recv[i]));
+            }
+            $('[data-toggle="tooltip"]').tooltip()
+            if (recv.length<10){
+                $("#load-more").text("No more results to show :(");
+                $("#load-more").prop("disabled", true);
+            } else {
+                $("#load-more").text("Load more results");
+                $("#load-more").prop("disabled", false);
+            }
+        })
+    }
+</script>
+{% endblock %}

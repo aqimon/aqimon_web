@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, g, redirect
-
 from MakerWeek.database.database import Client
 
 user = Blueprint("user", __name__, url_prefix="")
@@ -9,7 +8,6 @@ user = Blueprint("user", __name__, url_prefix="")
 def isLoggedIn():
     if g.user is None:
         return redirect("/login?needToLogin")
-
 
 @user.route("/myaccount")
 def myAccount():

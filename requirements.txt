@@ -30,3 +30,4 @@ s3transfer==0.1.1
 six==1.10.0
 vine==1.1.1
 Werkzeug==0.11.10
+phonenumberslite
