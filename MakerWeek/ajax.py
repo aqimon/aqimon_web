@@ -1,6 +1,7 @@
 import binascii
 import datetime
 import os
+import copy
 
 from flask import Blueprint, g, request, json, redirect, url_for
 from peewee import DoesNotExist, fn, SQL
@@ -66,7 +67,9 @@ def unsubscribe():
         return json.dumps({"result": "Need to login"})
     userID = g.user.id
     client = Client.get(Client.id == clientID)
-    client.subscriber_list.remove(userID)
+    subscriber_list = copy.copy(client.subscriber_list)
+    subscriber_list.remove(userID)
+    client.subscriber_list = subscriber_list
     client.save()
     return json.jsonify(result="success")
 
