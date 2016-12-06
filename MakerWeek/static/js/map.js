@@ -1,7 +1,23 @@
 var map;
-function initMap(){
+
+if ('geolocation' in navigator){
+    navigator.geolocation.getCurrentPosition(function(position){
+        initMap(position.coords.latitude, position.coords.longitude);
+    }, function(error){
+        console.log("geolocation err: ");
+        console.log(error.code);
+        console.log(error.message);
+        initMap(21.2, 105.51);
+    }, {
+        "maximumAge": 60000
+    });
+} else {
+
+}
+
+function initMap(lat, lon){
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -33.8688, lng: 151.2195},
+        center: {lat: lat, lng: lon},
         zoom: 3,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
