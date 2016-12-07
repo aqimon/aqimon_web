@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% set currPage="login" %}
-{% block title %} MakerWeek login {% endblock %}
+{% block title %} {{ _("MakerWeek login") }} {% endblock %}
 {% block css %}
 {{ super() }}
 <link rel="stylesheet" href="/static/css/forms.css">
@@ -8,44 +8,44 @@
 {% block content %}
 <div class="container-fluid" id="container">
     <div id="form" class="well well-lg">
-        <h1>Login</h1>
+        <h1>{{ _("Login") }}</h1>
         <hr/>
         <div class="alert alert-success" id="resetSuccess">
-            <strong>We have sent you a email with your new random password</strong>
-            Please log in using that password and then change it immediately.
+            <strong>{{ _("We have sent you a email with your new random password") }}</strong>
+            {{ _("Please log in using that password and then change it immediately.") }}
         </div>
         <div class="alert alert-danger" id="invalidToken">
-            <strong>Invalid forgot token</strong>
-            Either the token does not exists or it is expired.
+            <strong>{{ _("Invalid forgot token") }}</strong>
+            {{ _("Either the token does not exists or it is expired.") }}
         </div>
         <div class="alert alert-success" id="created">
-            <strong>Account created</strong>
-            Now you can login into your account.
+            <strong>{{ _("Account created") }}</strong>
+            {{ _("Now you can login into your account.") }}
         </div>
         <div class="alert alert-danger" id="failure">
-            <strong>Login failed</strong>
-            Either the account does not exist or the password is incorrect.
+            <strong>{{ _("Login failed") }}</strong>
+            {{ _("Either the account does not exist or the password is incorrect.") }}
         </div>
         <div class="alert alert-danger" id="needToLogin">
-            <strong>You need to login to proceed futher</strong>
+            <strong>{{ _("You need to login to proceed futher") }}</strong>
         </div>
         <form action="/login" method="post">
             <div class="form-group">
-                <input placeholder="Your username" name="username" type="text" class="form-control">
+                <input placeholder="{{ _('Your username') }}" name="username" type="text" class="form-control">
             </div>
             <div class="form-group">
-                <input type="password" name="password" placeholder="Your password" class="form-control">
+                <input type="password" name="password" placeholder="{{ _('Your password') }}" class="form-control">
             </div>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="remember-me"><b>Remember me (for up to one month)</b>
+                        <input type="checkbox" name="remember-me"><b>{{ _("Remember me (for up to one month)") }}</b>
                     </label>
                 </div>
             </div>
             <button type="submit" class="btn btn-block btn-primary btn-lg">Log in</button>
             <a href="/forgot" type="button" class="btn btn-block btn-lg btn-info">
-                I forgot my password
+                {{ _("I forgot my password") }}
             </a>
         </form>
     </div>

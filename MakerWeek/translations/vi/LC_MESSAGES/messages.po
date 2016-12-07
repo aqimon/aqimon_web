@@ -1,0 +1,794 @@
+# Vietnamese translations for PROJECT.
+# Copyright (C) 2016 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-12-07 17:57+0700\n"
+"PO-Revision-Date: 2016-12-07 23:06+0700\n"
+"Last-Translator: \n"
+"Language: vi\n"
+"Language-Team: vi <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+"X-Generator: Poedit 1.8.11\n"
+
+#: templates/base.html:2
+msgid "Home"
+msgstr "Trang chủ"
+
+#: templates/base.html:3
+msgid "Global map"
+msgstr "Bản đồ"
+
+#: templates/base.html:4
+msgid "Search"
+msgstr "Tìm kiếm"
+
+#: templates/base.html:5
+msgid "Data"
+msgstr "Xuất dữ liệu"
+
+#: templates/authentication/login.html:11 templates/base.html:8
+msgid "Login"
+msgstr "Đăng nhập"
+
+#: templates/base.html:9
+msgid "Sign up"
+msgstr "Đăng kí"
+
+#: templates/base.html:37 templates/index.html:4 templates/index.html:51
+msgid "MakerWeek"
+msgstr "KHKT"
+
+#: templates/base.html:61
+msgid "Dashboard"
+msgstr ""
+
+#: templates/base.html:66 templates/user/clients.html:5
+msgid "My clients"
+msgstr "Các trạm của bạn"
+
+#: templates/base.html:71 templates/user/settings.html:51
+msgid "Account settings"
+msgstr "Cài đặt tài khoản"
+
+#: templates/base.html:77
+msgid "Sign out"
+msgstr "Đăng xuất"
+
+#: templates/client.html:5
+#, python-format
+msgid "MakerWeek client %(id)s"
+msgstr "Trạm %(id)s"
+
+#: templates/client.html:20
+msgid "Client:"
+msgstr "Trạm quan trắc:"
+
+#: templates/client.html:23
+msgid "Tags:"
+msgstr "Nhãn:"
+
+#: templates/client.html:26
+msgid "Client ID:"
+msgstr "ID trạm quan trắc"
+
+#: templates/client.html:27
+msgid "Latitude:"
+msgstr "Vĩ độ:"
+
+#: templates/client.html:28
+msgid "Longitude:"
+msgstr "Kinh độ:"
+
+#: templates/client.html:29
+msgid "Address:"
+msgstr "Địa chỉ:"
+
+#: templates/client.html:37
+msgid "Unsubscribe"
+msgstr "Huỷ nhận cảnh bảo"
+
+#: templates/client.html:39
+msgid "Subscribe"
+msgstr "Đăng kí nhận cảnh báo"
+
+#: templates/client.html:47 templates/user/clients.html:24
+msgid "Edit"
+msgstr "Chỉnh sửa thông tin"
+
+#: templates/client.html:61 templates/user/clients.html:47
+msgid "Edit client"
+msgstr ""
+
+#: templates/client.html:66 templates/user/clients.html:52
+#: templates/user/clients.html:108
+msgid "Client name"
+msgstr "Tên trạm"
+
+#: templates/client.html:72 templates/user/clients.html:58
+#: templates/user/clients.html:114
+msgid "Address"
+msgstr "Địa chỉ"
+
+#: templates/client.html:78 templates/user/clients.html:64
+#: templates/user/clients.html:120
+msgid "Latitude"
+msgstr "Vĩ độ"
+
+#: templates/client.html:82 templates/user/clients.html:68
+#: templates/user/clients.html:124
+msgid "Longitude"
+msgstr "Kinh Đô"
+
+#: templates/client.html:88 templates/index.html:73 templates/search.html:21
+#: templates/tags.html:8 templates/user/clients.html:74
+#: templates/user/clients.html:130
+msgid "Tags"
+msgstr "Nhãn"
+
+#: templates/client.html:97 templates/user/clients.html:83
+#: templates/user/clients.html:139
+msgid "This client is private"
+msgstr ""
+
+#: templates/client.html:106 templates/user/clients.html:92
+#: templates/user/clients.html:171 templates/user/clients.html:195
+#: templates/user/clients.html:214 templates/user/clients.html:247
+#: templates/user/clients.html:264
+msgid "Close"
+msgstr "Đóng cửa sổ"
+
+#: templates/client.html:107 templates/user/clients.html:93
+msgid "Save changes"
+msgstr "Lưu thay đổi"
+
+#: templates/data.html:8
+msgid "Execute SQL queries directly!"
+msgstr ""
+
+#: templates/data.html:16
+msgid "Database structure"
+msgstr "Cấu trúc cơ sử dữ liệu"
+
+#: templates/index.html:55
+msgid "You are seeing live data sending from clients around the world"
+msgstr ""
+
+#: templates/index.html:57
+msgid "For a bigger map, click here"
+msgstr ""
+
+#: templates/index.html:61 templates/search.html:8
+msgid "Try typing something here to search"
+msgstr "Hãy thử gõ vào đây để tìm kiếm"
+
+#: templates/index.html:72 templates/search.html:20
+msgid "Clients"
+msgstr "Trạm"
+
+#: templates/index.html:74 templates/search.html:22
+msgid "Users"
+msgstr "Người dùng"
+
+#: templates/index.html:78 templates/search.html:26
+msgid "Search for clients, tags and more"
+msgstr ""
+
+#: templates/index.html:91 templates/search.html:39
+msgid "Search tips"
+msgstr "Thủ thuật tìm kiếm"
+
+#: templates/index.html:100 templates/index.html:101 templates/index.html:102
+#: templates/index.html:103 templates/index.html:104 templates/search.html:48
+#: templates/search.html:49 templates/search.html:50 templates/search.html:51
+#: templates/search.html:52
+msgid "keyword"
+msgstr "từ khoá"
+
+#: templates/index.html:100 templates/search.html:48
+msgid "Only return results that contain <i>keyword</i>"
+msgstr "Chỉ trả về những kết quả chứa <i>từ khoá</i>"
+
+#: templates/index.html:101 templates/search.html:49
+msgid "Only return results that don't contain <i>keyword</i>"
+msgstr "Chỉ trả về những kết quả không chứa <i>từ khoá</i>"
+
+#: templates/index.html:102 templates/search.html:50
+msgid "Only return results that contain the exact phrase"
+msgstr "Chỉ trả về những kết quả có chứa chính xác <i>từ khoá</i>"
+
+#: templates/index.html:103 templates/search.html:51
+msgid "tag"
+msgstr "nhãn"
+
+#: templates/index.html:103 templates/search.html:51
+msgid "Only return results tagging with <i>keyword</i>"
+msgstr ""
+
+#: templates/index.html:104 templates/search.html:52
+msgid "username"
+msgstr ""
+
+#: templates/index.html:104 templates/search.html:52
+msgid "Only return results which its owner is <i>keyword</i>"
+msgstr ""
+
+#: templates/index.html:105 templates/search.html:53
+msgid "Only clients which have sent at lease once will appear here, to prevent spam"
+msgstr ""
+
+#: templates/map.html:4
+msgid "MakerWeek map"
+msgstr "Bản đồ"
+
+#: templates/tags.html:12 templates/user.html:26
+msgid "Loading..."
+msgstr "Đang tải..."
+
+#: templates/tags.html:18 templates/user.html:32 templates/user.html:73
+msgid "Load more results"
+msgstr "Hiển thị thêm kết quả"
+
+#: templates/user.html:19 templates/user/settings.html:109
+msgid "Username"
+msgstr "Tên đăng nhập"
+
+#: templates/user.html:24
+msgid "Client list"
+msgstr "Danh sách trạm"
+
+#: templates/user.html:52
+msgid "Loading"
+msgstr "Đang tải"
+
+#: templates/user.html:70
+msgid "No more results to show :("
+msgstr "Không còn kết quả nào để hiển thị"
+
+#: templates/authentication/forgot.html:3
+msgid "MakerWeek forgot your password"
+msgstr "Quên mật khẩu"
+
+#: templates/authentication/forgot.html:11
+msgid "Forgot your password?"
+msgstr "Bạn quên mật khẩu?"
+
+#: templates/authentication/forgot.html:14
+msgid "We have sent you a confirmation link"
+msgstr ""
+
+#: templates/authentication/forgot.html:15
+msgid "Please click on it to continue."
+msgstr ""
+
+#: templates/authentication/forgot.html:18
+msgid "User not found"
+msgstr ""
+
+#: templates/authentication/forgot.html:19
+msgid "Please check the email address you supplied."
+msgstr ""
+
+#: templates/authentication/forgot.html:24
+#: templates/authentication/register.html:19
+msgid "Your email"
+msgstr ""
+
+#: templates/authentication/forgot.html:26
+msgid "Reset my password"
+msgstr ""
+
+#: templates/authentication/forgot2Email.html:5
+msgid "Your new temporary password is"
+msgstr ""
+
+#: templates/authentication/forgot2Email.html:6
+msgid "Please sign in using this temporary password and then change it immediately."
+msgstr ""
+
+#: templates/authentication/forgotEmail.html:6
+msgid "Someone, hopefully you, has requested to reset your password on MakerWeek."
+msgstr ""
+
+#: templates/authentication/forgotEmail.html:7
+msgid "To reset your password, please click this link:"
+msgstr ""
+
+#: templates/authentication/forgotEmail.html:11
+msgid "This link will expire on"
+msgstr ""
+
+#: templates/authentication/login.html:3
+msgid "MakerWeek login"
+msgstr "Đăng nhập"
+
+#: templates/authentication/login.html:14
+msgid "We have sent you a email with your new random password"
+msgstr ""
+
+#: templates/authentication/login.html:15
+msgid "Please log in using that password and then change it immediately."
+msgstr ""
+
+#: templates/authentication/login.html:18
+msgid "Invalid forgot token"
+msgstr ""
+
+#: templates/authentication/login.html:19
+msgid "Either the token does not exists or it is expired."
+msgstr ""
+
+#: templates/authentication/login.html:22
+msgid "Account created"
+msgstr "Tài khoản của bạn đã được tạo"
+
+#: templates/authentication/login.html:23
+msgid "Now you can login into your account."
+msgstr "Giờ bạn có thể đăng nhập vào tài khoản của mình"
+
+#: templates/authentication/login.html:26
+msgid "Login failed"
+msgstr "Đăng nhập thất bại"
+
+#: templates/authentication/login.html:27
+msgid "Either the account does not exist or the password is incorrect."
+msgstr "Có thể tài khoản bạn đăng nhập vào không tồn tại hoặc bạn nhập sai mật khẩu."
+
+#: templates/authentication/login.html:30
+msgid "You need to login to proceed futher"
+msgstr "Bạn phải đăng nhập để truy cập vào trang này"
+
+#: templates/authentication/login.html:34
+#: templates/authentication/register.html:15
+msgid "Your username"
+msgstr "Tên đăng nhập"
+
+#: templates/authentication/login.html:37
+#: templates/authentication/register.html:23
+msgid "Your password"
+msgstr "Mật khẩu"
+
+#: templates/authentication/login.html:42
+msgid "Remember me (for up to one month)"
+msgstr "Giữ đăng nhập (trong tối đa 1 tháng)"
+
+#: templates/authentication/login.html:48
+msgid "I forgot my password"
+msgstr "Tôi quên mật khẩu của mình"
+
+#: templates/authentication/register.html:3
+msgid "MakerWeek sign up"
+msgstr "Đăng kí"
+
+#: templates/authentication/register.html:10
+msgid "Registration form"
+msgstr "Đơn đăng kí"
+
+#: templates/authentication/register.html:27
+msgid "Your password (again)"
+msgstr "Nhập lại mật khẩu"
+
+#: templates/authentication/register.html:31
+msgid "Your real name"
+msgstr "Tên thật của bạn"
+
+#: templates/authentication/register.html:33
+msgid "You can add your phone number later for notification purpose"
+msgstr "Bạn có thêm số điện thoại nhận cảnh báo sau khi tạo tài khoản"
+
+#: templates/authentication/register.html:34
+msgid "Submit"
+msgstr "Tạo tài khoản"
+
+#: templates/user/clients.html:2
+#, python-format
+msgid "MakerWeek user %(username)s clients page"
+msgstr ""
+
+#: templates/user/clients.html:10 templates/user/settings.html:116
+msgid "Name"
+msgstr "Tên trạm"
+
+#: templates/user/clients.html:11
+msgid "clientID"
+msgstr "ID trạm"
+
+#: templates/user/clients.html:12
+msgid "Actions"
+msgstr "Hành động"
+
+#: templates/user/clients.html:29 templates/user/clients.html:248
+msgid "Export"
+msgstr "Xuất dữ liệu"
+
+#: templates/user/clients.html:34
+msgid "Remove"
+msgstr "Xoá trạm"
+
+#: templates/user/clients.html:103 templates/user/clients.html:159
+#: templates/user/clients.html:271
+msgid "Add a new client"
+msgstr "Thêm trạm mới"
+
+#: templates/user/clients.html:148
+msgid "Cancel"
+msgstr ""
+
+#: templates/user/clients.html:149
+msgid "Add client"
+msgstr "Thêm trạm mới"
+
+#: templates/user/clients.html:162
+msgid "New client created with clientID"
+msgstr "Một trạm mới đã được tạo với ID"
+
+#: templates/user/clients.html:163
+msgid "Please remember the API key below as it will not be shown anymore:"
+msgstr "Hãy ghi nhớ mã API dưới đây vì nó sẽ chỉ được hiển thị duy nhất một lần:"
+
+#: templates/user/clients.html:166
+msgid "API key:"
+msgstr "Mã API:"
+
+#: templates/user/clients.html:181 templates/user/clients.html:207
+msgid "Delete client"
+msgstr "Xoá trạm"
+
+#: templates/user/clients.html:184
+msgid "Do you really want to delete this client?"
+msgstr "Bạn có thật sự muốn xoá trạm này không?"
+
+#: templates/user/clients.html:185
+msgid "THIS ACTION CANNOT BE UNDONE"
+msgstr ""
+
+#: templates/user/clients.html:186
+msgid "After deleting this client:"
+msgstr ""
+
+#: templates/user/clients.html:188
+msgid "This client will disappear from the website, links will return 404"
+msgstr ""
+
+#: templates/user/clients.html:189
+msgid "All of this client's events will be purged."
+msgstr ""
+
+#: templates/user/clients.html:191
+msgid "It may take up to one day for your client to be deleted from the website."
+msgstr ""
+
+#: templates/user/clients.html:192
+msgid "You are advised to export this client's data before deleting to prevent data loss."
+msgstr ""
+
+#: templates/user/clients.html:196
+msgid "Delete this client"
+msgstr ""
+
+#: templates/user/clients.html:210
+msgid "You have successfully delete the client"
+msgstr ""
+
+#: templates/user/clients.html:211
+msgid "Please note it may take up to one day for this client's data to be fully deleted."
+msgstr ""
+
+#: templates/user/clients.html:224 templates/user/clients.html:258
+msgid "Export client"
+msgstr "Xuất dữ liệu của trạm"
+
+#: templates/user/clients.html:227
+msgid "Format:"
+msgstr "Định dạng:"
+
+#: templates/user/clients.html:235
+msgid "Compression:"
+msgstr "Kiểu nén:"
+
+#: templates/user/clients.html:237
+msgid "no compression"
+msgstr "Không nén"
+
+#: templates/user/clients.html:261
+msgid "The data is being processed and the link to download will be sent to your email."
+msgstr "Dữ liệu đang được xử lý và đường dẫn để tải về sẽ được gửi tới email của bạn."
+
+#: templates/user/settings.html:2
+#, python-format
+msgid "MakerWeek user %(username)s settings"
+msgstr ""
+
+#: templates/user/settings.html:54
+msgid "Settings saved"
+msgstr "Đã lưu các cài đặt"
+
+#: templates/user/settings.html:57 templates/user/settings.html:197
+msgid "Oh nose!"
+msgstr "Ôi không!"
+
+#: templates/user/settings.html:57 templates/user/settings.html:197
+msgid "Whatever errors happened:"
+msgstr ""
+
+#: templates/user/settings.html:64
+msgid "General settings"
+msgstr "Cài đặt chung"
+
+#: templates/user/settings.html:70
+msgid "Avatar"
+msgstr "Hình đại diện"
+
+#: templates/user/settings.html:88
+msgid "Rotate left"
+msgstr "Quay trái"
+
+#: templates/user/settings.html:94
+msgid "Rotate right"
+msgstr "Quay phải"
+
+#: templates/user/settings.html:101
+msgid "Select an image"
+msgstr "Chọn ảnh"
+
+#: templates/user/settings.html:122
+msgid "Email"
+msgstr "Địa chỉ email"
+
+#: templates/user/settings.html:128 templates/user/settings.html:162
+msgid "Save"
+msgstr "Lưu thông tin"
+
+#: templates/user/settings.html:138
+msgid "Change your password"
+msgstr "Đổi mật khẩu của bạn"
+
+#: templates/user/settings.html:144
+msgid "Old password"
+msgstr "Mật khẩu cũ"
+
+#: templates/user/settings.html:150
+msgid "New password"
+msgstr "Mật khẩu mới"
+
+#: templates/user/settings.html:156
+msgid "New password (repeat)"
+msgstr "Nhập lại mật khẩu mới"
+
+#: templates/user/settings.html:170
+msgid "Your phone number"
+msgstr "Số điện thoại của bạn"
+
+#: templates/user/settings.html:177
+msgid "Your phone number (E164 format)"
+msgstr "Số điện thoại của bạn (ở định dạng E164)"
+
+#: templates/user/settings.html:181
+msgid "Verify and save"
+msgstr "Xác nhận và lưu"
+
+#: templates/user/settings.html:193
+msgid "Verify your phone number"
+msgstr "Xác nhận số điện thoại của bạn"
+
+#: templates/user/settings.html:199
+msgid "We've sent you a message containing a verify code. Please enter it below"
+msgstr "Chúng tôi đã gửi cho bạn một tin nhắn kèm theo mã xác nhận. Xin hãy nhập nó vào ô bên dưới"
+
+#: templates/user/settings.html:203
+msgid "Abort the process"
+msgstr "Huỷ xác nhận"
+
+#: templates/user/settings.html:204
+msgid "Resend code"
+msgstr "Gửi lại mã"
+
+#: templates/user/settings.html:205
+msgid "Verify code"
+msgstr "Xác thực mã"
+
+#~ msgid "Home"
+#~ msgstr ""
+
+#~ msgid "Global map"
+#~ msgstr ""
+
+#~ msgid "Search"
+#~ msgstr ""
+
+#~ msgid "Data"
+#~ msgstr ""
+
+#~ msgid "Login"
+#~ msgstr ""
+
+#~ msgid "Sign up"
+#~ msgstr ""
+
+#~ msgid "MakerWeek"
+#~ msgstr ""
+
+#~ msgid "Dashboard"
+#~ msgstr ""
+
+#~ msgid "My clients"
+#~ msgstr ""
+
+#~ msgid "Account settings"
+#~ msgstr ""
+
+#~ msgid "Sign out"
+#~ msgstr ""
+
+#~ msgid "MakerWeek client %(id)s"
+#~ msgstr ""
+
+#~ msgid "Client:"
+#~ msgstr ""
+
+#~ msgid "Tags:"
+#~ msgstr ""
+
+#~ msgid "Client ID:"
+#~ msgstr ""
+
+#~ msgid "Latitude:"
+#~ msgstr ""
+
+#~ msgid "Longitude:"
+#~ msgstr ""
+
+#~ msgid "Address:"
+#~ msgstr ""
+
+#~ msgid "Unsubscribe"
+#~ msgstr ""
+
+#~ msgid "Subscribe"
+#~ msgstr ""
+
+#~ msgid "Edit"
+#~ msgstr ""
+
+#~ msgid "Edit client"
+#~ msgstr ""
+
+#~ msgid "Client name"
+#~ msgstr ""
+
+#~ msgid "Address"
+#~ msgstr ""
+
+#~ msgid "Latitude"
+#~ msgstr ""
+
+#~ msgid "Longitude"
+#~ msgstr ""
+
+#~ msgid "Tags"
+#~ msgstr ""
+
+#~ msgid "This client is private"
+#~ msgstr ""
+
+#~ msgid "Close"
+#~ msgstr ""
+
+#~ msgid "Save changes"
+#~ msgstr ""
+
+#~ msgid "Execute SQL queries directly!"
+#~ msgstr ""
+
+#~ msgid "Database structure"
+#~ msgstr ""
+
+#~ msgid "You are seeing live data sending from clients around the world"
+#~ msgstr ""
+
+#~ msgid "For a bigger map, click here"
+#~ msgstr ""
+
+#~ msgid "Try typing something here to search"
+#~ msgstr ""
+
+#~ msgid "Clients"
+#~ msgstr ""
+
+#~ msgid "Users"
+#~ msgstr ""
+
+#~ msgid "Search for clients, tags and more"
+#~ msgstr ""
+
+#~ msgid "Search tips"
+#~ msgstr ""
+
+#~ msgid "keyword"
+#~ msgstr ""
+
+#~ msgid "Only return results that contain <i>keyword</i>"
+#~ msgstr ""
+
+#~ msgid "Only return results that don't contain <i>keyword</i>"
+#~ msgstr ""
+
+#~ msgid "Only return results that contain the exact phrase"
+#~ msgstr ""
+
+#~ msgid "tag"
+#~ msgstr ""
+
+#~ msgid "Only return results that hthe tag <i>keyword</i>"
+#~ msgstr ""
+
+#~ msgid "username"
+#~ msgstr ""
+
+#~ msgid "Only return results which its owner is <i>keyword</i>"
+#~ msgstr ""
+
+#~ msgid ""
+#~ msgstr ""
+
+#~ msgid "MakerWeek map"
+#~ msgstr ""
+
+#~ msgid "Loading..."
+#~ msgstr ""
+
+#~ msgid "Load more results"
+#~ msgstr ""
+
+#~ msgid "Username"
+#~ msgstr ""
+
+#~ msgid "Client list"
+#~ msgstr ""
+
+#~ msgid "Loading"
+#~ msgstr ""
+
+#~ msgid "No more results to show :("
+#~ msgstr ""
+
+#~ msgid "MakerWeek forgot your password"
+#~ msgstr ""
+
+#~ msgid "Forgot your password?"
+#~ msgstr ""
+
+#~ msgid "We have sent you a confirmation link"
+#~ msgstr ""
+
+#~ msgid "Please click on it to continue."
+#~ msgstr ""
+
+#~ msgid "User not found"
+#~ msgstr ""
+
+#~ msgid "Please check the email address you supplied."
+#~ msgstr ""
+
+#~ msgid "Your email"
+#~ msgstr ""
+
+#~ msgid "Reset my password"
+#~ msgstr ""
+
+#~ msgid "Your new temporary password is"
+#~ msgstr ""
+
+#~ msgid "To reset your password, please click this link:"
+#~ msgstr ""
+
+#~ msgid "This link will expire on"
+#~ msgstr ""

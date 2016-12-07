@@ -3,12 +3,12 @@
 <head></head>
 <body>
 <p>
-    Someone, hopefully you, has requested to reset your password on MakerWeek.<br/>
-    To reset your password, please click this link:
+    {{ _("Someone, hopefully you, has requested to reset your password on MakerWeek.") }}<br/>
+    {{ _("To reset your password, please click this link:") }}
     <a href="{{ link }}">
         {{ link }}
     </a><br/>
-    This link will expire on {{expiration}}
+    {{ _("This link will expire on") }} {{expiration}}
 </p>
 </body>
 </html>

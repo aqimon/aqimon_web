@@ -5,17 +5,17 @@
 {% endblock %}
 {% block content %}
 <div id="index-searchbar">
-    <h1 class="text-center">Tags: {{ tagTitle }}</h1>
+    <h1 class="text-center">{{ _("Tags") }}: {{ tagTitle }}</h1>
 </div>
 <div id="result-container">
     <div id="result-loading" style="display:block !important;">
-        Loading...
+        {{ _("Loading...") }}
     </div>
     <div id="result">
 
     </div>
     <button class="btn btn-block btn-primary btn-lg" id="load-more" style="display:none;">
-        Load more results
+        {{ _("Load more results") }}
     </button>
 </div>
 {% endblock %}

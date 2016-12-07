@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "functions.html" import wsAuthInfo %}
 {% set currPage="map" %}
-{% block title %} MakerWeek map {% endblock %}
+{% block title %} {{ _("MakerWeek map") }} {% endblock %}
 {% block css %}
 {{ super() }}
 <link rel="stylesheet" href="/static/css/map.css">

@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block title %} MakerWeek user {{ g.user.username }} clients page {% endblock %}
+{% block title %} {{ _("MakerWeek user %(username)s clients page", username = g.user.username) }} {% endblock %}
 {% block content %}
 <div class="container-fluid">
-    <h1>My clients</h1>
+    <h1>{{ _("My clients") }}</h1>
     <div class="table-responsive">
         <table class="table table-striped table-hover table-bordered">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>clientID</th>
-                <th>Actions</th>
+                <th>{{ _("Name") }}</th>
+                <th>{{ _("clientID") }}</th>
+                <th>{{ _("Actions") }}</th>
             </tr>
             </thead>
             <tbody>
@@ -21,17 +21,17 @@
                     <button type="button" class="btn btn-primary btn-edit btn-sm" data-toggle="modal"
                             data-target="#edit-modal" data-clientid="{{ client.id }}" data-keyboard="true">
                         <span class="glyphicon glyphicon-edit"></span>
-                        Edit
+                        {{ _("Edit") }}
                     </button>
                     <button type="button" class="btn btn-info btn-export btn-sm" data-toggle="modal"
                             data-target="#export-modal" data-clientid="{{ client.id }}" data-keyboard="true">
                         <span class="glyphicon glyphicon-download-alt"></span>
-                        Export
+                        {{ _("Export") }}
                     </button>
                     <button type="button" class="btn btn-danger btn-remove btn-sm" data-toggle="modal"
                             data-target="#delete-modal" data-clientid="{{ client.id }}" data-keyboard="true">
                         <span class="glyphicon glyphicon-remove"></span>
-                        Remove
+                        {{ _("Remove") }}
                     </button>
                 </td>
             </tr>
@@ -44,34 +44,34 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Edit client <span id="edit-modal-client-id"></span></h4>
+                    <h4 class="modal-title">{{ _("Edit client") }} <span id="edit-modal-client-id"></span></h4>
                 </div>
                 <div class="modal-body">
                     <form onsubmit="return false;" class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label for="edit-client-name" class="col-sm-2 control-label">Client name</label>
+                            <label for="edit-client-name" class="col-sm-2 control-label">{{ _("Client name") }}</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="edit-client-name">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit-address" class="col-sm-2 control-label">Address</label>
+                            <label for="edit-address" class="col-sm-2 control-label">{{ _("Address") }}</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="edit-address">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit-latitude" class="col-sm-2 control-label">Latitude</label>
+                            <label for="edit-latitude" class="col-sm-2 control-label">{{ _("Latitude") }}</label>
                             <div class="col-sm-4">
                                 <input type="number" class="form-control" id="edit-latitude">
                             </div>
-                            <label for="edit-longitude" class="col-sm-2 control-label">Longitude</label>
+                            <label for="edit-longitude" class="col-sm-2 control-label">{{ _("Longitude") }}</label>
                             <div class="col-sm-4">
                                 <input type="number" class="form-control" id="edit-longitude">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit-address" class="col-sm-2 control-label">Tags</label>
+                            <label for="edit-address" class="col-sm-2 control-label">{{ _("Tags") }}</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="edit-tags" data-role="tagsinput">
                             </div>
@@ -80,7 +80,8 @@
                             <div class="col-sm-offset-2 col-sm-10">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id="edit-private"><b>This client is private</b>
+                                        <input type="checkbox" id="edit-private"><b>{{ _("This client is private")
+                                        }}</b>
                                     </label>
                                 </div>
                             </div>
@@ -89,8 +90,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="edit-modal-submit-button">Save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _("Close") }}</button>
+                    <button type="button" class="btn btn-primary" id="edit-modal-submit-button">{{ _("Save changes")
+                        }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -100,34 +103,34 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Add a new client</h4>
+                    <h4 class="modal-title">{{ _("Add a new client") }}</h4>
                 </div>
                 <div class="modal-body">
                     <form onsubmit="return false;" class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label for="add-client-name" class="col-sm-2 control-label">Client name</label>
+                            <label for="add-client-name" class="col-sm-2 control-label">{{ _("Client name") }}</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="add-client-name">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="add-address" class="col-sm-2 control-label">Address</label>
+                            <label for="add-address" class="col-sm-2 control-label">{{ _("Address") }}</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="add-address">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit-latitude" class="col-sm-2 control-label">Latitude</label>
+                            <label for="edit-latitude" class="col-sm-2 control-label">{{ _("Latitude") }}</label>
                             <div class="col-sm-4">
                                 <input type="number" class="form-control" id="add-latitude">
                             </div>
-                            <label for="edit-longitude" class="col-sm-2 control-label">Longitude</label>
+                            <label for="edit-longitude" class="col-sm-2 control-label">{{ _("Longitude") }}</label>
                             <div class="col-sm-4">
                                 <input type="number" class="form-control" id="add-longitude">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit-address" class="col-sm-2 control-label">Tags</label>
+                            <label for="edit-address" class="col-sm-2 control-label">{{ _("Tags") }}</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="add-tags" data-role="tagsinput">
                             </div>
@@ -136,7 +139,7 @@
                             <div class="col-sm-offset-2 col-sm-10">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id="add-private"><b>This client is private</b>
+                                        <input type="checkbox" id="add-private"><b>{{ _("This client is private") }}</b>
                                     </label>
                                 </div>
                             </div>
@@ -145,8 +148,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="add-modal-submit-button">Add client</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _("Cancel") }}</button>
+                    <button type="button" class="btn btn-primary" id="add-modal-submit-button">{{ _("Add client") }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -156,19 +160,20 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Add a new client</h4>
+                    <h4 class="modal-title">{{ _("Add a new client") }}</h4>
                 </div>
                 <div class="modal-body">
-                    New client created with clientID <strong><span id="add-modal-clientid"></span><br/></strong>
-                    Please remember the API key below as it will not be shown anymore:<br/>
+                    {{ _("New client created with clientID") }} <strong><span
+                        id="add-modal-clientid"></span><br/></strong>
+                    {{ _("Please remember the API key below as it will not be shown anymore:") }}<br/>
                     <div class="well">
                         <div style="display:flex;justify-content:center;align-items:center;">
-                            <h3>API key: <strong><span id="add-modal-api-key"></span></strong></h3>
+                            <h3>{{ _("API key:") }} <strong><span id="add-modal-api-key"></span></strong></h3>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _("Close") }}</button>
                 </div>
             </div>
         </div>
@@ -178,23 +183,24 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Delete client <span class="delete-modal-clientid"></span></h4>
+                    <h4 class="modal-title">{{ _("Delete client") }} <span class="delete-modal-clientid"></span></h4>
                 </div>
                 <div class="modal-body">
-                    Do you really want to delete this client?<br/>
-                    <h3>THIS ACTION CANNOT BE UNDONE</h3>
-                    After deleting this client:
+                    {{ _("Do you really want to delete this client?") }}<br/>
+                    <h3>{{ _("THIS ACTION CANNOT BE UNDONE") }}</h3>
+                    {{ _("After deleting this client:") }}
                     <ul>
-                        <li>This client will disappear from the website, links will return 404</li>
-                        <li>All of this client's events will be purged.</li>
+                        <li>{{ _("This client will disappear from the website, links will return 404") }}</li>
+                        <li>{{ _("All of this client's events will be purged.") }}</li>
                     </ul>
-                    It may take up to one day for your client to be deleted from the website.
-                    <strong>You are advised to export this client's data before deleting to prevent data
-                        loss.</strong><br/>
+                    {{ _("It may take up to one day for your client to be deleted from the website.") }}
+                    <strong>{{ _("You are advised to export this client's data before deleting to prevent data loss.")
+                        }}</strong><br/>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="delete-modal-delete-button">Delete this client
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _("Close") }}</button>
+                    <button type="button" class="btn btn-danger" id="delete-modal-delete-button">{{ _("Delete this
+                        client") }}
                     </button>
                 </div>
             </div>
@@ -205,14 +211,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Delete client <span class="delete-modal-clientid"></span></h4>
+                    <h4 class="modal-title">{{ _("Delete client") }} <span class="delete-modal-clientid"></span></h4>
                 </div>
                 <div class="modal-body">
-                    You have successfully delete the client <span class="delete-modal-clientid"></span>.<br/>
-                    Please note it may take up to one day for this client's data to be fully deleted.
+                    {{ _("You have successfully delete the client") }} <span class="delete-modal-clientid"></span>.<br/>
+                    {{ _("Please note it may take up to one day for this client's data to be fully deleted.") }}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _("Close") }}</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -222,10 +228,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Export client <span class="export-modal-clientid"></span></h4>
+                    <h4 class="modal-title">{{ _("Export client") }} <span class="export-modal-clientid"></span></h4>
                 </div>
                 <div class="modal-body">
-                    Format:
+                    {{ _("Format:") }}
                     <label class="radio-inline">
                         <input type="radio" name="format" value="json"> json
                     </label>
@@ -233,9 +239,9 @@
                         <input type="radio" name="format" value="csv"> csv
                     </label>
                     <br/>
-                    Compression:
+                    {{ _("Compression:") }}
                     <label class="radio-inline">
-                        <input type="radio" name="compression" value="none"> no compression
+                        <input type="radio" name="compression" value="none"> {{ _("no compression") }}
                     </label>
                     <label class="radio-inline">
                         <input type="radio" name="compression" value="gzip"> gzip
@@ -245,8 +251,8 @@
                     </label>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="export-button">Export</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _("Close") }}</button>
+                    <button type="button" class="btn btn-primary" id="export-button">{{ _("Export") }}</button>
                 </div>
             </div>
         </div>
@@ -256,20 +262,21 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Export client <span class="export-success-modal-clientid"></span></h4>
+                    <h4 class="modal-title">{{ _("Export client") }} <span class="export-success-modal-clientid"></span>
+                    </h4>
                 </div>
                 <div class="modal-body">
-                    The data is being processed and the link to download will be sent to your email.
+                    {{ _("The data is being processed and the link to download will be sent to your email.") }}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _("Close") }}</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <button class="btn btn-block btn-primary btn-lg" data-toggle="modal" data-target="#add-modal" data-keyboard="true">
         <span class="glyphicon glyphicon-plus"></span>
-        Add a new client
+        {{ _("Add a new client") }}
     </button>
 </div>
 {% endblock %}

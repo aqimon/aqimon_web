@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 <div id="index-searchbar">
-    <h1 class="text-center">Try typing something here</h1>
+    <h1 class="text-center">{{ _("Try typing something here to search") }}</h1>
     <form onsubmit="initiateSearch(); return false;">
         <div class="input-group">
             <div class="input-group-btn">
@@ -17,13 +17,13 @@
                         class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" id="search-dropdown-options">
-                    <li><a href="#">Clients</a></li>
-                    <li><a href="#">Tags</a></li>
-                    <li><a href="#">Users</a></li>
+                    <li><a href="#">{{ _("Clients") }}</a></li>
+                    <li><a href="#">{{ _("Tags") }}</a></li>
+                    <li><a href="#">{{ _("Users") }}</a></li>
                 </ul>
             </div>
             <input type="text" class="form-control" name="q" id="searchbar"
-                   placeholder="Search for clients, tags and more" value="{{ q }}">
+                   placeholder="{{ _('Search for clients, tags and more') }}" value="{{ q }}">
         </div>
         <br/>
         <div class="panel-group" role="tablist" aria-multiselectable="true" id="accordion">
@@ -36,7 +36,7 @@
                            aria-expanded="true"
                            aria-controls="search-tips"
                            data-parent="#accordion">
-                            Search tips
+                            {{ _("Search tips") }}
                         </a>
                         <span class="caret"></span>
                     </h2>
@@ -45,12 +45,23 @@
                      aria-labelledby="search-tips-heading">
                     <div class="panel-body">
                         <ul>
-                            <li>+<i>keyword</i>: Only return results that contain <i>keyword</i></li>
-                            <li>-<i>keyword</i>: Only return results that don't contain <i>keyword</i></li>
-                            <li>"<i>keyword</i>": Only return results that contain the exact phrase</li>
-                            <li>tags:<i>keyword</i>: Only return results that has the tag <i>keyword</i></li>
-                            <li>username:<i>keyword</i>: Only return results which its owner is <i>keyword</i></li>
-                            <li><b>Only clients which have sent at lease once will appear here, to prevent spam</b></li>
+                            <li>+<i>{{ _("keyword") }}</i>: {{ _("Only return results that contain <i>keyword</i>") }}
+                            </li>
+                            <li>-<i>{{ _("keyword") }}</i>: {{ _("Only return results that don't contain <i>keyword</i>")
+                                }}
+                            </li>
+                            <li>"<i>{{ _("keyword") }}</i>": {{ _("Only return results that contain the exact phrase")
+                                }}
+                            </li>
+                            <li>{{ _("tag") }}:<i>{{ _("keyword") }}</i>: {{ _("Only return results tagging with <i>keyword</i>")
+                                }}
+                            </li>
+                            <li>{{ _("username") }}:<i>{{ _("keyword") }}</i>: {{ _("Only return results which its owner
+                                is <i>keyword</i>") }}
+                            </li>
+                            <li><b>{{ _("Only clients which have sent at lease once will appear here, to prevent spam")
+                                }}</b>
+                            </li>
                         </ul>
                     </div>
                 </div>

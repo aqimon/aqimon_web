@@ -1,4 +1,5 @@
 from flask import Flask, render_template, session, g, request
+from flask_babel import Babel
 from peewee import DoesNotExist
 
 from MakerWeek.ajax import ajax
@@ -10,6 +11,7 @@ from MakerWeek.realtime import realtimeServer
 from MakerWeek.user import user
 
 app = Flask(__name__)
+babel = Babel(app)
 app.register_blueprint(api)
 app.register_blueprint(authentication)
 app.register_blueprint(user)
@@ -18,6 +20,11 @@ config = Config()
 app.config.from_object(config)
 realtimeServer.init_app(app)
 
+
+@babel.localeselector
+def get_locale():
+    # return request.accept_languages.best_match(["en", "vi"])
+    return "vi"
 
 @app.before_request
 def checkLogin():

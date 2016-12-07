@@ -16,20 +16,20 @@
     <div class="container-fluid" style="display:flex;justify-content:center;align-items:center;width:100%;break-after: always;">
             <img class="img-circle" src="{{ url_for('static', filename='avatar/'+user.avatar) }}" />
             <h2>{{user.realname}}</h2>
-            <h4><i>Username: {{user.username}}</i></h4>
+        <h4><i>{{ _("Username") }}: {{user.username}}</i></h4>
         </div>
     </div>
 </div>
 <div id="result-container">
-    <h1>Client list</h1>
+    <h1>{{ _("Client list") }}</h1>
     <div id="result-loading" style="display:block !important;">
-        Loading...
+        {{ _("Loading...") }}
     </div>
     <div id="result">
 
     </div>
     <button class="btn btn-block btn-primary btn-lg" id="load-more" style="display:none;">
-        Load more results
+        {{ _("Load more results") }}
     </button>
 </div>
 {% endblock %}
@@ -49,7 +49,7 @@
     })
 
     $("#load-more").on("click", function(){
-        $("#load-more").text("Loading");
+        $("#load-more").text("{{ _('Loading') }}");
         $("#load-more").prop("disabled", true);
         resultPage++;
         resultLoad(resultPage);
@@ -67,10 +67,10 @@
             }
             $('[data-toggle="tooltip"]').tooltip()
             if (recv.length<10){
-                $("#load-more").text("No more results to show :(");
+                $("#load-more").text("{{ _('No more results to show :(') }}");
                 $("#load-more").prop("disabled", true);
             } else {
-                $("#load-more").text("Load more results");
+                $("#load-more").text("{{ _('Load more results') }}");
                 $("#load-more").prop("disabled", false);
             }
         })

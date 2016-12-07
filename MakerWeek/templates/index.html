@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set currPage="index" %}
 {% from "functions.html" import wsAuthInfo %}
-{% block title %} MakerWeek {% endblock %}
+{% block title %} {{ _("MakerWeek") }} {% endblock %}
 {% block css %}
 <style>
     .infobox-header {
@@ -48,17 +48,17 @@
 {% block content %}
 <div class="jumbotron">
     <div class="container">
-        <h1>MakerWeek</h1>
+        <h1>{{ _("MakerWeek") }}</h1>
     </div>
 </div>
 <div class="container">
-    <h1 class="text-center">You are seeing live data sending from clients around the world</h1>
+    <h1 class="text-center">{{ _("You are seeing live data sending from clients around the world") }}</h1>
     <div id="map"></div>
-    <a href="/map" class="btn btn-info" id="map-button">For a bigger map, click here</a>
+    <a href="/map" class="btn btn-info" id="map-button">{{ _("For a bigger map, click here") }}</a>
 </div>
 <div class="grey-background">
     <div id="index-searchbar">
-        <h1 class="text-center">Try typing something here to search</h1>
+        <h1 class="text-center">{{ _("Try typing something here to search") }}</h1>
         <form onsubmit="redirectToSearchPage(); return false;">
             <div class="input-group">
                 <div class="input-group-btn">
@@ -69,13 +69,13 @@
                             aria-expanded="false"><span id="search-dropdown-text"></span> <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" id="search-dropdown-options">
-                        <li><a href="#">Clients</a></li>
-                        <li><a href="#">Tags</a></li>
-                        <li><a href="#">Users</a></li>
+                        <li><a href="#">{{ _("Clients") }}</a></li>
+                        <li><a href="#">{{ _("Tags") }}</a></li>
+                        <li><a href="#">{{ _("Users") }}</a></li>
                     </ul>
                 </div>
                 <input type="text" class="form-control" name="q" id="searchbar"
-                       placeholder="Search for clients, tags and more">
+                       placeholder="{{ _('Search for clients, tags and more') }}">
             </div>
             <br/>
             <div class="panel-group" role="tablist" aria-multiselectable="true" id="accordion">
@@ -88,7 +88,7 @@
                                aria-expanded="true"
                                aria-controls="search-tips"
                                data-parent="#accordion">
-                                Search tips
+                                {{ _("Search tips") }}
                             </a>
                             <span class="caret"></span>
                         </h2>
@@ -97,12 +97,23 @@
                          aria-labelledby="search-tips-heading">
                         <div class="panel-body">
                             <ul>
-                                <li>+<i>keyword</i>: Only return results that contain <i>keyword</i></li>
-                                <li>-<i>keyword</i>: Only return results that don't contain <i>keyword</i></li>
-                                <li>"<i>keyword</i>": Only return results that contain the exact phrase</li>
-                                <li>tags:<i>keyword</i>: Only return results that hthe tag <i>keyword</i></li>
-                                <li>username:<i>keyword</i>: Only return results which its owner is <i>keyword</i></li>
-                                <li><b>Only clients which have sent at lease once will appear here, to prevent spam</b>
+                                <li>+<i>{{ _("keyword") }}</i>: {{ _("Only return results that contain <i>keyword</i>")
+                                    }}
+                                </li>
+                                <li>-<i>{{ _("keyword") }}</i>: {{ _("Only return results that don't contain
+                                    <i>keyword</i>") }}
+                                </li>
+                                <li>"<i>{{ _("keyword") }}</i>": {{ _("Only return results that contain the exact
+                                    phrase") }}
+                                </li>
+                                <li>{{ _("tag") }}:<i>{{ _("keyword") }}</i>: {{ _("Only return results tagging with <i>keyword</i>")
+                                    }}
+                                </li>
+                                <li>{{ _("username") }}:<i>{{ _("keyword") }}</i>: {{ _("Only return results which its
+                                    owner is <i>keyword</i>") }}
+                                </li>
+                                <li><b>{{ _("Only clients which have sent at lease once will appear here, to prevent
+                                    spam") }}</b>
                                 </li>
                             </ul>
                         </div>

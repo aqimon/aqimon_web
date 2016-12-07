@@ -1,12 +1,12 @@
 {% set navLeft=[
-("index", "Home", "/", "home"),
-("map", "Global map", "/map", "globe"),
-("search", "Search", "/search", "search"),
-("data", "Data", "/data", "cog")
+("index", _("Home"), "/", "home"),
+("map", _("Global map"), "/map", "globe"),
+("search", _("Search"), "/search", "search"),
+("data", _("Data"), "/data", "cog")
 ] %}
 {% set navRight=[
-("login", "Login", "/login", "log-in"),
-("register", "Sign up", "/register", "user"),
+("login", _("Login"), "/login", "log-in"),
+("register", _("Sign up"), "/register", "user"),
 ] %}
 <!DOCTYPE html>
 <html>
@@ -34,7 +34,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">MakerWeek</a>
+            <a class="navbar-brand" href="/">{{ _("MakerWeek") }}</a>
         </div>
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
@@ -58,23 +58,23 @@
                     <ul class="dropdown-menu">
                         <li>
                             <a href="/myaccount">
-                                <span class="glyphicon glyphicon-dashboard"></span> Dashboard
+                                <span class="glyphicon glyphicon-dashboard"></span> {{ _("Dashboard") }}
                             </a>
                         </li>
                         <li>
                             <a href="/myaccount/clients">
-                                <span class="glyphicon glyphicon-map-marker"></span> My clients
+                                <span class="glyphicon glyphicon-map-marker"></span> {{ _("My clients") }}
                             </a>
                         </li>
                         <li>
                             <a href="/myaccount/settings">
-                                <span class="glyphicon glyphicon-cog"></span> Account settings
+                                <span class="glyphicon glyphicon-cog"></span> {{ _("Account settings") }}
                             </a>
                         </li>
                         <li role="separator" class="divider"></li>
                         <li>
                             <a href="/signout">
-                                <span class="glyphicon glyphicon-log-out"></span> Sign out
+                                <span class="glyphicon glyphicon-log-out"></span> {{ _("Sign out") }}
                             </a>
                         </li>
                     </ul>
