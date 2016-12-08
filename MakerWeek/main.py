@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, g, request
+from flask import Flask, render_template, session, g, request, redirect
 from flask_babel import Babel
 from peewee import DoesNotExist
 
@@ -23,8 +23,10 @@ realtimeServer.init_app(app)
 
 @babel.localeselector
 def get_locale():
-    # return request.accept_languages.best_match(["en", "vi"])
-    return "vi"
+    try:
+        return session['language']
+    except KeyError:
+        return request.accept_languages.best_match(["en", "vi"])
 
 @app.before_request
 def checkLogin():
@@ -105,3 +107,9 @@ def userPage(username):
     except DoesNotExist:
         return "no such user", 404
     return render_template("user.html", user=user)
+
+
+@app.route("/set_lang", methods=["GET"])
+def setLanguage():
+    session['language'] = request.args['lang']
+    return redirect(request.headers['Referer'])

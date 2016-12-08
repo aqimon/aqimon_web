@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-12-07 17:57+0700\n"
+"POT-Creation-Date: 2016-12-08 08:36+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,6 +61,18 @@ msgstr ""
 msgid "Sign out"
 msgstr ""
 
+#: templates/base.html:95
+msgid "Languages"
+msgstr ""
+
+#: templates/base.html:101
+msgid "English"
+msgstr ""
+
+#: templates/base.html:106
+msgid "Vietnamese"
+msgstr ""
+
 #: templates/client.html:5
 #, python-format
 msgid "MakerWeek client %(id)s"
@@ -107,44 +119,44 @@ msgid "Edit client"
 msgstr ""
 
 #: templates/client.html:66 templates/user/clients.html:52
-#: templates/user/clients.html:108
+#: templates/user/clients.html:111
 msgid "Client name"
 msgstr ""
 
 #: templates/client.html:72 templates/user/clients.html:58
-#: templates/user/clients.html:114
+#: templates/user/clients.html:117
 msgid "Address"
 msgstr ""
 
 #: templates/client.html:78 templates/user/clients.html:64
-#: templates/user/clients.html:120
+#: templates/user/clients.html:123
 msgid "Latitude"
 msgstr ""
 
 #: templates/client.html:82 templates/user/clients.html:68
-#: templates/user/clients.html:124
+#: templates/user/clients.html:127
 msgid "Longitude"
 msgstr ""
 
 #: templates/client.html:88 templates/index.html:73 templates/search.html:21
 #: templates/tags.html:8 templates/user/clients.html:74
-#: templates/user/clients.html:130
+#: templates/user/clients.html:133
 msgid "Tags"
 msgstr ""
 
 #: templates/client.html:97 templates/user/clients.html:83
-#: templates/user/clients.html:139
+#: templates/user/clients.html:142
 msgid "This client is private"
 msgstr ""
 
-#: templates/client.html:106 templates/user/clients.html:92
-#: templates/user/clients.html:171 templates/user/clients.html:195
-#: templates/user/clients.html:214 templates/user/clients.html:247
-#: templates/user/clients.html:264
+#: templates/client.html:107 templates/user/clients.html:93
+#: templates/user/clients.html:176 templates/user/clients.html:201
+#: templates/user/clients.html:221 templates/user/clients.html:254
+#: templates/user/clients.html:272
 msgid "Close"
 msgstr ""
 
-#: templates/client.html:107 templates/user/clients.html:93
+#: templates/client.html:108 templates/user/clients.html:94
 msgid "Save changes"
 msgstr ""
 
@@ -184,10 +196,10 @@ msgstr ""
 msgid "Search tips"
 msgstr ""
 
-#: templates/index.html:100 templates/index.html:101 templates/index.html:102
-#: templates/index.html:103 templates/index.html:104 templates/search.html:48
-#: templates/search.html:49 templates/search.html:50 templates/search.html:51
-#: templates/search.html:52
+#: templates/index.html:100 templates/index.html:103 templates/index.html:106
+#: templates/index.html:109 templates/index.html:112 templates/search.html:48
+#: templates/search.html:50 templates/search.html:53 templates/search.html:56
+#: templates/search.html:59
 msgid "keyword"
 msgstr ""
 
@@ -195,38 +207,64 @@ msgstr ""
 msgid "Only return results that contain <i>keyword</i>"
 msgstr ""
 
-#: templates/index.html:101 templates/search.html:49
-msgid "Only return results that don't contain <i>keyword</i>"
+#: templates/index.html:103
+msgid ""
+"Only return results that don't contain\n"
+"                                    <i>keyword</i>"
 msgstr ""
 
-#: templates/index.html:102 templates/search.html:50
-msgid "Only return results that contain the exact phrase"
+#: templates/index.html:106
+msgid ""
+"Only return results that contain the exact\n"
+"                                    phrase"
 msgstr ""
 
-#: templates/index.html:103 templates/search.html:51
+#: templates/index.html:109 templates/search.html:56
 msgid "tag"
 msgstr ""
 
-#: templates/index.html:103 templates/search.html:51
+#: templates/index.html:109 templates/search.html:56
 msgid "Only return results tagging with <i>keyword</i>"
 msgstr ""
 
-#: templates/index.html:104 templates/search.html:52
+#: templates/index.html:112 templates/search.html:59
 msgid "username"
 msgstr ""
 
-#: templates/index.html:104 templates/search.html:52
-msgid "Only return results which its owner is <i>keyword</i>"
+#: templates/index.html:112
+msgid ""
+"Only return results which its\n"
+"                                    owner is <i>keyword</i>"
 msgstr ""
 
-#: templates/index.html:105 templates/search.html:53
+#: templates/index.html:115
 msgid ""
-"Only clients which have sent at lease once will appear here, to prevent "
-"spam"
+"Only clients which have sent at lease once will appear here, to prevent\n"
+"                                    spam"
 msgstr ""
 
 #: templates/map.html:4
 msgid "MakerWeek map"
+msgstr ""
+
+#: templates/search.html:50
+msgid "Only return results that don't contain <i>keyword</i>"
+msgstr ""
+
+#: templates/search.html:53
+msgid "Only return results that contain the exact phrase"
+msgstr ""
+
+#: templates/search.html:59
+msgid ""
+"Only return results which its owner\n"
+"                                is <i>keyword</i>"
+msgstr ""
+
+#: templates/search.html:62
+msgid ""
+"Only clients which have sent at lease once will appear here, to prevent "
+"spam"
 msgstr ""
 
 #: templates/tags.html:12 templates/user.html:26
@@ -378,15 +416,15 @@ msgstr ""
 msgid "Your password (again)"
 msgstr ""
 
-#: templates/authentication/register.html:31
+#: templates/authentication/register.html:32
 msgid "Your real name"
 msgstr ""
 
-#: templates/authentication/register.html:33
+#: templates/authentication/register.html:34
 msgid "You can add your phone number later for notification purpose"
 msgstr ""
 
-#: templates/authentication/register.html:34
+#: templates/authentication/register.html:35
 msgid "Submit"
 msgstr ""
 
@@ -407,7 +445,7 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: templates/user/clients.html:29 templates/user/clients.html:248
+#: templates/user/clients.html:29 templates/user/clients.html:255
 msgid "Export"
 msgstr ""
 
@@ -415,96 +453,98 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: templates/user/clients.html:103 templates/user/clients.html:159
-#: templates/user/clients.html:271
+#: templates/user/clients.html:106 templates/user/clients.html:163
+#: templates/user/clients.html:279
 msgid "Add a new client"
 msgstr ""
 
-#: templates/user/clients.html:148
+#: templates/user/clients.html:151
 msgid "Cancel"
 msgstr ""
 
-#: templates/user/clients.html:149
+#: templates/user/clients.html:152
 msgid "Add client"
 msgstr ""
 
-#: templates/user/clients.html:162
+#: templates/user/clients.html:166
 msgid "New client created with clientID"
 msgstr ""
 
-#: templates/user/clients.html:163
+#: templates/user/clients.html:168
 msgid "Please remember the API key below as it will not be shown anymore:"
 msgstr ""
 
-#: templates/user/clients.html:166
+#: templates/user/clients.html:171
 msgid "API key:"
 msgstr ""
 
-#: templates/user/clients.html:181 templates/user/clients.html:207
+#: templates/user/clients.html:186 templates/user/clients.html:214
 msgid "Delete client"
 msgstr ""
 
-#: templates/user/clients.html:184
+#: templates/user/clients.html:189
 msgid "Do you really want to delete this client?"
 msgstr ""
 
-#: templates/user/clients.html:185
+#: templates/user/clients.html:190
 msgid "THIS ACTION CANNOT BE UNDONE"
 msgstr ""
 
-#: templates/user/clients.html:186
+#: templates/user/clients.html:191
 msgid "After deleting this client:"
 msgstr ""
 
-#: templates/user/clients.html:188
+#: templates/user/clients.html:193
 msgid "This client will disappear from the website, links will return 404"
 msgstr ""
 
-#: templates/user/clients.html:189
+#: templates/user/clients.html:194
 msgid "All of this client's events will be purged."
 msgstr ""
 
-#: templates/user/clients.html:191
+#: templates/user/clients.html:196
 msgid "It may take up to one day for your client to be deleted from the website."
 msgstr ""
 
-#: templates/user/clients.html:192
+#: templates/user/clients.html:197
 msgid ""
 "You are advised to export this client's data before deleting to prevent "
 "data loss."
 msgstr ""
 
-#: templates/user/clients.html:196
-msgid "Delete this client"
+#: templates/user/clients.html:202
+msgid ""
+"Delete this\n"
+"                        client"
 msgstr ""
 
-#: templates/user/clients.html:210
+#: templates/user/clients.html:217
 msgid "You have successfully delete the client"
 msgstr ""
 
-#: templates/user/clients.html:211
+#: templates/user/clients.html:218
 msgid ""
 "Please note it may take up to one day for this client's data to be fully "
 "deleted."
 msgstr ""
 
-#: templates/user/clients.html:224 templates/user/clients.html:258
+#: templates/user/clients.html:231 templates/user/clients.html:265
 msgid "Export client"
 msgstr ""
 
-#: templates/user/clients.html:227
+#: templates/user/clients.html:234
 msgid "Format:"
 msgstr ""
 
-#: templates/user/clients.html:235
+#: templates/user/clients.html:242
 msgid "Compression:"
 msgstr ""
 
-#: templates/user/clients.html:237
+#: templates/user/clients.html:244
 msgid "no compression"
 msgstr ""
 
-#: templates/user/clients.html:261
+#: templates/user/clients.html:269
 msgid ""
 "The data is being processed and the link to download will be sent to your"
 " email."
@@ -519,11 +559,11 @@ msgstr ""
 msgid "Settings saved"
 msgstr ""
 
-#: templates/user/settings.html:57 templates/user/settings.html:197
+#: templates/user/settings.html:57 templates/user/settings.html:198
 msgid "Oh nose!"
 msgstr ""
 
-#: templates/user/settings.html:57 templates/user/settings.html:197
+#: templates/user/settings.html:57 templates/user/settings.html:198
 msgid "Whatever errors happened:"
 msgstr ""
 
@@ -551,7 +591,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: templates/user/settings.html:128 templates/user/settings.html:162
+#: templates/user/settings.html:128 templates/user/settings.html:163
 msgid "Save"
 msgstr ""
 
@@ -571,35 +611,35 @@ msgstr ""
 msgid "New password (repeat)"
 msgstr ""
 
-#: templates/user/settings.html:170
+#: templates/user/settings.html:171
 msgid "Your phone number"
 msgstr ""
 
-#: templates/user/settings.html:177
+#: templates/user/settings.html:178
 msgid "Your phone number (E164 format)"
 msgstr ""
 
-#: templates/user/settings.html:181
+#: templates/user/settings.html:182
 msgid "Verify and save"
 msgstr ""
 
-#: templates/user/settings.html:193
+#: templates/user/settings.html:194
 msgid "Verify your phone number"
 msgstr ""
 
-#: templates/user/settings.html:199
+#: templates/user/settings.html:201
 msgid "We've sent you a message containing a verify code. Please enter it below"
 msgstr ""
 
-#: templates/user/settings.html:203
+#: templates/user/settings.html:205
 msgid "Abort the process"
 msgstr ""
 
-#: templates/user/settings.html:204
+#: templates/user/settings.html:207
 msgid "Resend code"
 msgstr ""
 
-#: templates/user/settings.html:205
+#: templates/user/settings.html:208
 msgid "Verify code"
 msgstr ""
 
