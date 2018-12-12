@@ -6,7 +6,7 @@ from MakerWeek.ajax import ajax
 from MakerWeek.api import api
 from MakerWeek.authentication import authentication
 from MakerWeek.config import Config
-from MakerWeek.database.database import database, Client, LoginToken, InvalidToken, WebsocketToken, User
+from MakerWeek.database.database import database, Client, LoginToken, InvalidToken, WebsocketToken, User, Event
 from MakerWeek.realtime import realtimeServer
 from MakerWeek.user import user
 

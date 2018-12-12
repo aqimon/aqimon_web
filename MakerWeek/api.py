@@ -3,7 +3,7 @@ import json
 from flask import request, json, Blueprint
 from peewee import DoesNotExist
 
-from MakerWeek.async import sendNotification
+from MakerWeek.async_ops import sendNotification
 from MakerWeek.common import paramsParse, overThreshold, utcNow, fromTimestamp
 from MakerWeek.database.database import Client, Event, database, LastEvent, createAllTables
 from MakerWeek.realtime import broadcastEvent
@@ -33,6 +33,7 @@ def addEvent():
         params['timestamp'] = utcNow()
     else:
         params['timestamp'] = fromTimestamp(request.args['time'])
+
     with database.atomic():
         try:
             client = Client.get(Client.id == params['client_id'])
@@ -47,7 +48,7 @@ def addEvent():
         last_event.save()
 
     broadcastEvent(event.toFrontendObject(include_geo=True), private=client.private)
-    if overThreshold(event.colevel, event.dustlevel):
+    if overThreshold(client, event):
         if not client.last_notification:
             sendNotification(str(event.client_id.id), True)
             client.last_notification = True

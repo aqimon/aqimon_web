@@ -6,7 +6,7 @@ import copy
 from flask import Blueprint, g, request, json, redirect, url_for
 from peewee import DoesNotExist, fn, SQL
 
-from MakerWeek.async import deleteClient, exportClient, sendSMSVerify
+from MakerWeek.async_ops import deleteClient, exportClient, sendSMSVerify
 from MakerWeek.common import checkPassword, hashPassword, paramsParse, timeSubtract, fromTimestamp, verifyPhoneNumber
 from MakerWeek.config import Config
 from MakerWeek.database.database import Client, LastEvent, Event, TagsMap, Tags, User, PhoneVerification
@@ -143,7 +143,12 @@ def editClient():
         "longitude": "float",
         "address": "str",
         "tags": "json",
-        "private": "bool"
+        "private": "bool",
+
+        "temperature_limit": "float",
+        "humidity_limit": "float",
+        "colevel_limit": "float",
+        "dustlevel_limit": "float"
     }
     params = paramsParse(__paramsList__, request.args)
     try:
@@ -157,6 +162,10 @@ def editClient():
     client.longitude = params['longitude']
     client.address = params['address']
     client.private = params['private']
+    client.temperature_limit = params['temperature_limit']
+    client.humidity_limit = params['humidity_limit']
+    client.colevel_limit = params['colevel_limit']
+    client.dustlevel_limit = params['dustlevel_limit']
     client.save()
     TagsMap.link(client, params['tags'])
     return json.jsonify(result="success")

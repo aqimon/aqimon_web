@@ -25,7 +25,7 @@ class Config(DevelopmentConfig):
 
     DB_HOST = "localhost"
     DB_NAME = "e3"
-    DB_USER = "e3"
+    DB_USER = "root"
     DB_PASSWORD = "e3e3e3e3"
 
     AMAZON_ACCESS_KEY_ID = os.getenv("AMAZON_ACCESS_KEY_ID")

@@ -26,8 +26,11 @@ def paramsParse(paramsList, paramsValue):
     return params
 
 
-def overThreshold(coLevel, dustLevel):
-    return coLevel >= 222 or dustLevel >= 0.2
+def overThreshold(client, event):
+    return ((event.temperature >= client.temperature_limit) or 
+           (event.humidity >= client.humidity_limit) or 
+           (event.colevel >= client.colevel_limit) or 
+           (event.dustlevel >= client.dustlevel_limit))
 
 
 def timeSubtract(days=0, hours=0, minutes=0, seconds=0):

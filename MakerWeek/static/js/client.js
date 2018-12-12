@@ -71,21 +71,21 @@ function initChart(tempSeries, humidSeries, dustSeries, coSeries){
             },
             yAxis: [{
                 title: {
-                    text: "Temperature (°C)",
+                    text: "Nhiệt độ"
                 },
                 opposite: false
             }, {
                 title: {
-                    text: "Humidity (%)",
+                    text: "Độ pH"
                 },
                 opposite: false
             }, {
                 title: {
-                    text: "Dust concentration (ppm)"
+                    text: "Độ đục"
                 }
             }, {
                 title: {
-                    text: "CO concentration (ppm)"
+                    text: "Độ DO"
                 }
             }],
             rangeSelector: {
@@ -136,7 +136,7 @@ function initChart(tempSeries, humidSeries, dustSeries, coSeries){
             },
             series: [{
                 type: "line",
-                name: "Temperature",
+                name: "Nhiệt độ",
                 tooltip: {
                     valueSuffix: "°C"
                 },
@@ -144,7 +144,7 @@ function initChart(tempSeries, humidSeries, dustSeries, coSeries){
                 yAxis: 0,
             },{
                 type: "line",
-                name: "Humidity",
+                name: "Độ pH",
                 tooltip: {
                     valueSuffix: "%"
                 },
@@ -152,7 +152,7 @@ function initChart(tempSeries, humidSeries, dustSeries, coSeries){
                 yAxis: 1
             },{
                 type: "line",
-                name: "Dust concentration",
+                name: "Độ đục",
                 tooltip: {
                     valueSuffix: "ppm"
                 },
@@ -160,7 +160,7 @@ function initChart(tempSeries, humidSeries, dustSeries, coSeries){
                 yAxis: 2
             },{
                 type: "line",
-                name: "CO concentration",
+                name: "Độ DO",
                 tooltip: {
                     valueSuffix: "ppm"
                 },
@@ -297,7 +297,11 @@ if (enableEdit){
             latitude: $("#edit-latitude").val(),
             longitude: $("#edit-longitude").val(),
             address: $("#edit-address").val(),
-            tags: JSON.stringify($("#edit-tags").tagsinput("items"))
+            tags: JSON.stringify($("#edit-tags").tagsinput("items")),
+            temperature_limit: $("#edit-temp-limit").val(),
+            humidity_limit: $("#edit-humid-limit").val(),
+            colevel_limit: $("#edit-co-limit").val(),
+            dustlevel_limit: $("#edit-dust-limit").val()
         };
         if ($("#edit-private").prop("checked"))
             data.private="true";

@@ -2,7 +2,7 @@
 {% set currPage="client" %}
 {% from "functions.html" import wsAuthInfo %}
 {% set isOwner=(g.user.id == client.owner) %}
-{% block title %} {{ _("MakerWeek client %(id)s", name=client.id) }} {% endblock %}
+{% block title %} {{ _("MakerWeek client %(id)s", id=client.id) }} {% endblock %}
 {% block css %}
 {% if isOwner %}
 <link rel="stylesheet" href="/static/css/bootstrap-tagsinput-typeahead.css">
@@ -85,11 +85,40 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit-address" class="col-sm-2 control-label">{{ _("Tags") }}</label>
+                            <label for="edit-tags" class="col-sm-2 control-label">{{ _("Tags") }}</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="edit-tags" data-role="tagsinput">
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="edit-temp-limit" class="col-sm-2 control-label">{{ _("Temperature limit") }}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-temp-limit">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-humid-limit" class="col-sm-2 control-label">{{ _("Humidity limit") }}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-humid-limit">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-co-limit" class="col-sm-2 control-label">{{ _("CO limit") }}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-co-limit">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-dust-limit" class="col-sm-2 control-label">{{ _("Dust limit") }}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="edit-dust-limit">
+                            </div>
+                        </div>
+                        
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <div class="checkbox">
@@ -120,7 +149,7 @@
 </div>
 {% endblock %}
 {% block js %}
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZTqvLB97t4V1CcpRgokk4KEt7QAV4adg&libraries=places&language=en&region=VN"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGbO2KFj9-VAXcrxwdipXAFSE1kzR4bFg&libraries=places&language=en&region=VN"></script>
 <script src="/static/js/socketio.js"></script>
 <script>
         info={{ client | tojson | safe }};

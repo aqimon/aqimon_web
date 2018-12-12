@@ -9,7 +9,7 @@ database.connect()
 
 def generateEvent(uuid):
     return {
-        "client_id": "71c5d852e55f4963b567120923b8eb24",
+        "client_id": "843ccd7f-93bb-496c-bb8b-f237fe905655",
         "temperature": random.randint(22, 35),
         "humidity": random.randint(0, 100),
         "dustlevel": random.randint(0, 10) / 10,

@@ -1,0 +1,41 @@
+{
+    "tags": [
+        "Y",
+        "7",
+        "N",
+        "H",
+        "g",
+        "s"
+    ],
+    "name": "me09c XmoGx BxvFE 2S8Bo D1j5Y",
+    "id": "5e1f761c-ef97-48b1-9c86-4b2c0dff2268",
+    "owner": 1,
+    "latitude": 0.0,
+    "address": "aaaa",
+    "longitude": 0.0,
+    "private": false,
+    "events": [
+        {
+            "tags": [
+                "Y",
+                "7",
+                "N",
+                "H",
+                "g",
+                "s"
+            ],
+            "timestamp": 1470153193000.0,
+            "coLevel": 0.6,
+            "name": "me09c XmoGx BxvFE 2S8Bo D1j5Y",
+            "address": "aaaa",
+            "longitude": 0.0,
+            "humidity": 22.0,
+            "temperature": 35.0,
+            "id": "5e1f761c-ef97-48b1-9c86-4b2c0dff2268",
+            "owner_username": "x",
+            "latitude": 0.0,
+            "dustLevel": 1.0,
+            "owner_realname": ""
+        }
+    ]
+}

@@ -1,0 +1,2 @@
+MakerWeek/static/css
+MakerWeek/static/js

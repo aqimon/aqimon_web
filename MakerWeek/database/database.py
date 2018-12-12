@@ -90,6 +90,11 @@ class Client(BaseModel):
     last_notification = BooleanField(default=False)
     private = BooleanField(default=False)
 
+    temperature_limit = FloatField(default = 10)
+    humidity_limit = FloatField(default = 10)
+    colevel_limit = FloatField(default = 10)
+    dustlevel_limit = FloatField(default = 10)
+
     def toFrontendObject(self):
         response = {
             'id': str(self.id),
